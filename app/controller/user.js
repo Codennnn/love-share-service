@@ -1,0 +1,91 @@
+'use strict';
+
+const Controller = require('egg').Controller;
+
+class UserController extends Controller {
+  /*
+   * 用户登录
+   */
+  async login() {
+    const { ctx, service } = this;
+    const data = ctx.request.body;
+    const res = await service.user.login(data);
+
+    if (res && res.isMatch) {
+      ctx.body = { code: 2000, msg: '登录校验成功', token: res.token };
+    } else if (typeof res === 'undefined') {
+      ctx.body = { code: 4004, msg: '该账号尚未注册' };
+    } else {
+      ctx.body = { code: 3000, msg: '登录校验失败' };
+    }
+    ctx.response.status = 200;
+  }
+
+  /*
+   * 创建用户
+   */
+  async register() {
+    const { ctx, service } = this;
+    const userData = ctx.request.body;
+
+    // 验证 post 过来的参数
+    ctx.validate({
+      user_name: { type: 'string', required: true },
+      password: { type: 'string', required: true },
+    });
+
+    const res = await service.user.createUser(userData);
+
+    if (res) {
+      if (res.isCreated) {
+        ctx.body = { code: 2001, msg: '创建用户成功' };
+      } else if (res.isExist) {
+        ctx.body = { code: 3000, msg: '该账号已被注册' };
+      }
+    }
+    ctx.status = 200;
+  }
+
+  /*
+   * 查询所有用户
+   */
+  async index() {
+    const { ctx, service } = this;
+    const res = await service.user.getUsers();
+
+    ctx.body = { code: 2000, msg: '查询所有用户', users: res };
+    ctx.status = 200;
+  }
+
+  /*
+   * 删除用户
+   */
+  async destroy() {
+    const { ctx, service } = this;
+    const res = await service.user.deleteUser(ctx.request.body.id);
+
+    if (res.deletedCount === 1) {
+      ctx.body = { code: 2004, msg: '删除用户成功' };
+    } else {
+      ctx.body = { code: 3000, msg: '无删除任何用户' };
+    }
+    ctx.status = 200;
+  }
+
+  /*
+   * 更新用户
+   */
+  async update() {
+    const { ctx, service } = this;
+    const res = await service.user.updateUser(ctx.params.id, ctx.query);
+
+    if (res && res.nModified === 1) {
+      ctx.body = { code: 2004, msg: '数据更新成功' };
+    } else {
+      ctx.body = { code: 3000, msg: '无可更新的数据' };
+    }
+    ctx.status = 200;
+  }
+}
+
+module.exports = UserController;
