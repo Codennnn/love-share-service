@@ -9,9 +9,16 @@ class UserService extends Service {
 
     const res = await ctx.model.User.findOne({ user_name });
     if (res) {
-      const token = app.jwt.sign({ id: res._id }, app.config.jwt.secret, { expiresIn: '7d' });
-      console.log(token);
+      // 创建JWT，有效期为7天
+      const token = app.jwt.sign(
+        { id: res._id },
+        app.config.jwt.secret,
+        { expiresIn: '7d' }
+      );
+
+      // 对比hash加密的密码是否相等
       const isMatch = await ctx.compare(password, res.password);
+
       return { token, isMatch };
     }
   }
@@ -51,10 +58,10 @@ class UserService extends Service {
     return result;
   }
 
-  async updateUser(id, query) {
+  async updateUser(id, data) {
     const result = await this.ctx.model.User.updateOne(
       { _id: id },
-      { $set: query }
+      { $set: data }
     );
     return result;
   }

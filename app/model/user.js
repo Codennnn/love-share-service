@@ -14,11 +14,11 @@ module.exports = app => {
       type: String,
       required: true,
     },
-  }, {
-    timestamps: {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
-    },
+  });
+
+  UserSchema.set('timestamps', {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   });
 
   return mongoose.model('User', UserSchema);

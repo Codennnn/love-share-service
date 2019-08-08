@@ -10,6 +10,6 @@ module.exports = app => {
   router.post('/api/users/login', user.login);
   router.post('/api/users/register', user.register);
   router.get('/api/users/all', user.index);
-  router.put('/api/users', user.update);
+  router.put('/api/users/update', user.update);
   router.delete('/api/users/destroy', user.destroy);
 };

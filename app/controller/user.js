@@ -77,7 +77,9 @@ class UserController extends Controller {
    */
   async update() {
     const { ctx, service } = this;
-    const res = await service.user.updateUser(ctx.params.id, ctx.query);
+    const id = ctx.state.user.id;
+    const data = ctx.request.body;
+    const res = await service.user.updateUser(id, data);
 
     if (res && res.nModified === 1) {
       ctx.body = { code: 2004, msg: '数据更新成功' };
