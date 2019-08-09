@@ -13,7 +13,7 @@ class UserService extends Service {
       const token = app.jwt.sign(
         { id: res._id },
         app.config.jwt.secret,
-        { expiresIn: '7d' }
+        { expiresIn: '30d' }
       );
 
       // 对比hash加密的密码是否相等
