@@ -26,8 +26,8 @@ class UserService extends Service {
   async createUser(data) {
     const { ctx } = this;
     const { user_name, password } = data;
-    const count = await ctx.model.User.count({ user_name });
-    if (count === 0) {
+    const query = await ctx.model.User.find({ user_name }).limit(1);
+    if (query.length === 0) {
       const hash = await ctx.genHash(password);
       const result = await ctx.model.User
         .create({
