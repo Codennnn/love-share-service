@@ -11,13 +11,7 @@ class UserController extends Controller {
     const data = ctx.request.body;
     const res = await service.user.login(data);
 
-    if (res && res.isMatch) {
-      ctx.body = { code: 2000, msg: '登录校验成功', token: res.token };
-    } else if (typeof res === 'undefined') {
-      ctx.body = { code: 4004, msg: '该账号尚未注册' };
-    } else {
-      ctx.body = { code: 3000, msg: '登录校验失败' };
-    }
+    ctx.body = res;
     ctx.response.status = 200;
   }
 
@@ -32,17 +26,11 @@ class UserController extends Controller {
     ctx.validate({
       user_name: { type: 'string', required: true },
       password: { type: 'string', required: true },
-    });
+    }, userData);
 
     const res = await service.user.createUser(userData);
 
-    if (res) {
-      if (res.isCreated) {
-        ctx.body = { code: 2001, msg: '创建用户成功' };
-      } else if (res.isExist) {
-        ctx.body = { code: 3000, msg: '该账号已被注册' };
-      }
-    }
+    ctx.body = res;
     ctx.status = 200;
   }
 
@@ -53,7 +41,7 @@ class UserController extends Controller {
     const { ctx, service } = this;
     const res = await service.user.getUsers();
 
-    ctx.body = { code: 2000, msg: '查询所有用户', users: res };
+    ctx.body = res;
     ctx.status = 200;
   }
 
@@ -64,11 +52,7 @@ class UserController extends Controller {
     const { ctx, service } = this;
     const res = await service.user.deleteUser(ctx.request.body.id);
 
-    if (res.deletedCount === 1) {
-      ctx.body = { code: 2004, msg: '删除用户成功' };
-    } else {
-      ctx.body = { code: 3000, msg: '无删除任何用户' };
-    }
+    ctx.body = res;
     ctx.status = 200;
   }
 
@@ -81,11 +65,7 @@ class UserController extends Controller {
     const data = ctx.request.body;
     const res = await service.user.updateUser(id, data);
 
-    if (res && res.nModified === 1) {
-      ctx.body = { code: 2004, msg: '数据更新成功' };
-    } else {
-      ctx.body = { code: 3000, msg: '无可更新的数据' };
-    }
+    ctx.body = res;
     ctx.status = 200;
   }
 }
