@@ -15,18 +15,17 @@ class UserService extends Service {
     }
 
     if (res.length === 1) {
-      // 创建JWT，有效期为7天
-      const token = app.jwt.sign(
-        { id: res._id },
-        app.config.jwt.secret,
-        { expiresIn: '30d' }
-      );
-
       // 对比hash加密后的密码是否相等
-      const isMatch = await ctx.compare(password, res.password);
+      const isMatch = await ctx.compare(password, res[0].password);
 
       if (isMatch) {
-        return { code: 2000, msg: '登录校验成功', token };
+        // 创建JWT，有效期为7天
+        const token = app.jwt.sign(
+          { id: res[0]._id },
+          app.config.jwt.secret,
+          { expiresIn: '7d' }
+        );
+        return { code: 2000, msg: '登录校验成功', data: { token } };
       }
       return { code: 3000, msg: '登录校验失败' };
     }
@@ -45,6 +44,8 @@ class UserService extends Service {
           .create({
             user_name,
             password: hash,
+            nick_name: data.nick_name,
+            roles: data.roles,
           })
           .then(() => {
             return { code: 2001, msg: '创建用户成功' };
@@ -89,6 +90,15 @@ class UserService extends Service {
         return { code: 3000, msg: err.message };
       });
     return res;
+  }
+
+  async getUserInfo(id) {
+    const res = await this.ctx.model.User.findOne(
+      { _id: id },
+      { nick_name: 1, roles: 1 }
+    );
+
+    return { code: 2000, msg: '获取用户登录信息', data: { ...res._doc } };
   }
 }
 

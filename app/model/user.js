@@ -16,6 +16,21 @@ module.exports = app => {
       type: String,
       required: true,
     },
+    nick_name: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 8,
+    },
+    real_name: {
+      type: String,
+      requier: true,
+      maxlength: 6,
+    },
+    roles: {
+      type: Array,
+      required: true,
+    },
   });
 
   UserSchema.set('timestamps', {

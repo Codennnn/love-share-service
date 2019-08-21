@@ -22,12 +22,6 @@ class UserController extends Controller {
     const { ctx, service } = this;
     const userData = ctx.request.body;
 
-    // 验证 post 过来的参数
-    ctx.validate({
-      user_name: { type: 'string', required: true },
-      password: { type: 'string', required: true },
-    }, userData);
-
     const res = await service.user.createUser(userData);
 
     ctx.body = res;
@@ -64,6 +58,18 @@ class UserController extends Controller {
     const id = ctx.state.user.id;
     const data = ctx.request.body;
     const res = await service.user.updateUser(id, data);
+
+    ctx.body = res;
+    ctx.status = 200;
+  }
+
+  /*
+   * 更新用户
+   */
+  async info() {
+    const { ctx, service } = this;
+    const id = ctx.state.user.id;
+    const res = await service.user.getUserInfo(id);
 
     ctx.body = res;
     ctx.status = 200;

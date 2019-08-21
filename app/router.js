@@ -12,4 +12,5 @@ module.exports = app => {
   router.get('/api/users/all', user.index);
   router.put('/api/users/update', user.update);
   router.delete('/api/users/destroy', user.destroy);
+  router.get('/api/users/user_info', user.info);
 };
