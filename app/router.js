@@ -17,7 +17,7 @@ module.exports = app => {
   // 用户模块
   router.post('/api/user/login', user.login)
   router.post('/api/user/register', user.register)
-  router.get('/api/user/user_info', user.info)
+  router.get('/api/user/info', user.getUserInfo)
 
 
   /*
@@ -28,7 +28,7 @@ module.exports = app => {
   router.post('/api/admin/login', admin.login)
   router.post('/api/admin/create', admin.create)
   // 用户模块
-  router.put('/api/user/user_list', auth, user.getUserList)
+  router.get('/api/user/list', auth, user.getUserList)
   router.put('/api/user/update', auth, user.updateUser)
   router.delete('/api/user/delete', auth, user.delete)
 }

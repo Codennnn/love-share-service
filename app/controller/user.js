@@ -44,8 +44,19 @@ class UserController extends Controller {
    */
   async getUserList() {
     const { ctx, service } = this
-    const data = ctx.request.body
+    const data = ctx.request.query
     const res = await service.user.getUserList(data)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /* GET
+   * 获取用户信息
+   */
+  async getUserInfo() {
+    const { ctx, service } = this
+    const res = await service.user.getUserInfo(ctx.state.user.id)
 
     ctx.body = res
     ctx.status = 200
@@ -56,9 +67,8 @@ class UserController extends Controller {
    */
   async updateUser() {
     const { ctx, service } = this
-    const id = ctx.state.user.id
     const data = ctx.request.body
-    const res = await service.user.updateUser(id, data)
+    const res = await service.user.updateUser(data)
 
     ctx.body = res
     ctx.status = 200

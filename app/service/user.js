@@ -48,7 +48,7 @@ class UserService extends Service {
             roles,
           })
           .then(() => {
-            return { code: 2001, msg: '创建用户成功' }
+            return { code: 2001, msg: '成功创建用户' }
           })
           .catch(err => {
             console.log(err)
@@ -69,15 +69,50 @@ class UserService extends Service {
     return { code: 3000, msg: '无任何用户被删除' }
   }
 
-  async getUserList() {
-    const res = await this.ctx.model.User.find()
-    return { code: 2000, msg: '查询所有用户', data: { user_list: res } }
+  async getUserList(data) {
+    const { page, pageSize } = data
+    const total = await this.ctx.model.User.find().count()
+    const res = await this.ctx.model.User
+      .find({}, '_id avatar_url credit_value share_value nickname created_at')
+      .skip((+page - 1) * pageSize)
+      .limit(+pageSize)
+    const pagination = {
+      page: +page,
+      pageSize: +pageSize,
+      total,
+    }
+    return { code: 2000, msg: '查询所有用户', data: { user_list: res, pagination } }
   }
 
-  async updateUser(id, data) {
+  async getUserInfo(_id) {
+    try {
+      const res = await this.ctx.model.User.aggregate(
+        [
+          { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
+          {
+            $project: {
+              avatar_url: 1,
+              nickname: 1,
+              real_name: 1,
+              school: 1,
+              introduction: 1,
+              fans_num: { $size: '$fans' },
+              collect_num: { $size: '$collects' },
+              follow_num: { $size: '$follows' },
+            },
+          },
+        ]
+      )
+      return { code: 2000, msg: '获取用户信息', data: { user_info: res } }
+    } catch (err) {
+      return { code: 5000, msg: err.message }
+    }
+  }
+
+  async updateUser(data) {
     const res = await this.ctx.model.User
       .updateOne(
-        { _id: id },
+        { _id: data._id },
         { $set: data },
         { runValidators: true }
       )
@@ -88,18 +123,9 @@ class UserService extends Service {
         return { code: 3000, msg: '无可更新的数据' }
       })
       .catch(err => {
-        return { code: 3000, msg: err.message }
+        return { code: 5000, msg: err.message }
       })
     return res
-  }
-
-  async getUserInfo(id) {
-    const res = await this.ctx.model.User.findOne(
-      { _id: id },
-      { nick_name: 1, roles: 1 }
-    )
-
-    return { code: 2000, msg: '获取用户登录信息', data: { ...res._doc } }
   }
 }
 

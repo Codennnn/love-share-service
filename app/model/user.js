@@ -18,7 +18,7 @@ module.exports = app => {
     },
     email: {
       type: String,
-      trim: true,
+      default: '',
     },
     avatar_url: {
       type: String,
@@ -51,6 +51,7 @@ module.exports = app => {
     },
     introduction: {
       type: String,
+      default: '',
     },
     wechat: {
       type: String,
@@ -58,23 +59,20 @@ module.exports = app => {
     qq: {
       type: String,
     },
-    fans_num: {
-      type: Number,
-    },
-    follow_num: {
-      type: Number,
-    },
-    collect_num: {
-      type: Number,
-    },
     credit_value: {
       type: Number,
       default: 500,
     },
-    share_value: Number,
-    address_list: {
-      type: Array,
+    share_value: {
+      type: Number,
+      default: 0,
     },
+    fans: Array,
+    follows: Array,
+    collects: Array,
+    address_list: Array,
+    published_goods: Array,
+    bought_goods: Array,
   })
 
   UserSchema.set('timestamps', {
