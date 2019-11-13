@@ -66,7 +66,7 @@ class UserService extends Service {
     if (res.deletedCount === 1) {
       return { code: 2000, msg: '删除用户成功' }
     }
-    return { code: 3000, msg: '无删除任何用户' }
+    return { code: 3000, msg: '无任何用户被删除' }
   }
 
   async getUsers() {

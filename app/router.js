@@ -8,17 +8,23 @@ module.exports = app => {
   })
 
   /*
-   * 管理员模块
+   * 客户端
    */
-  router.post('/api/admin/create', admin.create)
 
-  /*
-   * 用户模块
-   */
+  // 用户模块
   router.post('/api/user/login', user.login)
   router.post('/api/user/register', user.register)
   router.get('/api/user/user_list', user.index)
+  router.get('/api/user/user_info', user.info)
+
+  /*
+   * 管理端
+   */
+
+  // 管理员模块
+  router.post('/api/admin/login', admin.login)
+  router.post('/api/admin/create', admin.create)
+  // 用户模块
   router.put('/api/user/update', auth, user.update)
   router.delete('/api/user/delete', auth, user.delete)
-  router.get('/api/user/user_info', user.info)
 }

@@ -3,7 +3,8 @@
 module.exports = options => {
   return async function permission(ctx, next) {
     const { url } = ctx.request
-    const result = await ctx.model.Admin.find({ _id: ctx.state.admin.id }, 'roles')
+    const result = await ctx.model.Admin.find({ _id: ctx.state.user.id }, 'roles')
+
     if (result[0]) {
       const roles = result[0].roles
       // 如果是超级管理员，直接 next，如果是普通管理员，则先判断是否有权限访问 url，superUrl 只有超级管理员可访问

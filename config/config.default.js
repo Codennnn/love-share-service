@@ -37,6 +37,8 @@ module.exports = appInfo => {
       secret: 'auth-token-secret',
       enable: true,
       ignore: [
+        '/api/admin/login',
+        '/api/admin/create',
         '/api/user/login',
         '/api/user/register',
       ],

@@ -7,27 +7,26 @@ class AdminService extends Service {
     const { ctx, app } = this
     const { account, password } = data
 
-    let res = await ctx.model.User.find({ phone: account }).limit(1)
+    const res = await ctx.model.Admin.find({ account }).limit(1)
 
-    if (res.length < 1) {
-      res = await ctx.model.User.find({ email: account }).limit(1)
-      if (res.length < 1) {
-        return { code: 4001, msg: '手机号或邮箱尚未注册' }
+    if (res.length === 1) {
+      const { _id: id, password: hashPassword } = res[0]
+
+      // 对比 hash 加密后的密码是否相等
+      const isMatch = await ctx.compare(password, hashPassword)
+
+      if (isMatch) {
+        // 创建 JWT，有效期为7天
+        const token = app.jwt.sign(
+          { id },
+          app.config.jwt.secret,
+          { expiresIn: '30d' }
+        )
+        return { code: 2000, msg: '登录校验成功', data: { token } }
       }
+      return { code: 4003, msg: '密码错误' }
     }
-    // 对比 hash 加密后的密码是否相等
-    const isMatch = await ctx.compare(password, res[0].password)
-
-    if (isMatch) {
-      // 创建JWT，有效期为7天
-      const token = app.jwt.sign(
-        { id: res[0]._id },
-        app.config.jwt.secret,
-        { expiresIn: '7d' }
-      )
-      return { code: 2000, msg: '登录校验成功', data: { token } }
-    }
-    return { code: 4003, msg: '密码错误' }
+    return { code: 4001, msg: '账号尚未注册' }
   }
 
   async createAdmin(data) {
