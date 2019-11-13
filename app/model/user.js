@@ -68,10 +68,10 @@ module.exports = app => {
       default: 0,
     },
     address_list: [
-      { receiver: { type: String, required: true } },
-      { phone: { type: String, required: true } },
-      { address: { type: String, required: true } },
       {
+        receiver: { type: String, required: true },
+        phone: { type: String, required: true },
+        address: { type: String, required: true },
         address_type: {
           type: String,
           required: true,
