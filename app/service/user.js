@@ -139,7 +139,6 @@ class UserService extends Service {
 
   async addAddress(_id, data) {
     try {
-      console.log(data)
       const res = await this.ctx.model.User.update({ _id }, { $push: { address_list: data } })
       if (res.nModified === 1) {
         return { code: 2000, msg: '成功添加一个地址' }
