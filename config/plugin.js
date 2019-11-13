@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   // static: {
@@ -28,4 +28,4 @@ module.exports = {
     enable: true,
     package: 'egg-jwt',
   },
-};
+}
