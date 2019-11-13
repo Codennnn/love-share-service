@@ -127,6 +127,15 @@ class UserService extends Service {
       })
     return res
   }
+
+  async getAddressList(_id) {
+    try {
+      const res = await this.ctx.model.User.find({ _id }, 'address_list')
+      return { code: 2000, msg: '', data: { address_list: res } }
+    } catch (err) {
+      return { code: 5000, msg: err.message }
+    }
+  }
 }
 
 module.exports = UserService

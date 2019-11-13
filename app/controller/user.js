@@ -56,7 +56,8 @@ class UserController extends Controller {
    */
   async getUserInfo() {
     const { ctx, service } = this
-    const res = await service.user.getUserInfo(ctx.state.user.id)
+    const id = ctx.request.query._id || ctx.state.user.id
+    const res = await service.user.getUserInfo(id)
 
     ctx.body = res
     ctx.status = 200
@@ -81,6 +82,18 @@ class UserController extends Controller {
     const { ctx, service } = this
     const id = ctx.state.user.id
     const res = await service.user.getUserInfo(id)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /*
+   * 获取用户的收货地址
+   */
+  async getAddressList() {
+    const { ctx, service } = this
+    const id = ctx.request.query._id || ctx.state.user.id
+    const res = await service.user.getAddressList(id)
 
     ctx.body = res
     ctx.status = 200
