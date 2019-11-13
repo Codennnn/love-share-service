@@ -67,10 +67,21 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
+    address_list: [
+      { receiver: { type: String, required: true } },
+      { phone: { type: String, required: true } },
+      { address: { type: String, required: true } },
+      {
+        address_type: {
+          type: String,
+          required: true,
+          enum: [ '学校', '家庭', '公司' ],
+        },
+      },
+    ],
     fans: Array,
     follows: Array,
     collects: Array,
-    address_list: Array,
     published_goods: Array,
     bought_goods: Array,
   })

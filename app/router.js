@@ -19,6 +19,7 @@ module.exports = app => {
   router.post('/api/user/register', user.register)
   router.get('/api/user/info', user.getUserInfo)
   router.get('/api/user/address_list', user.getAddressList)
+  router.post('/api/user/address/add', user.addAddress)
 
 
   /*
