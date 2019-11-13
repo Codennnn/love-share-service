@@ -1,16 +1,24 @@
-'use strict';
+'use strict'
 
 module.exports = app => {
-  const { router, controller } = app;
-  const { user } = controller;
+  const { router, controller, middleware } = app
+  const { admin, user } = controller
+  const auth = middleware.permission({
+    superUrl: [ '/api/user/delete' ],
+  })
+
+  /*
+   * 管理员模块
+   */
+  router.post('/api/admin/create', admin.create)
 
   /*
    * 用户模块
    */
-  router.post('/api/users/login', user.login);
-  router.post('/api/users/register', user.register);
-  router.get('/api/users/all', user.index);
-  router.put('/api/users/update', user.update);
-  router.delete('/api/users/destroy', user.destroy);
-  router.get('/api/users/user_info', user.info);
-};
+  router.post('/api/user/login', user.login)
+  router.post('/api/user/register', user.register)
+  router.get('/api/user/user_list', user.index)
+  router.put('/api/user/update', auth, user.update)
+  router.delete('/api/user/delete', auth, user.delete)
+  router.get('/api/user/user_info', user.info)
+}
