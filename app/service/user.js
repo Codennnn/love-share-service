@@ -69,9 +69,9 @@ class UserService extends Service {
     return { code: 3000, msg: '无任何用户被删除' }
   }
 
-  async getUsers() {
+  async getUserList() {
     const res = await this.ctx.model.User.find()
-    return { code: 2000, msg: '查询所有用户', data: { users: res } }
+    return { code: 2000, msg: '查询所有用户', data: { user_list: res } }
   }
 
   async updateUser(id, data) {

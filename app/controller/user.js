@@ -40,11 +40,12 @@ class UserController extends Controller {
   }
 
   /* GET
-   * 查询所有用户
+   * 获取用户列表
    */
-  async index() {
+  async getUserList() {
     const { ctx, service } = this
-    const res = await service.user.getUsers()
+    const data = ctx.request.body
+    const res = await service.user.getUserList(data)
 
     ctx.body = res
     ctx.status = 200
@@ -53,7 +54,7 @@ class UserController extends Controller {
   /* PUT
    * 更新用户
    */
-  async update() {
+  async updateUser() {
     const { ctx, service } = this
     const id = ctx.state.user.id
     const data = ctx.request.body
