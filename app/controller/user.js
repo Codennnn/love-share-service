@@ -18,7 +18,7 @@ class UserController extends Controller {
   /* POST
    * 创建用户
    */
-  async register() {
+  async createUser() {
     const { ctx, service } = this
     const data = ctx.request.body
 
@@ -69,7 +69,8 @@ class UserController extends Controller {
   async updateUser() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.user.updateUser(data)
+    const id = data.user_id || ctx.state.user.id
+    const res = await service.user.updateUser(id, data)
 
     ctx.body = res
     ctx.status = 200
@@ -104,8 +105,8 @@ class UserController extends Controller {
    */
   async addAddress() {
     const { ctx, service } = this
-    const id = ctx.request.query._id || ctx.state.user.id
     const data = ctx.request.body
+    const id = data.user_id || ctx.state.user.id
     const res = await service.user.addAddress(id, data)
 
     ctx.body = res
@@ -117,8 +118,8 @@ class UserController extends Controller {
    */
   async deleteAddress() {
     const { ctx, service } = this
-    const id = ctx.request.query._id || ctx.state.user.id
     const data = ctx.request.body
+    const id = data.user_id || ctx.state.user.id
     const res = await service.user.deleteAddress(id, data)
 
     ctx.body = res
@@ -130,9 +131,48 @@ class UserController extends Controller {
    */
   async updateAddress() {
     const { ctx, service } = this
-    const id = ctx.request.query._id || ctx.state.user.id
     const data = ctx.request.body
+    const id = data.user_id || ctx.state.user.id
     const res = await service.user.updateAddress(id, data)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /*
+   * 修改用户的收货地址
+   */
+  async setDefaultAddress() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const id = data.user_id || ctx.state.user.id
+    const res = await service.user.setDefaultAddress(id, data)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /*
+   * 关注用户
+   */
+  async subscribe() {
+    const { ctx, service } = this
+    const id = ctx.state.user.id
+    const data = ctx.request.body
+    const res = await service.user.subscribe(id, data)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /*
+   * 取消关注用户
+   */
+  async unsubscribe() {
+    const { ctx, service } = this
+    const id = ctx.state.user.id
+    const data = ctx.request.body
+    const res = await service.user.unsubscribe(id, data)
 
     ctx.body = res
     ctx.status = 200

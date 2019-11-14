@@ -16,12 +16,15 @@ module.exports = app => {
 
   // 用户模块
   router.post('/api/user/login', user.login)
-  router.post('/api/user/register', user.register)
+  router.post('/api/user/register', user.createUser)
   router.get('/api/user/info', user.getUserInfo)
   router.get('/api/user/address_list', user.getAddressList)
   router.post('/api/user/address/add', user.addAddress)
   router.delete('/api/user/address/delete', user.deleteAddress)
   router.put('/api/user/address/update', user.updateAddress)
+  router.put('/api/user/address/default', user.setDefaultAddress)
+  router.post('/api/user/subscribe', user.subscribe)
+  router.post('/api/user/unsubscribe', user.unsubscribe)
 
 
   /*

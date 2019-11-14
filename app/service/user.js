@@ -34,31 +34,28 @@ class UserService extends Service {
     const { ctx } = this
     const { phone, password, nickname, real_name, school, roles = [ 'user' ] } = data
     const hashPassword = await ctx.genHash(password)
-    let res
-    await ctx.model.User
-      .init()
-      .then(async () => {
-        res = await ctx.model.User
-          .create({
-            phone,
-            password: hashPassword,
-            nickname,
-            real_name,
-            school,
-            roles,
-          })
-          .then(() => {
-            return { code: 2001, msg: '成功创建用户' }
-          })
-          .catch(err => {
-            console.log(err)
-            if (err.message.includes('duplicate key error')) {
-              return { code: 3000, msg: '该账号已注册，请前往登录' }
-            }
-            return { code: 3000, msg: err.message }
-          })
-      })
-    return res
+    const user = new ctx.model.User({
+      phone,
+      password: hashPassword,
+      nickname,
+      real_name,
+      school,
+      roles,
+    })
+    try {
+      await user.save()
+      return { code: 2001, msg: '成功创建用户' }
+    } catch (err) {
+      if (err.message.includes('duplicate key error')) {
+        if (err.message.includes('phone')) {
+          return { code: 5000, msg: '手机号已注册' }
+        } else if (err.message.includes('nickname')) {
+          return { code: 5000, msg: '昵称已被使用' }
+        }
+        return { code: 5000, msg: err.message }
+      }
+      return { code: 5000, msg: err.message }
+    }
   }
 
   async deleteUser(id) {
@@ -70,49 +67,52 @@ class UserService extends Service {
   }
 
   async getUserList(data) {
-    const { page, pageSize } = data
-    const total = await this.ctx.model.User.find().count()
-    const res = await this.ctx.model.User
-      .find({}, '_id avatar_url credit_value share_value nickname created_at')
-      .skip((+page - 1) * pageSize)
-      .limit(+pageSize)
+    const page = Number(data.page)
+    const pageSize = Number(data.pageSize)
+    const [ total, res ] = await Promise.all([
+      this.ctx.model.User.find().count(),
+      this.ctx.model.User
+        .find({}, '_id avatar_url credit_value share_value nickname created_at')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize),
+    ])
     const pagination = {
-      page: +page,
-      pageSize: +pageSize,
+      page,
+      pageSize,
       total,
     }
     return { code: 2000, msg: '查询所有用户', data: { user_list: res, pagination } }
   }
 
   async getUserInfo(_id) {
-    try {
-      const res = await this.ctx.model.User.aggregate(
-        [
-          { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
-          {
-            $project: {
-              avatar_url: 1,
-              nickname: 1,
-              real_name: 1,
-              school: 1,
-              introduction: 1,
-              fans_num: { $size: '$fans' },
-              collect_num: { $size: '$collects' },
-              follow_num: { $size: '$follows' },
-            },
-          },
-        ]
-      )
-      return { code: 2000, msg: '获取用户信息', data: { user_info: res } }
-    } catch (err) {
-      return { code: 5000, msg: err.message }
-    }
+    const res = await this.ctx.model.User.aggregate([
+      { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
+      {
+        $project: {
+          avatar_url: 1,
+          nickname: 1,
+          real_name: 1,
+          school: 1,
+          introduction: 1,
+          fans_num: { $size: '$fans' },
+          collect_num: { $size: '$collects' },
+          follow_num: { $size: '$follows' },
+        },
+      },
+    ])
+      .then(res => {
+        return { code: 2000, msg: '获取用户信息', data: { user_info: res[0] } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
   }
 
-  async updateUser(data) {
+  updateUser(_id, data) {
     const res = this.ctx.model.User
       .updateOne(
-        { _id: data._id },
+        { _id },
         { $set: data },
         { runValidators: true }
       )
@@ -128,11 +128,12 @@ class UserService extends Service {
     return res
   }
 
-  async getAddressList(_id) {
+  getAddressList(_id) {
     const res = this.ctx.model.User
-      .find({ _id }, 'address_list')
-      .then(address_list => {
-        return { code: 2000, msg: '获取收货地址', data: { address_list } }
+      .find({ _id }, 'default_address address_list')
+      .then(res => {
+        const { default_address, address_list } = res[0]
+        return { code: 2000, msg: '获取收货地址', data: { default_address, address_list } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
@@ -140,7 +141,7 @@ class UserService extends Service {
     return res
   }
 
-  async addAddress(_id, data) {
+  addAddress(_id, data) {
     const res = this.ctx.model.User
       .updateOne(
         { _id },
@@ -159,7 +160,7 @@ class UserService extends Service {
     return res
   }
 
-  async deleteAddress(_id, data) {
+  deleteAddress(_id, data) {
     const res = this.ctx.model.User
       .updateOne(
         { _id },
@@ -177,7 +178,7 @@ class UserService extends Service {
     return res
   }
 
-  async updateAddress(_id, data) {
+  updateAddress(_id, data) {
     const res = this.ctx.model.User
       .updateOne(
         { _id, 'address_list._id': data.address_id },
@@ -192,11 +193,67 @@ class UserService extends Service {
         { runValidators: true } // 开启更新验证器
       )
       .then(res => {
-        console.log()
         if (res.nModified === 1) {
           return { code: 2000, msg: '成功修改一个地址' }
         }
         return { code: 3000, msg: '没有修改地址' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  setDefaultAddress(_id, data) {
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id },
+        { default_address: data.address_id }
+      )
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '成功设置默认地址' }
+        }
+        return { code: 3000, msg: '没有设置默认地址' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  subscribe(_id, data) {
+    if (_id === data.user_id) {
+      return { code: 4003, msg: '不能关注自己' }
+    }
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id },
+        { $addToSet: { follows: data.user_id } }
+      )
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '关注成功' }
+        }
+        return { code: 3000, msg: '关注失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  unsubscribe(_id, data) {
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id },
+        { $pull: { follows: data.user_id } }
+      )
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '取消关注成功' }
+        }
+        return { code: 3000, msg: '取消关注失败' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

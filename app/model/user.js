@@ -10,15 +10,12 @@ module.exports = app => {
       required: true,
       unique: true,
       trim: true,
+      match: /^1[3456789]\d{9}$/,
     },
     password: {
       type: String,
       required: true,
       trim: true,
-    },
-    email: {
-      type: String,
-      default: '',
     },
     avatar_url: {
       type: String,
@@ -67,6 +64,7 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
+    default_address: String,
     address_list: [{
       receiver: { type: String, required: true },
       phone: { type: String, required: true },
@@ -77,6 +75,10 @@ module.exports = app => {
         enum: [ '学校', '家庭', '公司' ],
       },
     }],
+    email: {
+      type: String,
+      match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+    },
     fans: Array,
     follows: Array,
     collects: Array,
