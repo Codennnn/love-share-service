@@ -1,11 +1,8 @@
-# RESTful-API power by egg.js
+# [ 乐享校园 ] 服务端
+基于 [Egg.js][egg] 开发的服务端 API
 
 🚀 功能优化 ⚡️ 性能优化 🏆 新增功能 🎨 样式调整 🔧 修改配置 🛠️ 修复BUG
 🎉 发布版本 ⛔️ 删除文件 ✅ 添加文件 🔔 更新通知 ⚠️ 警告通知 ✔️ 临时提交
-
-## QuickStart
-
-see [egg docs][egg] for more detail.
 
 ### Development
 
