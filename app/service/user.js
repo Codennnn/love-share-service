@@ -7,21 +7,21 @@ class UserService extends Service {
     const { ctx, app } = this
     const { account, password } = data
 
-    let res = await ctx.model.User.find({ phone: account }).limit(1)
+    let res = await ctx.model.User.findOne({ phone: account })
 
-    if (res.length < 1) {
-      res = await ctx.model.User.find({ email: account }).limit(1)
-      if (res.length < 1) {
+    if (!res) {
+      res = await ctx.model.User.findOne({ email: account })
+      if (!res) {
         return { code: 4001, msg: '手机号或邮箱尚未注册' }
       }
     }
     // 对比 hash 加密后的密码是否相等
-    const isMatch = await ctx.compare(password, res[0].password)
+    const isMatch = await ctx.compare(password, res.password)
 
     if (isMatch) {
       // 创建JWT，有效期为7天
       const token = app.jwt.sign(
-        { id: res[0]._id },
+        { id: res._id },
         app.config.jwt.secret,
         { expiresIn: '7d' }
       )
@@ -31,10 +31,9 @@ class UserService extends Service {
   }
 
   async createUser(data) {
-    const { ctx } = this
     const { phone, password, nickname, real_name, school, roles = [ 'user' ] } = data
-    const hashPassword = await ctx.genHash(password)
-    const user = new ctx.model.User({
+    const hashPassword = await this.ctx.genHash(password)
+    const user = new this.ctx.model.User({
       phone,
       password: hashPassword,
       nickname,
@@ -85,7 +84,7 @@ class UserService extends Service {
   }
 
   async getUserInfo(_id) {
-    const res = await this.ctx.model.User.aggregate([
+    const res = this.ctx.model.User.aggregate([
       { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
       {
         $project: {
@@ -102,6 +101,21 @@ class UserService extends Service {
     ])
       .then(res => {
         return { code: 2000, msg: '获取用户信息', data: { user_info: res[0] } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  getUserDetail(_id) {
+    const res = this.ctx.model.User
+      .findOne(
+        { _id },
+        'credit_value share_value nickname real_name school phone email wechat qq'
+      )
+      .then(user_detail => {
+        return { code: 2000, msg: '获取用户详细信息', data: { user_detail } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
@@ -254,6 +268,25 @@ class UserService extends Service {
           return { code: 2000, msg: '取消关注成功' }
         }
         return { code: 3000, msg: '取消关注失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  async resetPassword(_id, data) {
+    const hashPassword = await this.ctx.genHash(data.password)
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id },
+        { password: hashPassword }
+      )
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '密码已重置' }
+        }
+        return { code: 3000, msg: '密码重置失败' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

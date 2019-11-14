@@ -40,9 +40,6 @@ module.exports = app => {
       type: String,
       default: '0',
     },
-    introduction: {
-      type: String,
-    },
   })
 
   AdminSchema.set('timestamps', {

@@ -30,24 +30,38 @@ class AdminService extends Service {
   }
 
   async createAdmin(data) {
-    const { ctx } = this
-    const hashPassword = await ctx.genHash(data.password)
+    const hashPassword = await this.ctx.genHash(data.password)
     data.password = hashPassword
-    let res
-    await ctx.model.Admin
-      .init()
-      .then(async () => {
-        res = await ctx.model.Admin
-          .create(data)
-          .then(() => {
-            return { code: 2001, msg: '创建管理员成功' }
-          })
-          .catch(err => {
-            if (err.message.includes('duplicate key error')) {
-              return { code: 3000, msg: '该账号已注册，请前往登录' }
-            }
-            return { code: 3000, msg: err.message }
-          })
+    const admin = new this.ctx.model.Admin(data)
+    try {
+      await admin.save()
+      return { code: 2001, msg: '成功创建管理员' }
+    } catch (err) {
+      if (err.message.includes('duplicate key error')) {
+        if (err.message.includes('nickname')) {
+          return { code: 3000, msg: '昵称已被使用' }
+        }
+        return { code: 3000, msg: '已注册管理员，请前往登录' }
+      }
+      return { code: 5000, msg: err.message }
+    }
+  }
+
+  async resetPassword(_id, data) {
+    const hashPassword = await this.ctx.genHash(data.password)
+    const res = this.ctx.model.Admin
+      .updateOne(
+        { _id },
+        { password: hashPassword }
+      )
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '密码已重置' }
+        }
+        return { code: 3000, msg: '密码重置失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
       })
     return res
   }

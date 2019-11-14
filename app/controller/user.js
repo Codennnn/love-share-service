@@ -56,8 +56,20 @@ class UserController extends Controller {
    */
   async getUserInfo() {
     const { ctx, service } = this
-    const id = ctx.request.query._id || ctx.state.user.id
+    const id = ctx.request.query.user_id || ctx.state.user.id
     const res = await service.user.getUserInfo(id)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /* GET
+   * 获取用户详细信息
+   */
+  async getUserDetail() {
+    const { ctx, service } = this
+    const id = ctx.request.query.user_id || ctx.state.user.id
+    const res = await service.user.getUserDetail(id)
 
     ctx.body = res
     ctx.status = 200
@@ -161,6 +173,19 @@ class UserController extends Controller {
     const id = ctx.state.user.id
     const data = ctx.request.body
     const res = await service.user.unsubscribe(id, data)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /* POST
+   * 重置用户密码
+   */
+  async resetPassword() {
+    const { ctx, service } = this
+    const id = ctx.state.user.id
+    const data = ctx.request.body
+    const res = await service.user.resetPassword(id, data)
 
     ctx.body = res
     ctx.status = 200

@@ -18,6 +18,7 @@ module.exports = app => {
   router.post('/api/user/login', user.login)
   router.post('/api/user/register', user.createUser)
   router.get('/api/user/info', user.getUserInfo)
+  router.get('/api/user/detail', user.getUserDetail)
   router.get('/api/user/address_list', user.getAddressList)
   router.post('/api/user/address/add', user.addAddress)
   router.delete('/api/user/address/delete', user.deleteAddress)
@@ -25,6 +26,7 @@ module.exports = app => {
   router.put('/api/user/address/default', user.setDefaultAddress)
   router.post('/api/user/subscribe', user.subscribe)
   router.post('/api/user/unsubscribe', user.unsubscribe)
+  router.post('/api/user/reset_password', user.resetPassword)
 
 
   /*
@@ -33,7 +35,7 @@ module.exports = app => {
 
   // 管理员模块
   router.post('/api/admin/login', admin.login)
-  router.post('/api/admin/create', admin.create)
+  router.post('/api/admin/create', admin.createAdmin)
   // 用户模块
   router.get('/api/user/list', permission, user.getUserList)
   router.put('/api/user/update', permission, user.updateUser)
