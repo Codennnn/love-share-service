@@ -1,6 +1,6 @@
 # [ 乐享校园 ] 服务端
 
-基于 [Egg.js][egg] 开发的服务端 API
+基于 [Egg.js][egg] 开发的服务端 API，[查看 API 文档][api]
 
 
 🚀 功能优化 ⚡️ 性能优化 🏆 新增功能 🎨 样式调整 🔧 修改配置 🛠️ 修复BUG
@@ -28,3 +28,4 @@ $ npm stop
 - Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
 
 [egg]: https://eggjs.org
+[api]: https://czc12580520.gitbook.io/workspace/
