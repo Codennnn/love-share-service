@@ -21,6 +21,7 @@ module.exports = app => {
   router.get('/api/user/address_list', user.getAddressList)
   router.post('/api/user/address/add', user.addAddress)
   router.delete('/api/user/address/delete', user.deleteAddress)
+  router.put('/api/user/address/update', user.updateAddress)
 
 
   /*

@@ -142,12 +142,16 @@ class UserService extends Service {
 
   async addAddress(_id, data) {
     const res = this.ctx.model.User
-      .updateOne({ _id }, { $push: { address_list: data } })
+      .updateOne(
+        { _id },
+        { $push: { address_list: data } },
+        { runValidators: true }
+      )
       .then(res => {
         if (res.nModified === 1) {
           return { code: 2000, msg: '成功添加一个地址' }
         }
-        return { code: 3000, msg: '没有成功添加地址' }
+        return { code: 3000, msg: '没有添加地址' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
@@ -165,7 +169,34 @@ class UserService extends Service {
         if (res.nModified === 1) {
           return { code: 2000, msg: '成功删除一个地址' }
         }
-        return { code: 3000, msg: '没有成功删除地址' }
+        return { code: 3000, msg: '没有删除地址' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  async updateAddress(_id, data) {
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id, 'address_list._id': data.address_id },
+        {
+          $set: {
+            'address_list.$.receiver': data.receiver,
+            'address_list.$.phone': data.phone,
+            'address_list.$.address': data.address,
+            'address_list.$.address_type': data.address_type,
+          },
+        },
+        { runValidators: true } // 开启更新验证器
+      )
+      .then(res => {
+        console.log()
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '成功修改一个地址' }
+        }
+        return { code: 3000, msg: '没有修改地址' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
