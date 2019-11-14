@@ -31,7 +31,7 @@ class UserController extends Controller {
   /* DELETE
    * 删除用户
    */
-  async delete() {
+  async deleteUser() {
     const { ctx, service } = this
     const res = await service.user.deleteUser(ctx.request.body._id)
 
@@ -76,19 +76,7 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
-   * 更新用户
-   */
-  async info() {
-    const { ctx, service } = this
-    const id = ctx.state.user.id
-    const res = await service.user.getUserInfo(id)
-
-    ctx.body = res
-    ctx.status = 200
-  }
-
-  /*
+  /* GET
    * 获取用户的收货地址
    */
   async getAddressList() {
@@ -100,7 +88,7 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
+  /* POST
    * 添加用户的收货地址
    */
   async addAddress() {
@@ -113,7 +101,7 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
+  /* DELETE
    * 删除用户的收货地址
    */
   async deleteAddress() {
@@ -126,7 +114,7 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
+  /* PUT
    * 修改用户的收货地址
    */
   async updateAddress() {
@@ -139,8 +127,8 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
-   * 修改用户的收货地址
+  /* PUT
+   * 设置用户的默认收货地址
    */
   async setDefaultAddress() {
     const { ctx, service } = this
@@ -152,7 +140,7 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
+  /* POST
    * 关注用户
    */
   async subscribe() {
@@ -165,7 +153,7 @@ class UserController extends Controller {
     ctx.status = 200
   }
 
-  /*
+  /* POST
    * 取消关注用户
    */
   async unsubscribe() {

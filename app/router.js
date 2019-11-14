@@ -3,7 +3,7 @@
 module.exports = app => {
   const { router, controller, middleware } = app
   const { admin, user } = controller
-  const auth = middleware.permission({
+  const permission = middleware.permission({
     superUrl: [
       '/api/user/update',
       '/api/user/delete',
@@ -35,7 +35,7 @@ module.exports = app => {
   router.post('/api/admin/login', admin.login)
   router.post('/api/admin/create', admin.create)
   // 用户模块
-  router.get('/api/user/list', auth, user.getUserList)
-  router.put('/api/user/update', auth, user.updateUser)
-  router.delete('/api/user/delete', auth, user.delete)
+  router.get('/api/user/list', permission, user.getUserList)
+  router.put('/api/user/update', permission, user.updateUser)
+  router.delete('/api/user/delete', permission, user.deleteUser)
 }
