@@ -110,7 +110,7 @@ class UserService extends Service {
   }
 
   async updateUser(data) {
-    const res = await this.ctx.model.User
+    const res = this.ctx.model.User
       .updateOne(
         { _id: data._id },
         { $set: data },
@@ -129,24 +129,48 @@ class UserService extends Service {
   }
 
   async getAddressList(_id) {
-    try {
-      const res = await this.ctx.model.User.find({ _id }, 'address_list')
-      return { code: 2000, msg: '获取收货地址', data: { address_list: res } }
-    } catch (err) {
-      return { code: 5000, msg: err.message }
-    }
+    const res = this.ctx.model.User
+      .find({ _id }, 'address_list')
+      .then(address_list => {
+        return { code: 2000, msg: '获取收货地址', data: { address_list } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
   }
 
   async addAddress(_id, data) {
-    try {
-      const res = await this.ctx.model.User.update({ _id }, { $push: { address_list: data } })
-      if (res.nModified === 1) {
-        return { code: 2000, msg: '成功添加一个地址' }
-      }
-      return { code: 3000, msg: '没有添加地址成功' }
-    } catch (err) {
-      return { code: 5000, msg: err.message }
-    }
+    const res = this.ctx.model.User
+      .updateOne({ _id }, { $push: { address_list: data } })
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '成功添加一个地址' }
+        }
+        return { code: 3000, msg: '没有成功添加地址' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  async deleteAddress(_id, data) {
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id },
+        { $pull: { address_list: { _id: data.address_id } } }
+      )
+      .then(res => {
+        if (res.nModified === 1) {
+          return { code: 2000, msg: '成功删除一个地址' }
+        }
+        return { code: 3000, msg: '没有成功删除地址' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
   }
 }
 

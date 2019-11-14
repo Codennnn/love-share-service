@@ -111,6 +111,19 @@ class UserController extends Controller {
     ctx.body = res
     ctx.status = 200
   }
+
+  /*
+   * 添加用户的收货地址
+   */
+  async deleteAddress() {
+    const { ctx, service } = this
+    const id = ctx.request.query._id || ctx.state.user.id
+    const data = ctx.request.body
+    const res = await service.user.deleteAddress(id, data)
+
+    ctx.body = res
+    ctx.status = 200
+  }
 }
 
 module.exports = UserController
