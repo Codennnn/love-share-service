@@ -39,8 +39,11 @@ module.exports = appInfo => {
       ignore: [
         '/api/admin/login',
         '/api/admin/create',
-        '/api/user/login',
-        '/api/user/register',
+        '/api/user/sign_in',
+        '/api/user/sign_up',
+        '/api/school/list',
+        '/api/common/check_phone_number',
+        '/api/common/verification_code',
       ],
     },
 
