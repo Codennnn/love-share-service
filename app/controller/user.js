@@ -6,10 +6,10 @@ class UserController extends Controller {
   /* POST
    * 用户登录
    */
-  async login() {
+  async signIn() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.user.login(data)
+    const res = await service.user.signIn(data)
 
     ctx.body = res
     ctx.status = 200
@@ -18,7 +18,7 @@ class UserController extends Controller {
   /* POST
    * 创建用户
    */
-  async createUser() {
+  async signUp() {
     const { ctx, service } = this
     const data = ctx.request.body
 
@@ -58,6 +58,18 @@ class UserController extends Controller {
     const { ctx, service } = this
     const id = ctx.request.query.user_id || ctx.state.user.id
     const res = await service.user.getUserInfo(id)
+
+    ctx.body = res
+    ctx.status = 200
+  }
+
+  /* GET
+   * 获取用户的数量信息
+   */
+  async getUserInfoNum() {
+    const { ctx, service } = this
+    const id = ctx.request.query.user_id || ctx.state.user.id
+    const res = await service.user.getUserInfoNum(id)
 
     ctx.body = res
     ctx.status = 200

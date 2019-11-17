@@ -3,7 +3,7 @@
 const Service = require('egg').Service
 
 class UserService extends Service {
-  async login(data) {
+  async signIn(data) {
     const { ctx, app } = this
     const { account, password } = data
 
@@ -19,11 +19,11 @@ class UserService extends Service {
     const isMatch = await ctx.compare(password, res.password)
 
     if (isMatch) {
-      // 创建JWT，有效期为7天
+      // 创建 JWT，有效期为 30 天
       const token = app.jwt.sign(
         { id: res._id },
         app.config.jwt.secret,
-        { expiresIn: '7d' }
+        { expiresIn: '30d' }
       )
       return { code: 2000, msg: '登录校验成功', data: { token } }
     }
@@ -47,9 +47,9 @@ class UserService extends Service {
     } catch (err) {
       if (err.message.includes('duplicate key error')) {
         if (err.message.includes('phone')) {
-          return { code: 5000, msg: '手机号已注册' }
+          return { code: 4002, msg: '手机号已注册' }
         } else if (err.message.includes('nickname')) {
-          return { code: 5000, msg: '昵称已被使用' }
+          return { code: 4003, msg: '昵称已被使用' }
         }
         return { code: 5000, msg: err.message }
       }
@@ -57,8 +57,8 @@ class UserService extends Service {
     }
   }
 
-  async deleteUser(id) {
-    const res = await this.ctx.model.User.deleteOne({ _id: id })
+  async deleteUser(_id) {
+    const res = await this.ctx.model.User.deleteOne({ _id })
     if (res.deletedCount === 1) {
       return { code: 2000, msg: '删除用户成功' }
     }
@@ -68,7 +68,7 @@ class UserService extends Service {
   async getUserList(data) {
     const page = Number(data.page)
     const pageSize = Number(data.pageSize)
-    const [ total, res ] = await Promise.all([
+    const [ total, user_list ] = await Promise.all([
       this.ctx.model.User.find().count(),
       this.ctx.model.User
         .find({}, '_id avatar_url credit_value share_value nickname created_at')
@@ -80,10 +80,23 @@ class UserService extends Service {
       pageSize,
       total,
     }
-    return { code: 2000, msg: '查询所有用户', data: { user_list: res, pagination } }
+    return { code: 2000, msg: '查询用户列表', data: { user_list, pagination } }
   }
 
-  async getUserInfo(_id) {
+  getUserInfo(_id) {
+    const res = this.ctx.model.User.findOne(
+      { _id },
+      '-_id avatar_url nickname real_name school introduction')
+      .then(user_info => {
+        return { code: 2000, msg: '获取用户信息', data: { user_info } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  getUserInfoNum(_id) {
     const res = this.ctx.model.User.aggregate([
       { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
       {
@@ -100,7 +113,7 @@ class UserService extends Service {
       },
     ])
       .then(res => {
-        return { code: 2000, msg: '获取用户信息', data: { user_info: res[0] } }
+        return { code: 2000, msg: '获取用户关注、粉丝、收藏的数量信息', data: { user_info: res[0] } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
@@ -112,7 +125,7 @@ class UserService extends Service {
     const res = this.ctx.model.User
       .findOne(
         { _id },
-        'credit_value share_value nickname real_name school phone email wechat qq'
+        '-_id credit_value share_value nickname real_name school phone email wechat qq'
       )
       .then(user_detail => {
         return { code: 2000, msg: '获取用户详细信息', data: { user_detail } }
