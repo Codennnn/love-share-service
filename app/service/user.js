@@ -86,7 +86,7 @@ class UserService extends Service {
   getUserInfo(_id) {
     const res = this.ctx.model.User.findOne(
       { _id },
-      '-_id avatar_url nickname real_name school introduction')
+      '-_id avatar_url nickname real_name school introduction roles')
       .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
       })

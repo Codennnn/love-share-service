@@ -8,6 +8,16 @@
 module.exports = appInfo => {
   const config = (exports = {})
 
+  config.onerror = {
+    all(err, ctx) {
+      // JWT 过期
+      if (err.message === 'jwt expired') {
+        ctx.body = {}
+        ctx.status = 418
+      }
+    },
+  }
+
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1561624248329_9612'
 
