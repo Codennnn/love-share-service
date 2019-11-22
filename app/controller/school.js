@@ -8,7 +8,7 @@ class SchoolController extends Controller {
    */
   async addSchool() {
     const { ctx, service } = this
-    const res = await service.school.addSchool(ctx.request.body)
+    const res = await service.school.addSchool(ctx.request.body.name)
 
     ctx.body = res
     ctx.status = 200

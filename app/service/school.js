@@ -3,11 +3,9 @@
 const Service = require('egg').Service
 
 class SchoolService extends Service {
-  async addSchool(data) {
+  async addSchool(name) {
     try {
-      const school = new this.ctx.model.School({
-        name: data.name,
-      })
+      const school = new this.ctx.model.School({ name })
       await school.save()
       return { code: 2001, msg: '成功添加学校' }
     } catch (err) {
@@ -39,9 +37,6 @@ class SchoolService extends Service {
           school_list.push(item.name)
         })
         return { code: 2000, msg: '获取学校列表', data: { school_list } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
       })
     return res
   }
