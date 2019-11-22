@@ -28,4 +28,10 @@ module.exports = {
     enable: true,
     package: 'egg-jwt',
   },
+
+  // 七牛云
+  fullQiniu: {
+    enable: true,
+    package: 'egg-full-qiniu',
+  },
 }
