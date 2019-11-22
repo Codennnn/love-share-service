@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { router, controller, middleware } = app
-  const { admin, user, goods, school, common } = controller
+  const { admin, user, goods, school, category, common } = controller
   const permission = middleware.permission({
     superUrl: [
       '/api/user/update',
@@ -33,10 +33,10 @@ module.exports = app => {
   // 学校模块
   router.get('/api/school/list', school.getSchoolList)
 
-
   // 公共模块
   router.post('/api/common/check_phone_number', common.checkPhoneNumber)
   router.post('/api/common/verification_code', common.getVerificationCode)
+  router.get('/api/category/list', category.getCategoryList)
 
   /*
    * 管理端
