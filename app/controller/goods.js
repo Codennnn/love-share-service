@@ -30,11 +30,17 @@ class GoodsController extends Controller {
   }
 
   /* DELETE
-   * 删除上传的图片
+   * 删除已上传的图片
    */
   async deleteImg() {
     const { ctx, service } = this
-    const { img_list } = ctx.request.body
+    const { img_list, img_with_id = true } = ctx.request.body
+    if (!img_with_id) {
+      const id = ctx.state.user.id
+      img_list.forEach((it, i, _) => {
+        _[i] = `${id}-${it}`
+      })
+    }
     const res = await service.goods.deleteImg(img_list)
 
     ctx.body = res

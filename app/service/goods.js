@@ -56,7 +56,7 @@ class GoodsService extends Service {
     } else if (res.some(el => el.ok)) {
       return { code: 5001, msg: '部分图片删除失败' }
     }
-    return { code: 5000, msg: '图片删除失败' }
+    return { code: 5000, msg: '所有图片删除失败' }
   }
 }
 

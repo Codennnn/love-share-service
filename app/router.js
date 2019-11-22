@@ -28,8 +28,8 @@ module.exports = app => {
   router.post('/api/user/unsubscribe', user.unsubscribe)
   router.post('/api/user/reset_password', user.resetPassword)
   // 商品模块
-  router.post('/api/goods/upload_img', goods.uploadImg)
-  router.delete('/api/goods/delete_img', goods.deleteImg)
+  router.post('/api/goods/img/upload', goods.uploadImg)
+  router.delete('/api/goods/img/delete', goods.deleteImg)
   // 学校模块
   router.get('/api/school/list', school.getSchoolList)
 
