@@ -7,6 +7,7 @@ module.exports = app => {
     superUrl: [
       '/api/user/update',
       '/api/user/delete',
+      '/api/category/add',
     ],
   })
 
@@ -51,6 +52,9 @@ module.exports = app => {
   router.delete('/api/user/delete', permission, user.deleteUser)
   // 商品模块
   router.get('/api/goods/list', permission, goods.getGoodsList)
+  // 商品分类
+  router.post('/api/category/add', permission, category.addCategory)
+  router.delete('/api/category/delete', permission, category.deleteCategory)
   // 学校模块
   router.post('/api/school/add', permission, school.addSchool)
   router.delete('/api/school/delete', permission, school.deleteSchool)
