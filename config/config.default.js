@@ -72,6 +72,7 @@ module.exports = appInfo => {
         '/api/user/sign_in',
         '/api/user/sign_up',
         '/api/school/list',
+        '/api/category/list',
         '/api/common/check_phone_number',
         '/api/common/verification_code',
       ],
