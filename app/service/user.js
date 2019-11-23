@@ -57,12 +57,19 @@ class UserService extends Service {
     }
   }
 
-  async deleteUser(_id) {
-    const res = await this.ctx.model.User.deleteOne({ _id })
-    if (res.deletedCount === 1) {
-      return { code: 2000, msg: '删除用户成功' }
-    }
-    return { code: 3000, msg: '无任何用户被删除' }
+  deleteUser(_id) {
+    const res = this.ctx.model.User
+      .deleteOne({ _id })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 1) {
+          return { code: 2000, msg: '删除用户成功' }
+        }
+        return { code: 3000, msg: '无任何用户被删除' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+    return res
   }
 
   async getUserList(data) {
@@ -110,6 +117,9 @@ class UserService extends Service {
         user_info.school = user_info.school[0].name
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
       })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
 
     return res
   }
@@ -129,6 +139,10 @@ class UserService extends Service {
       .then(([ res ]) => {
         return { code: 2000, msg: '获取用户关注、粉丝、收藏的数量信息', data: { info_num: res } }
       })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+
     return res
   }
 
@@ -163,6 +177,9 @@ class UserService extends Service {
         user_detail.school = user_detail.school[0].name
         return { code: 2000, msg: '获取用户详细信息', data: { user_detail } }
       })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
 
     return res
   }
@@ -188,10 +205,13 @@ class UserService extends Service {
 
   getAddressList(_id) {
     const res = this.ctx.model.User
-      .find({ _id }, 'default_address address_list')
-      .then(res => {
-        const { default_address, address_list } = res[0]
-        return { code: 2000, msg: '获取收货地址', data: { default_address, address_list } }
+      .findOne({ _id }, 'default_address address_list')
+      .then(({ default_address, address_list }) => {
+        return {
+          code: 2000,
+          msg: '获取收货地址',
+          data: { default_address, address_list },
+        }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
@@ -218,14 +238,15 @@ class UserService extends Service {
     return res
   }
 
-  deleteAddress(_id, data) {
+  deleteAddress(_id, { address_id }) {
+    console.log(address_id)
     const res = this.ctx.model.User
       .updateOne(
         { _id },
-        { $pull: { address_list: { _id: data.address_id } } }
+        { $pull: { address_list: { _id: address_id } } }
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '成功删除一个地址' }
         }
         return { code: 3000, msg: '没有删除地址' }

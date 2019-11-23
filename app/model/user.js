@@ -64,7 +64,7 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
-    default_address: String,
+    default_address: mongoose.Schema.Types.ObjectId,
     address_list: [{
       receiver: { type: String, required: true },
       phone: { type: String, required: true },
