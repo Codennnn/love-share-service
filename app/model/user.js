@@ -69,7 +69,7 @@ module.exports = app => {
       receiver: { type: String, required: true },
       phone: { type: String, required: true },
       address: { type: String, required: true },
-      address_type: {
+      type: {
         type: String,
         required: true,
         enum: [ '学校', '家庭', '公司' ],

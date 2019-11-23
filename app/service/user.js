@@ -257,16 +257,19 @@ class UserService extends Service {
     return res
   }
 
-  updateAddress(_id, data) {
+  updateAddress(
+    _id,
+    { _id: address_id, receiver, phone, address, address_type }
+  ) {
     const res = this.ctx.model.User
       .updateOne(
-        { _id, 'address_list._id': data.address_id },
+        { _id, 'address_list._id': address_id },
         {
           $set: {
-            'address_list.$.receiver': data.receiver,
-            'address_list.$.phone': data.phone,
-            'address_list.$.address': data.address,
-            'address_list.$.address_type': data.address_type,
+            'address_list.$.receiver': receiver,
+            'address_list.$.phone': phone,
+            'address_list.$.address': address,
+            'address_list.$.address_type': address_type,
           },
         },
         { runValidators: true } // 开启更新验证器
@@ -283,14 +286,14 @@ class UserService extends Service {
     return res
   }
 
-  setDefaultAddress(_id, data) {
+  setDefaultAddress(_id, { address_id }) {
     const res = this.ctx.model.User
       .updateOne(
         { _id },
-        { default_address: data.address_id }
+        { default_address: address_id }
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '成功设置默认地址' }
         }
         return { code: 3000, msg: '没有设置默认地址' }
