@@ -36,6 +36,11 @@ module.exports = appInfo => {
     },
   }
 
+  config.validate = {
+    convert: true,
+    widelyUndefined: true,
+  }
+
   config.multipart = {
     mode: 'file',
   }
@@ -71,13 +76,13 @@ module.exports = appInfo => {
         '/api/admin/create',
         '/api/user/sign_in',
         '/api/user/sign_up',
+        '/api/user/reset_password',
         '/api/school/list',
         '/api/category/list',
         '/api/common/check_phone_number',
         '/api/common/verification_code',
       ],
     },
-
   }
 
   return {
