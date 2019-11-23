@@ -110,6 +110,7 @@ class UserService extends Service {
         user_info.school = user_info.school[0].name
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
       })
+
     return res
   }
 
@@ -132,14 +133,37 @@ class UserService extends Service {
   }
 
   getUserDetail(_id) {
-    const res = this.ctx.model.User
-      .findOne(
-        { _id },
-        '-_id credit_value share_value nickname real_name school phone email wechat qq'
-      )
-      .then(user_detail => {
+    const res = this.ctx.model.User.aggregate([
+      { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
+      {
+        $lookup: {
+          from: 'schools',
+          localField: 'school',
+          foreignField: '_id',
+          as: 'school',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          nickname: 1,
+          real_name: 1,
+          credit_value: 1,
+          share_value: 1,
+          gender: 1,
+          phone: 1,
+          email: 1,
+          wechat: 1,
+          qq: 1,
+          'school.name': 1,
+        },
+      },
+    ])
+      .then(([ user_detail ]) => {
+        user_detail.school = user_detail.school[0].name
         return { code: 2000, msg: '获取用户详细信息', data: { user_detail } }
       })
+
     return res
   }
 

@@ -47,8 +47,8 @@ class AdminService extends Service {
     }
   }
 
-  async resetPassword(_id, data) {
-    const hashPassword = await this.ctx.genHash(data.password)
+  async resetPassword(_id, { password }) {
+    const hashPassword = await this.ctx.genHash(password)
     const res = this.ctx.model.Admin
       .updateOne(
         { _id },

@@ -35,6 +35,17 @@ class SchoolController extends Controller {
     ctx.body = res
     ctx.status = 200
   }
+
+  /* PUT
+   * 修改学校名称
+   */
+  async modifySchool() {
+    const { ctx, service } = this
+    const res = await service.school.modifySchool(ctx.request.body)
+
+    ctx.body = res
+    ctx.status = 200
+  }
 }
 
 module.exports = SchoolController

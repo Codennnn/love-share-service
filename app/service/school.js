@@ -28,11 +28,26 @@ class SchoolService extends Service {
   deleteSchool(name) {
     const res = this.ctx.model.School
       .deleteOne({ name })
-      .then(res => {
-        if (res.deletedCount === 1) {
+      .then(deletedCount => {
+        if (deletedCount === 1) {
           return { code: 2000, msg: '删除了一间学校' }
         }
         return { code: 3000, msg: '无任何学校被删除' }
+      })
+    return res
+  }
+
+  modifySchool({ _id, name }) {
+    const res = this.ctx.model.School
+      .updateOne(
+        { _id },
+        { name }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '修改学校名称成功' }
+        }
+        return { code: 3000, msg: '无任何学校名称被修改' }
       })
     return res
   }
