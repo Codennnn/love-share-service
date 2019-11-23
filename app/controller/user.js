@@ -194,12 +194,19 @@ class UserController extends Controller {
    * 重置用户密码
    */
   async resetPassword() {
-    const { ctx, service } = this
-    const id = ctx.state.user.id
-    const data = ctx.request.body
-    const res = await service.user.resetPassword(id, data)
+    const { app, ctx, service } = this
+    const errors = app.validator.validate(
+      { phone: 'string', password: 'string' },
+      ctx.request.body
+    )
 
-    ctx.body = res
+    if (errors) {
+      ctx.body = errors
+    } else {
+      const res = await service.user.resetPassword(ctx.request.body)
+      ctx.body = res
+    }
+
     ctx.status = 200
   }
 }

@@ -20,7 +20,7 @@ class CommonService extends Service {
           .toString()
           .slice(-6)
         resolve(code)
-      }, 500)
+      }, 200)
     })
     return { code: 2000, msg: '获取验证码', data: { code } }
   }

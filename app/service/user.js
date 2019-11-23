@@ -343,15 +343,15 @@ class UserService extends Service {
     return res
   }
 
-  async resetPassword(_id, data) {
-    const hashPassword = await this.ctx.genHash(data.password)
+  async resetPassword({ phone, password }) {
+    const hashPassword = await this.ctx.genHash(password)
     const res = this.ctx.model.User
       .updateOne(
-        { _id },
+        { phone },
         { password: hashPassword }
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '密码已重置' }
         }
         return { code: 3000, msg: '密码重置失败' }
