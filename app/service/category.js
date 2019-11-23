@@ -5,12 +5,8 @@ const Service = require('egg').Service
 class CategoryService extends Service {
   getCategoryList() {
     const res = this.ctx.model.Category
-      .find()
-      .then(res => {
-        const category_list = []
-        res.forEach(it => {
-          category_list.push(it.name)
-        })
+      .find({}, '_id name')
+      .then(category_list => {
         return { code: 2000, msg: '获取商品分类列表', data: { category_list } }
       })
     return res

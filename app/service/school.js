@@ -3,6 +3,15 @@
 const Service = require('egg').Service
 
 class SchoolService extends Service {
+  getSchoolList() {
+    const res = this.ctx.model.School
+      .find({}, '_id name')
+      .then(school_list => {
+        return { code: 2000, msg: '获取学校列表', data: { school_list } }
+      })
+    return res
+  }
+
   async addSchool(name) {
     try {
       const school = new this.ctx.model.School({ name })
@@ -24,19 +33,6 @@ class SchoolService extends Service {
           return { code: 2000, msg: '删除了一间学校' }
         }
         return { code: 3000, msg: '无任何学校被删除' }
-      })
-    return res
-  }
-
-  getSchoolList() {
-    const res = this.ctx.model.School
-      .find()
-      .then(res => {
-        const school_list = []
-        res.forEach(item => {
-          school_list.push(item.name)
-        })
-        return { code: 2000, msg: '获取学校列表', data: { school_list } }
       })
     return res
   }
