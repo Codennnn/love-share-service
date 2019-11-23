@@ -84,14 +84,31 @@ class UserService extends Service {
   }
 
   getUserInfo(_id) {
-    const res = this.ctx.model.User.findOne(
-      { _id },
-      '-_id avatar_url nickname real_name school introduction roles')
-      .then(user_info => {
+    const res = this.ctx.model.User.aggregate([
+      { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
+      {
+        $lookup: {
+          from: 'schools',
+          localField: 'school',
+          foreignField: '_id',
+          as: 'school',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          avatar_url: 1,
+          nickname: 1,
+          real_name: 1,
+          introduction: 1,
+          roles: 1,
+          'school.name': 1,
+        },
+      },
+    ])
+      .then(([ user_info ]) => {
+        user_info.school = user_info.school[0].name
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
       })
     return res
   }
@@ -101,22 +118,15 @@ class UserService extends Service {
       { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
       {
         $project: {
-          avatar_url: 1,
-          nickname: 1,
-          real_name: 1,
-          school: 1,
-          introduction: 1,
+          _id: 0,
           fans_num: { $size: '$fans' },
           collect_num: { $size: '$collects' },
           follow_num: { $size: '$follows' },
         },
       },
     ])
-      .then(res => {
-        return { code: 2000, msg: '获取用户关注、粉丝、收藏的数量信息', data: { user_info: res[0] } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
+      .then(([ res ]) => {
+        return { code: 2000, msg: '获取用户关注、粉丝、收藏的数量信息', data: { info_num: res } }
       })
     return res
   }
@@ -129,9 +139,6 @@ class UserService extends Service {
       )
       .then(user_detail => {
         return { code: 2000, msg: '获取用户详细信息', data: { user_detail } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
       })
     return res
   }

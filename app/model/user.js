@@ -34,7 +34,7 @@ module.exports = app => {
       maxlength: 6,
     },
     school: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     roles: {
