@@ -8,6 +8,9 @@ module.exports = app => {
       '/api/user/update',
       '/api/user/delete',
       '/api/category/add',
+      '/api/school/add',
+      '/api/school/delete',
+      '/api/school/modify',
     ],
   })
 
@@ -19,6 +22,7 @@ module.exports = app => {
   router.post('/api/user/sign_in', user.signIn)
   router.post('/api/user/sign_up', user.signUp)
   router.get('/api/user/info', user.getUserInfo)
+  router.get('/api/user/info_num', user.getUserInfoNum)
   router.get('/api/user/detail', user.getUserDetail)
   router.get('/api/user/address_list', user.getAddressList)
   router.post('/api/user/address/add', user.addAddress)
@@ -58,4 +62,5 @@ module.exports = app => {
   // 学校模块
   router.post('/api/school/add', permission, school.addSchool)
   router.delete('/api/school/delete', permission, school.deleteSchool)
+  router.put('/api/school/modify', permission, school.modifySchool)
 }
