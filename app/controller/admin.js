@@ -8,8 +8,8 @@ class AdminController extends Controller {
    */
   async login() {
     const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.admin.login(data)
+
+    const res = await service.admin.login(ctx.request.body)
 
     ctx.body = res
     ctx.status = 200
@@ -19,12 +19,21 @@ class AdminController extends Controller {
    * 创建管理员
    */
   async createAdmin() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.admin.createAdmin(data)
+    const { app, ctx, service } = this
 
-    ctx.body = res
-    ctx.status = 200
+    const errors = app.validator.validate(
+      { account: 'string', password: 'string', nickname: 'string' },
+      ctx.request.body
+    )
+
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 400
+    } else {
+      const res = await service.admin.createAdmin(ctx.request.body)
+      ctx.body = res
+      ctx.status = 200
+    }
   }
 
   /* POST
@@ -32,9 +41,11 @@ class AdminController extends Controller {
    */
   async resetPassword() {
     const { ctx, service } = this
-    const id = ctx.state.user.id
-    const data = ctx.request.body
-    const res = await service.admin.resetPassword(id, data)
+
+    const res = await service.admin.resetPassword(
+      ctx.state.user.id,
+      ctx.request.body
+    )
 
     ctx.body = res
     ctx.status = 200

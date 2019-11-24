@@ -18,22 +18,42 @@ class CategoryController extends Controller {
    * 添加商品分类
    */
   async addCategory() {
-    const { ctx, service } = this
-    const res = await service.category.addCategory(ctx.request.body.name)
+    const { app, ctx, service } = this
 
-    ctx.body = res
-    ctx.status = 200
+    const errors = app.validator.validate(
+      { name: 'string' },
+      ctx.request.body
+    )
+
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 400
+    } else {
+      const res = await service.category.addCategory(ctx.request.body.name)
+      ctx.body = res
+      ctx.status = 200
+    }
   }
 
   /* DELETE
    * 删除商品分类
    */
   async deleteCategory() {
-    const { ctx, service } = this
-    const res = await service.category.deleteCategory(ctx.request.body.name)
+    const { app, ctx, service } = this
 
-    ctx.body = res
-    ctx.status = 200
+    const errors = app.validator.validate(
+      { name: 'string' },
+      ctx.request.body
+    )
+
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 400
+    } else {
+      const res = await service.category.deleteCategory(ctx.request.body.name)
+      ctx.body = res
+      ctx.status = 200
+    }
   }
 }
 

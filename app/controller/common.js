@@ -18,11 +18,21 @@ class CommonController extends Controller {
    * 获取用户注册验证码
    */
   async getVerificationCode() {
-    const { ctx, service } = this
-    const res = await service.common.getVerificationCode(ctx.request.body.phone)
+    const { app, ctx, service } = this
 
-    ctx.body = res
-    ctx.status = 200
+    const errors = app.validator.validate(
+      { phone: 'string' },
+      ctx.request.body
+    )
+
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 400
+    } else {
+      const res = await service.common.getVerificationCode(ctx.request.body.phone)
+      ctx.body = res
+      ctx.status = 200
+    }
   }
 }
 
