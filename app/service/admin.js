@@ -3,14 +3,13 @@
 const Service = require('egg').Service
 
 class AdminService extends Service {
-  async login(data) {
+  async login({ account, password }) {
     const { ctx, app } = this
-    const { account, password } = data
 
-    const res = await ctx.model.Admin.find({ account }).limit(1)
+    const res = await ctx.model.Admin.findOne({ account })
 
-    if (res.length === 1) {
-      const { _id: id, password: hashPassword } = res[0]
+    if (res) {
+      const { _id: id, password: hashPassword } = res
 
       // 对比 hash 加密后的密码是否相等
       const isMatch = await ctx.compare(password, hashPassword)
