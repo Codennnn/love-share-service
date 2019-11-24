@@ -3,16 +3,9 @@
 module.exports = app => {
   const { router, controller, middleware } = app
   const { admin, user, goods, school, category, notice, common } = controller
-  const permission = middleware.permission({
-    superUrl: [
-      '/api/user/update',
-      '/api/user/delete',
-      '/api/category/add',
-      '/api/school/add',
-      '/api/school/delete',
-      '/api/school/modify',
-    ],
-  })
+
+  const auth1 = middleware.auth1() // 普通管理员权限
+  const auth2 = middleware.auth2() // 超级管理员权限
 
   /*
    * 客户端
@@ -52,16 +45,16 @@ module.exports = app => {
   router.post('/api/admin/login', admin.login)
   router.post('/api/admin/create', admin.createAdmin)
   // 用户模块
-  router.get('/api/user/list', permission, user.getUserList)
-  router.put('/api/user/update', permission, user.updateUser)
-  router.delete('/api/user/delete', permission, user.deleteUser)
+  router.get('/api/user/list', auth1, user.getUserList)
+  router.put('/api/user/update', auth1, auth2, user.updateUser)
+  router.delete('/api/user/delete', auth1, auth2, user.deleteUser)
   // 商品模块
-  router.get('/api/goods/list', permission, goods.getGoodsList)
+  router.get('/api/goods/list', auth1, goods.getGoodsList)
   // 商品分类
-  router.post('/api/category/add', permission, category.addCategory)
-  router.delete('/api/category/delete', permission, category.deleteCategory)
+  router.post('/api/category/add', auth1, category.addCategory)
+  router.delete('/api/category/delete', auth1, category.deleteCategory)
   // 学校模块
-  router.post('/api/school/add', permission, school.addSchool)
-  router.delete('/api/school/delete', permission, school.deleteSchool)
-  router.put('/api/school/modify', permission, school.modifySchool)
+  router.post('/api/school/add', auth1, auth2, school.addSchool)
+  router.delete('/api/school/delete', auth1, auth2, school.deleteSchool)
+  router.put('/api/school/update', auth1, auth2, school.updateSchool)
 }
