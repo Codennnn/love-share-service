@@ -105,20 +105,16 @@ class UserController extends Controller {
    * 更新用户[管理端]
    */
   async updateUser() {
-    const { app, ctx, service } = this
+    const { ctx, service } = this
 
-    const errors = app.validator.validate(
-      { user_id: 'string' },
-      ctx.request.body
-    )
-
-    if (errors) {
-      ctx.body = errors
-      ctx.status = 400
-    } else {
+    try {
+      ctx.validate({ user_id: 'string' })
       const res = await service.user.updateUser(ctx.request.body)
       ctx.body = res
       ctx.status = 200
+    } catch (err) {
+      ctx.body = err
+      ctx.status = 400
     }
   }
 
@@ -216,20 +212,16 @@ class UserController extends Controller {
    * 重置用户密码
    */
   async resetPassword() {
-    const { app, ctx, service } = this
+    const { ctx, service } = this
 
-    const errors = app.validator.validate(
-      { phone: 'string', password: 'string' },
-      ctx.request.body
-    )
-
-    if (errors) {
-      ctx.body = errors
-      ctx.status = 400
-    } else {
+    try {
+      ctx.validate({ phone: 'string', password: 'string' })
       const res = await service.user.resetPassword(ctx.request.body)
       ctx.body = res
       ctx.status = 200
+    } catch (err) {
+      ctx.body = err
+      ctx.status = 400
     }
   }
 }

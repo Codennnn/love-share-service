@@ -18,20 +18,16 @@ class CategoryController extends Controller {
    * 添加商品分类
    */
   async addCategory() {
-    const { app, ctx, service } = this
+    const { ctx, service } = this
 
-    const errors = app.validator.validate(
-      { name: 'string' },
-      ctx.request.body
-    )
-
-    if (errors) {
-      ctx.body = errors
-      ctx.status = 400
-    } else {
+    try {
+      ctx.validate({ name: 'string' })
       const res = await service.category.addCategory(ctx.request.body.name)
       ctx.body = res
       ctx.status = 200
+    } catch (err) {
+      ctx.body = err
+      ctx.status = 400
     }
   }
 
@@ -39,20 +35,16 @@ class CategoryController extends Controller {
    * 删除商品分类
    */
   async deleteCategory() {
-    const { app, ctx, service } = this
+    const { ctx, service } = this
 
-    const errors = app.validator.validate(
-      { name: 'string' },
-      ctx.request.body
-    )
-
-    if (errors) {
-      ctx.body = errors
-      ctx.status = 400
-    } else {
+    try {
+      ctx.validate({ name: 'string' })
       const res = await service.category.deleteCategory(ctx.request.body.name)
       ctx.body = res
       ctx.status = 200
+    } catch (err) {
+      ctx.body = err
+      ctx.status = 400
     }
   }
 }

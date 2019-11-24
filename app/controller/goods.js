@@ -33,17 +33,10 @@ class GoodsController extends Controller {
    * 删除已上传的图片
    */
   async deleteImg() {
-    const { app, ctx, service } = this
+    const { ctx, service } = this
 
-    const errors = app.validator.validate(
-      { img_list: 'array', img_with_id: 'boolean?' },
-      ctx.request.body
-    )
-
-    if (errors) {
-      ctx.body = errors
-      ctx.status = 400
-    } else {
+    try {
+      ctx.validate({ img_list: 'array', img_with_id: 'boolean?' })
       const { img_list, img_with_id = true } = ctx.request.body
       if (!img_with_id) {
         const id = ctx.state.user.id
@@ -56,6 +49,9 @@ class GoodsController extends Controller {
 
       ctx.body = res
       ctx.status = 200
+    } catch (err) {
+      ctx.body = err
+      ctx.status = 400
     }
   }
 }
