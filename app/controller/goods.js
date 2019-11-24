@@ -33,18 +33,30 @@ class GoodsController extends Controller {
    * 删除已上传的图片
    */
   async deleteImg() {
-    const { ctx, service } = this
-    const { img_list, img_with_id = true } = ctx.request.body
-    if (!img_with_id) {
-      const id = ctx.state.user.id
-      img_list.forEach((it, i, _) => {
-        _[i] = `${id}-${it}`
-      })
-    }
-    const res = await service.goods.deleteImg(img_list)
+    const { app, ctx, service } = this
 
-    ctx.body = res
-    ctx.status = 200
+    const errors = app.validator.validate(
+      { img_list: 'array', img_with_id: 'boolean?' },
+      ctx.request.body
+    )
+
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 400
+    } else {
+      const { img_list, img_with_id = true } = ctx.request.body
+      if (!img_with_id) {
+        const id = ctx.state.user.id
+        // 逐张图片名加上用户的 ID
+        img_list.forEach((it, i, _this) => {
+          _this[i] = `${id}-${it}`
+        })
+      }
+      const res = await service.goods.deleteImg(img_list)
+
+      ctx.body = res
+      ctx.status = 200
+    }
   }
 }
 

@@ -195,6 +195,7 @@ class UserController extends Controller {
    */
   async resetPassword() {
     const { app, ctx, service } = this
+
     const errors = app.validator.validate(
       { phone: 'string', password: 'string' },
       ctx.request.body
@@ -202,12 +203,12 @@ class UserController extends Controller {
 
     if (errors) {
       ctx.body = errors
+      ctx.status = 400
     } else {
       const res = await service.user.resetPassword(ctx.request.body)
       ctx.body = res
+      ctx.status = 200
     }
-
-    ctx.status = 200
   }
 }
 

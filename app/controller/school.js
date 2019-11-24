@@ -39,9 +39,9 @@ class SchoolController extends Controller {
   /* PUT
    * 修改学校名称
    */
-  async modifySchool() {
+  async updateSchool() {
     const { ctx, service } = this
-    const res = await service.school.modifySchool(ctx.request.body)
+    const res = await service.school.updateSchool(ctx.request.body)
 
     ctx.body = res
     ctx.status = 200
