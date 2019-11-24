@@ -108,6 +108,12 @@ class UserService extends Service {
           nickname: 1,
           real_name: 1,
           introduction: 1,
+          credit_value: 1,
+          share_value: 1,
+          phone: 1,
+          gender: 1,
+          wechat: 1,
+          qq: 1,
           roles: 1,
           'school.name': 1,
         },
@@ -184,16 +190,38 @@ class UserService extends Service {
     return res
   }
 
-  updateUser(_id, data) {
+  modifyUser(_id, data) {
     const res = this.ctx.model.User
       .updateOne(
         { _id },
         { $set: data },
         { runValidators: true }
       )
-      .then(res => {
-        if (res.nModified === 1) {
-          return { code: 2004, msg: '数据更新成功' }
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '修改用户成功' }
+        }
+        return { code: 3000, msg: '无可用户被修改' }
+      })
+      .catch(err => {
+        if (err.message.includes('nickname_1 dup key')) {
+          return { code: 4003, msg: '该用户昵称已被使用' }
+        }
+        return { code: 5000, msg: err.message }
+      })
+    return res
+  }
+
+  updateUser(data) {
+    const res = this.ctx.model.User
+      .updateOne(
+        { _id: data.user_id },
+        { $set: data },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '数据更新成功' }
         }
         return { code: 3000, msg: '无可更新的数据' }
       })
@@ -226,8 +254,8 @@ class UserService extends Service {
         { $push: { address_list: data } },
         { runValidators: true }
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '成功添加一个地址' }
         }
         return { code: 3000, msg: '没有添加地址' }
@@ -239,7 +267,6 @@ class UserService extends Service {
   }
 
   deleteAddress(_id, { address_id }) {
-    console.log(address_id)
     const res = this.ctx.model.User
       .updateOne(
         { _id },
@@ -259,7 +286,7 @@ class UserService extends Service {
 
   updateAddress(
     _id,
-    { _id: address_id, receiver, phone, address, address_type }
+    { _id: address_id, receiver, phone, address, type }
   ) {
     const res = this.ctx.model.User
       .updateOne(
@@ -269,13 +296,13 @@ class UserService extends Service {
             'address_list.$.receiver': receiver,
             'address_list.$.phone': phone,
             'address_list.$.address': address,
-            'address_list.$.address_type': address_type,
+            'address_list.$.type': type,
           },
         },
         { runValidators: true } // 开启更新验证器
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '成功修改一个地址' }
         }
         return { code: 3000, msg: '没有修改地址' }
@@ -290,7 +317,8 @@ class UserService extends Service {
     const res = this.ctx.model.User
       .updateOne(
         { _id },
-        { default_address: address_id }
+        { default_address: address_id },
+        { runValidators: true }
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
@@ -313,8 +341,8 @@ class UserService extends Service {
         { _id },
         { $addToSet: { follows: data.user_id } }
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '关注成功' }
         }
         return { code: 3000, msg: '关注失败' }
@@ -331,8 +359,8 @@ class UserService extends Service {
         { _id },
         { $pull: { follows: data.user_id } }
       )
-      .then(res => {
-        if (res.nModified === 1) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '取消关注成功' }
         }
         return { code: 3000, msg: '取消关注失败' }
@@ -348,7 +376,8 @@ class UserService extends Service {
     const res = this.ctx.model.User
       .updateOne(
         { phone },
-        { password: hashPassword }
+        { password: hashPassword },
+        { runValidators: true }
       )
       .then(({ nModified }) => {
         if (nModified === 1) {

@@ -37,11 +37,12 @@ class SchoolService extends Service {
     return res
   }
 
-  modifySchool({ _id, name }) {
+  updateSchool({ _id, name }) {
     const res = this.ctx.model.School
       .updateOne(
         { _id },
-        { name }
+        { name },
+        { runValidators: true }
       )
       .then(({ nModified }) => {
         if (nModified === 1) {

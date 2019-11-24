@@ -88,16 +88,38 @@ class UserController extends Controller {
   }
 
   /* PUT
-   * 更新用户
+   * 更新用户[客户端]
    */
-  async updateUser() {
+  async modifyUser() {
     const { ctx, service } = this
-    const data = ctx.request.body
-    const id = data.user_id || ctx.state.user.id
-    const res = await service.user.updateUser(id, data)
+    const res = await service.user.modifyUser(
+      ctx.state.user.id,
+      ctx.request.body
+    )
 
     ctx.body = res
     ctx.status = 200
+  }
+
+  /* PUT
+   * 更新用户[管理端]
+   */
+  async updateUser() {
+    const { app, ctx, service } = this
+
+    const errors = app.validator.validate(
+      { user_id: 'string' },
+      ctx.request.body
+    )
+
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 400
+    } else {
+      const res = await service.user.updateUser(ctx.request.body)
+      ctx.body = res
+      ctx.status = 200
+    }
   }
 
   /* GET
