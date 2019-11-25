@@ -1,5 +1,6 @@
 'use strict'
 
+const path = require('path')
 const Service = require('egg').Service
 
 class UserService extends Service {
@@ -91,7 +92,7 @@ class UserService extends Service {
   }
 
   getUserInfo(_id) {
-    const res = this.ctx.model.User.aggregate([
+    return this.ctx.model.User.aggregate([
       { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
       {
         $lookup: {
@@ -111,6 +112,7 @@ class UserService extends Service {
           credit_value: 1,
           share_value: 1,
           phone: 1,
+          email: 1,
           gender: 1,
           wechat: 1,
           qq: 1,
@@ -126,8 +128,6 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-
-    return res
   }
 
   getUserInfoNum(_id) {
@@ -213,7 +213,7 @@ class UserService extends Service {
   }
 
   updateUser(data) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id: data.user_id },
         { $set: data },
@@ -228,7 +228,39 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
+  }
+
+  async replaceAvatar(_id, stream) {
+    const { app, ctx } = this
+    const name = `avatar-${_id}-${path.basename(stream.filename)}`
+
+    try {
+      const { avatar_url: originalAvatar } = await ctx.model.User
+        .findOne({ _id }, 'avatar_url')
+      const { ok, url: avatar_url } = await app.fullQiniu
+        .uploadStream(name, stream)
+      if (ok) {
+        return ctx.model.User
+          .updateOne(
+            { _id },
+            { avatar_url }
+          )
+          .then(async ({ nModified }) => {
+            if (nModified === 1) {
+              const { ok } = await app.fullQiniu
+                .delete(path.basename(originalAvatar))
+              if (ok) {
+                return { code: 2000, msg: '头像更换成功', data: { avatar_url } }
+              }
+              return { code: 4003, msg: '原头像删除失败' }
+            }
+            return { code: 3000, msg: '没有更换到头像' }
+          })
+      }
+      return { code: 5000, msg: '头像更换失败：上传图片失败' }
+    } catch (err) {
+      return { code: 5000, msg: err.message }
+    }
   }
 
   getAddressList(_id) {

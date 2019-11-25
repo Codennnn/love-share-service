@@ -1,5 +1,6 @@
 'use strict'
 
+const sendToWormhole = require('stream-wormhole')
 const Controller = require('egg').Controller
 
 class UserController extends Controller {
@@ -96,6 +97,20 @@ class UserController extends Controller {
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 更换头像
+   */
+  async replaceAvatar() {
+    const { ctx, service } = this
+    const stream = await ctx.getFileStream()
+    try {
+      const res = await service.user.replaceAvatar(ctx.state.user.id, stream)
+      ctx.reply(res)
+    } catch {
+      await sendToWormhole(stream)
     }
   }
 
