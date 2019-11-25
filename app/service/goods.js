@@ -1,8 +1,8 @@
 'use strict'
 
-const Service = require('egg').Service
 const fs = require('mz/fs')
 const path = require('path')
+const Service = require('egg').Service
 
 class GoodsService extends Service {
   async getGoodsList(data) {

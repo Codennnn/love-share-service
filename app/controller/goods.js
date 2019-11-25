@@ -2,7 +2,6 @@
 
 const Controller = require('egg').Controller
 
-
 class GoodsController extends Controller {
   /* GET
    * 获取商品列表
