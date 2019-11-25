@@ -18,6 +18,7 @@ module.exports = app => {
   router.get('/api/user/info_num', user.getUserInfoNum)
   router.get('/api/user/detail', user.getUserDetail)
   router.put('/api/user/modify', user.modifyUser)
+  router.put('/api/user/replace_avatar', user.replaceAvatar)
   router.get('/api/user/address_list', user.getAddressList)
   router.post('/api/user/address/add', user.addAddress)
   router.delete('/api/user/address/delete', user.deleteAddress)
