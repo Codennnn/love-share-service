@@ -41,7 +41,7 @@ module.exports = appInfo => {
   }
 
   config.multipart = {
-    mode: 'file',
+    mode: 'stream',
   }
 
   config.fullQiniu = {
