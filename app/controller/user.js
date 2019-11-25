@@ -10,9 +10,7 @@ class UserController extends Controller {
     const { ctx, service } = this
     const data = ctx.request.body
     const res = await service.user.signIn(data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -21,11 +19,8 @@ class UserController extends Controller {
   async signUp() {
     const { ctx, service } = this
     const data = ctx.request.body
-
     const res = await service.user.createUser(data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -34,9 +29,7 @@ class UserController extends Controller {
   async deleteUser() {
     const { ctx, service } = this
     const res = await service.user.deleteUser(ctx.request.body._id)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* GET
@@ -46,9 +39,7 @@ class UserController extends Controller {
     const { ctx, service } = this
     const data = ctx.request.query
     const res = await service.user.getUserList(data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* GET
@@ -58,9 +49,7 @@ class UserController extends Controller {
     const { ctx, service } = this
     const id = ctx.request.query.user_id || ctx.state.user.id
     const res = await service.user.getUserInfo(id)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* GET
@@ -70,9 +59,7 @@ class UserController extends Controller {
     const { ctx, service } = this
     const id = ctx.request.query.user_id || ctx.state.user.id
     const res = await service.user.getUserInfoNum(id)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* GET
@@ -82,9 +69,7 @@ class UserController extends Controller {
     const { ctx, service } = this
     const id = ctx.request.query.user_id || ctx.state.user.id
     const res = await service.user.getUserDetail(id)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* PUT
@@ -96,9 +81,7 @@ class UserController extends Controller {
       ctx.state.user.id,
       ctx.request.body
     )
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* PUT
@@ -110,11 +93,9 @@ class UserController extends Controller {
     try {
       ctx.validate({ user_id: 'string' })
       const res = await service.user.updateUser(ctx.request.body)
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 
@@ -125,9 +106,7 @@ class UserController extends Controller {
     const { ctx, service } = this
     const id = ctx.request.query._id || ctx.state.user.id
     const res = await service.user.getAddressList(id)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -138,9 +117,7 @@ class UserController extends Controller {
     const data = ctx.request.body
     const id = data.user_id || ctx.state.user.id
     const res = await service.user.addAddress(id, data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -151,9 +128,7 @@ class UserController extends Controller {
     const data = ctx.request.body
     const id = data.user_id || ctx.state.user.id
     const res = await service.user.deleteAddress(id, data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* PUT
@@ -164,9 +139,7 @@ class UserController extends Controller {
     const data = ctx.request.body
     const id = data.user_id || ctx.state.user.id
     const res = await service.user.updateAddress(id, data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* PUT
@@ -177,9 +150,7 @@ class UserController extends Controller {
     const data = ctx.request.body
     const id = data.user_id || ctx.state.user.id
     const res = await service.user.setDefaultAddress(id, data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -190,9 +161,7 @@ class UserController extends Controller {
     const id = ctx.state.user.id
     const data = ctx.request.body
     const res = await service.user.subscribe(id, data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -203,9 +172,7 @@ class UserController extends Controller {
     const id = ctx.state.user.id
     const data = ctx.request.body
     const res = await service.user.unsubscribe(id, data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -217,11 +184,9 @@ class UserController extends Controller {
     try {
       ctx.validate({ phone: 'string', password: 'string' })
       const res = await service.user.resetPassword(ctx.request.body)
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 }

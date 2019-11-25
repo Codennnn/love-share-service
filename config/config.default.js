@@ -12,7 +12,6 @@ module.exports = appInfo => {
     all(err, ctx) {
       // JWT 过期
       if (err.message === 'jwt expired') {
-        ctx.body = {}
         ctx.status = 418
       }
     },

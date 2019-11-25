@@ -11,9 +11,7 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     const data = ctx.request.body
     const res = await service.goods.getGoodsList(data)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -24,9 +22,7 @@ class GoodsController extends Controller {
     const id = ctx.state.user.id
     const files = ctx.request.files
     const res = await service.goods.uploadImg(id, files)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -46,12 +42,9 @@ class GoodsController extends Controller {
         })
       }
       const res = await service.goods.deleteImg(img_list)
-
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 }

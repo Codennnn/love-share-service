@@ -9,9 +9,7 @@ class CategoryController extends Controller {
   async getCategoryList() {
     const { ctx, service } = this
     const res = await service.category.getCategoryList()
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -23,11 +21,9 @@ class CategoryController extends Controller {
     try {
       ctx.validate({ name: 'string' })
       const res = await service.category.addCategory(ctx.request.body.name)
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 
@@ -40,11 +36,9 @@ class CategoryController extends Controller {
     try {
       ctx.validate({ name: 'string' })
       const res = await service.category.deleteCategory(ctx.request.body.name)
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 }

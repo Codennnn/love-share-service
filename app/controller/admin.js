@@ -8,11 +8,8 @@ class AdminController extends Controller {
    */
   async login() {
     const { ctx, service } = this
-
     const res = await service.admin.login(ctx.request.body)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -28,11 +25,9 @@ class AdminController extends Controller {
         nickname: 'string',
       })
       const res = await service.admin.createAdmin(ctx.request.body)
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 
@@ -41,14 +36,11 @@ class AdminController extends Controller {
    */
   async resetPassword() {
     const { ctx, service } = this
-
     const res = await service.admin.resetPassword(
       ctx.state.user.id,
       ctx.request.body
     )
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 }
 

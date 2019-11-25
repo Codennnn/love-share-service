@@ -9,9 +9,7 @@ class NoticeController extends Controller {
   async getNoticeList() {
     const { ctx, service } = this
     const res = await service.notice.getNoticeList(ctx.state.user.id)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 }
 

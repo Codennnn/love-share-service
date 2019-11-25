@@ -9,9 +9,7 @@ class CommonController extends Controller {
   async checkPhoneNumber() {
     const { ctx, service } = this
     const res = await service.common.checkPhoneNumber(ctx.request.body.phone)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* POST
@@ -24,11 +22,9 @@ class CommonController extends Controller {
       ctx.validate({ phone: 'string' })
       const { phone } = ctx.request.body
       const res = await service.common.getVerificationCode(phone)
-      ctx.body = res
-      ctx.status = 200
+      ctx.reply(res)
     } catch (err) {
-      ctx.body = err
-      ctx.status = 400
+      ctx.reply(err, 400)
     }
   }
 }

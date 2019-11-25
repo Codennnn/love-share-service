@@ -9,9 +9,7 @@ class SchoolController extends Controller {
   async addSchool() {
     const { ctx, service } = this
     const res = await service.school.addSchool(ctx.request.body.name)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -20,9 +18,7 @@ class SchoolController extends Controller {
   async deleteSchool() {
     const { ctx, service } = this
     const res = await service.school.deleteSchool(ctx.request.body.name)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* GET
@@ -31,9 +27,7 @@ class SchoolController extends Controller {
   async getSchoolList() {
     const { ctx, service } = this
     const res = await service.school.getSchoolList()
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 
   /* PUT
@@ -42,9 +36,7 @@ class SchoolController extends Controller {
   async updateSchool() {
     const { ctx, service } = this
     const res = await service.school.updateSchool(ctx.request.body)
-
-    ctx.body = res
-    ctx.status = 200
+    ctx.reply(res)
   }
 }
 
