@@ -27,6 +27,8 @@ module.exports = app => {
   router.post('/api/user/subscribe', user.subscribe)
   router.post('/api/user/unsubscribe', user.unsubscribe)
   router.put('/api/user/reset_password', user.resetPassword)
+  router.get('/api/user/published_goods', user.getPublishedGoods)
+  router.get('/api/user/purchased_goods', user.getPurchasedGoods)
   // 商品模块
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
