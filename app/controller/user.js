@@ -204,6 +204,24 @@ class UserController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* GET
+   * 获取用户已发布的商品
+   */
+  async getPublishedGoods() {
+    const { ctx, service } = this
+    const res = await service.user.getPublishedGoods(ctx.state.user.id)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 获取用户已购买的商品
+   */
+  async getPurchasedGoods() {
+    const { ctx, service } = this
+    const res = await service.user.getPurchasedGoods(ctx.state.user.id)
+    ctx.reply(res)
+  }
 }
 
 module.exports = UserController
