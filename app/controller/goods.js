@@ -13,6 +13,15 @@ class GoodsController extends Controller {
     ctx.reply(res)
   }
 
+  /* GET
+   * 获取商品列表
+   */
+  async getCartList() {
+    const { ctx, service } = this
+    const res = await service.goods.getCartList(ctx.state.user.id)
+    ctx.reply(res)
+  }
+
   /* POST
    * 图片上传
    */
