@@ -36,6 +36,7 @@ module.exports = app => {
     school: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: 'School',
     },
     roles: {
       type: Array,

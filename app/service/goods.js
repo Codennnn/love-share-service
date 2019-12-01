@@ -72,6 +72,12 @@ class GoodsService extends Service {
   getGoodsDetail(_id) {
     return this.ctx.model.Goods
       .findOne({ _id })
+      .populate('category', '-_id name')
+      .populate({
+        path: 'seller',
+        select: '-_id avatar_url nickname school credit_value',
+        populate: { path: 'school', select: '-_id name' },
+      })
       .then(goods_detail => {
         return { code: 2000, msg: '查询商品详情', data: { goods_detail } }
       })

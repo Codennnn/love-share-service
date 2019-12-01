@@ -26,10 +26,7 @@ module.exports = app => {
       type: Number,
       default: 1,
     },
-    category: {
-      type: Array,
-      required: true,
-    },
+    category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     description: {
       type: String,
       maxlength: 400,
@@ -57,8 +54,9 @@ module.exports = app => {
       default: 0,
     },
     seller: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'User',
     },
   })
 

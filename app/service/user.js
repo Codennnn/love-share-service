@@ -91,37 +91,11 @@ class UserService extends Service {
   }
 
   getUserInfo(_id) {
-    return this.ctx.model.User.aggregate([
-      { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
-      {
-        $lookup: {
-          from: 'schools',
-          localField: 'school',
-          foreignField: '_id',
-          as: 'school',
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          avatar_url: 1,
-          nickname: 1,
-          real_name: 1,
-          introduction: 1,
-          credit_value: 1,
-          share_value: 1,
-          phone: 1,
-          email: 1,
-          gender: 1,
-          wechat: 1,
-          qq: 1,
-          roles: 1,
-          'school.name': 1,
-        },
-      },
-    ])
-      .then(([ user_info ]) => {
-        user_info.school = user_info.school[0].name
+    const { ctx } = this
+    return ctx.model.User
+      .findOne({ _id }, '-_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles')
+      .populate('school', '-_id name')
+      .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
       })
       .catch(err => {
@@ -130,8 +104,9 @@ class UserService extends Service {
   }
 
   getUserInfoNum(_id) {
-    const res = this.ctx.model.User.aggregate([
-      { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
+    const { ctx, app } = this
+    return ctx.model.User.aggregate([
+      { $match: { _id: app.mongoose.Types.ObjectId(_id) } },
       {
         $project: {
           _id: 0,
@@ -147,13 +122,12 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-
-    return res
   }
 
   getUserDetail(_id) {
-    const res = this.ctx.model.User.aggregate([
-      { $match: { _id: this.ctx.app.mongoose.Types.ObjectId(_id) } },
+    const { ctx, app } = this
+    return ctx.model.User.aggregate([
+      { $match: { _id: app.mongoose.Types.ObjectId(_id) } },
       {
         $lookup: {
           from: 'schools',
@@ -185,8 +159,6 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-
-    return res
   }
 
   modifyUser(_id, data) {
