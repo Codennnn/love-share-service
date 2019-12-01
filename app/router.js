@@ -16,6 +16,7 @@ module.exports = app => {
   router.post('/api/user/sign_up', user.signUp)
   router.get('/api/user/info', user.getUserInfo)
   router.get('/api/user/info_num', user.getUserInfoNum)
+  router.get('/api/user/seller_info', user.getSellerInfo)
   router.get('/api/user/detail', user.getUserDetail)
   router.put('/api/user/modify', user.modifyUser)
   router.put('/api/user/replace_avatar', user.replaceAvatar)
@@ -34,6 +35,7 @@ module.exports = app => {
   router.delete('/api/goods/delete', goods.deleteGoods)
   router.get('/api/goods/list/recommend', goods.getRecommendGoodsList)
   router.get('/api/goods/cart/list', goods.getCartList)
+  router.get('/api/goods/detail', goods.getGoodsDetail)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
   // 学校模块
