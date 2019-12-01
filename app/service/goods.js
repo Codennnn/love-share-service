@@ -36,6 +36,22 @@ class GoodsService extends Service {
     }
   }
 
+  async getRecommendGoodsList(_id, { page, page_size: pageSize }) {
+    const [ total, goods_list ] = await Promise.all([
+      this.ctx.model.Goods.estimatedDocumentCount(),
+      this.ctx.model.Goods
+        .find({}, 'img_list name price')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total,
+    }
+    return { code: 2000, msg: '查询推荐商品列表', data: { goods_list, pagination } }
+  }
+
   async getGoodsList({ page, page_size: pageSize }) {
     const [ total, goods_list ] = await Promise.all([
       this.ctx.model.Goods.estimatedDocumentCount(),

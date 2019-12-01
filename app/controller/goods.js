@@ -43,6 +43,23 @@ class GoodsController extends Controller {
   }
 
   /* GET
+   * 获取推荐商品列表
+   */
+  async getRecommendGoodsList() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        page: 'int',
+        page_size: 'int',
+      }, ctx.request.query)
+      const res = await service.goods.getRecommendGoodsList(ctx.state.user.id, ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
    * 获取商品列表
    */
   async getGoodsList() {
