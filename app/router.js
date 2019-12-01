@@ -32,6 +32,7 @@ module.exports = app => {
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
+  router.get('/api/goods/list/recommend', goods.getRecommendGoodsList)
   router.get('/api/goods/cart/list', goods.getCartList)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
