@@ -54,7 +54,7 @@ module.exports = appInfo => {
     app: true,
     agent: false,
     client: {
-      zone: 'Zone_z2', // Zone_z0 华东, Zone_z1 华北, Zone_z2 华南, Zone_na0 北美
+      zone: 'Zone_z2', // Zone_z2 华南
       bucket: 'love-share',
       baseUrl: 'https://cdn.hrspider.top/', // 用于拼接已上传文件的完整地址
     },
