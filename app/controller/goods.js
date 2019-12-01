@@ -4,13 +4,60 @@ const Controller = require('egg').Controller
 
 class GoodsController extends Controller {
   /* GET
+   * 创建商品
+   */
+  async createGoods() {
+    const { ctx, service } = this
+
+    try {
+      ctx.validate({
+        img_list: { type: 'array', itemType: 'string' },
+        price: 'number',
+        original_price: 'number',
+        quantity: 'number',
+        delivery: 'string',
+        description: { type: 'string', max: 400, required: false },
+        can_bargain: 'boolean',
+        can_return: 'boolean',
+      })
+      const res = await service.goods.createGoods(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 创建商品
+   */
+  async deleteGoods() {
+    const { ctx, service } = this
+
+    try {
+      ctx.validate({ goods_id: 'string' })
+      const res = await service.goods.deleteGoods(ctx.request.body.goods_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
    * 获取商品列表
    */
   async getGoodsList() {
     const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.goods.getGoodsList(data)
-    ctx.reply(res)
+
+    try {
+      ctx.validate({
+        page: 'int',
+        page_size: 'int',
+      }, ctx.request.query)
+      const res = await service.goods.getGoodsList(ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* GET
@@ -28,8 +75,8 @@ class GoodsController extends Controller {
   async uploadImg() {
     const { ctx, service } = this
     const id = ctx.state.user.id
-    const files = ctx.request.files
-    const res = await service.goods.uploadImg(id, files)
+    const parts = ctx.multipart()
+    const res = await service.goods.uploadImg(id, parts)
     ctx.reply(res)
   }
 
@@ -40,16 +87,8 @@ class GoodsController extends Controller {
     const { ctx, service } = this
 
     try {
-      ctx.validate({ img_list: 'array', img_with_id: 'boolean?' })
-      const { img_list, img_with_id = true } = ctx.request.body
-      if (!img_with_id) {
-        const id = ctx.state.user.id
-        // 逐张图片名加上用户的 ID
-        img_list.forEach((it, i, _this) => {
-          _this[i] = `${id}-${it}`
-        })
-      }
-      const res = await service.goods.deleteImg(img_list)
+      ctx.validate({ img_list: 'array' })
+      const res = await service.goods.deleteImg(ctx.request.body.img_list)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

@@ -40,9 +40,13 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
-    returnable: {
+    can_bargain: {
       type: Boolean,
-      default: true,
+      default: false,
+    },
+    can_return: {
+      type: Boolean,
+      default: false,
     },
     collect_num: {
       type: Number,
