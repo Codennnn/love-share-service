@@ -16,6 +16,7 @@ module.exports = app => {
     },
     original_price: {
       type: Number,
+      default: 0,
     },
     img_list: {
       type: Array,
@@ -27,14 +28,17 @@ module.exports = app => {
     },
     category: {
       type: Array,
+      required: true,
     },
     description: {
       type: String,
       maxlength: 400,
+      default: '',
     },
     delivery: {
       type: String,
       enum: [ '1', '2', '3' ],
+      default: '1',
     },
     delivery_charge: {
       type: Number,
@@ -51,6 +55,10 @@ module.exports = app => {
     collect_num: {
       type: Number,
       default: 0,
+    },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
   })
 

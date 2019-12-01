@@ -5,7 +5,8 @@ const sendToWormhole = require('stream-wormhole')
 const Service = require('egg').Service
 
 class GoodsService extends Service {
-  async createGoods(data) {
+  async createGoods(_id, data) {
+    data.seller = _id
     const goods = new this.ctx.model.Goods(data)
     try {
       await goods.save()
@@ -66,6 +67,17 @@ class GoodsService extends Service {
       total,
     }
     return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
+  }
+
+  getGoodsDetail(_id) {
+    return this.ctx.model.Goods
+      .findOne({ _id })
+      .then(goods_detail => {
+        return { code: 2000, msg: '查询商品详情', data: { goods_detail } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
   }
 
   async getCartList() {

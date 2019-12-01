@@ -222,6 +222,15 @@ class UserController extends Controller {
     const res = await service.user.getPurchasedGoods(ctx.state.user.id)
     ctx.reply(res)
   }
+
+  /* GET
+   * 获取用户已购买的商品
+   */
+  async getSellerInfo() {
+    const { ctx, service } = this
+    const res = await service.user.getSellerInfo(ctx.request.query.user_id)
+    ctx.reply(res)
+  }
 }
 
 module.exports = UserController

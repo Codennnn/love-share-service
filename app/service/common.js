@@ -4,7 +4,7 @@ const Service = require('egg').Service
 
 class CommonService extends Service {
   async checkPhoneNumber(phone) {
-    const count = await this.ctx.model.User.find({ phone }).count()
+    const count = await this.ctx.model.User.countDocuments({ phone })
     if (count >= 1) {
       return { code: 4003, msg: '手机号码已被注册' }
     }

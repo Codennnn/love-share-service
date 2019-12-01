@@ -20,7 +20,7 @@ class GoodsController extends Controller {
         can_bargain: 'boolean',
         can_return: 'boolean',
       })
-      const res = await service.goods.createGoods(ctx.request.body)
+      const res = await service.goods.createGoods(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -71,6 +71,21 @@ class GoodsController extends Controller {
         page_size: 'int',
       }, ctx.request.query)
       const res = await service.goods.getGoodsList(ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取商品详情
+   */
+  async getGoodsDetail() {
+    const { ctx, service } = this
+
+    try {
+      ctx.validate({ goods_id: 'string' }, ctx.request.query)
+      const res = await service.goods.getGoodsDetail(ctx.request.query.goods_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

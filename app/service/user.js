@@ -59,7 +59,7 @@ class UserService extends Service {
   }
 
   deleteUser(_id) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .deleteOne({ _id })
       .then(({ deletedCount }) => {
         if (deletedCount === 1) {
@@ -70,7 +70,6 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   async getUserList(data) {
@@ -478,6 +477,23 @@ class UserService extends Service {
           status: 0,
         }],
       },
+    }
+  }
+
+  async getSellerInfo(_id) {
+    try {
+      const { code, data: { user_info: { avatar_url, nickname, school, credit_value } } } = await this.getUserInfo(_id)
+      if (code === 2000) {
+        const seller_info = {
+          avatar_url,
+          nickname,
+          school,
+          credit_value,
+        }
+        return { code: 2000, msg: '获取卖家信息', data: { seller_info } }
+      }
+    } catch (err) {
+      return { code: 5000, msg: err.message }
     }
   }
 }
