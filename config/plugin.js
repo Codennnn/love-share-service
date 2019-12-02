@@ -34,4 +34,10 @@ module.exports = {
     enable: true,
     package: 'egg-full-qiniu',
   },
+
+  // WebSocket
+  io: {
+    enable: true,
+    package: 'egg-socket.io',
+  },
 }
