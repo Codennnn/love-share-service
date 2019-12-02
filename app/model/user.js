@@ -34,7 +34,7 @@ module.exports = app => {
       maxlength: 6,
     },
     school: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: 'School',
     },
@@ -65,7 +65,7 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
-    default_address: mongoose.Schema.Types.ObjectId,
+    default_address: Schema.Types.ObjectId,
     address_list: [{
       receiver: { type: String, required: true },
       phone: { type: String, required: true },
