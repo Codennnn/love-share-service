@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = app => {
-  const { router, controller, middleware } = app
+  const { router, controller, middleware, io } = app
   const { admin, user, goods, school, category, notice, common } = controller
 
   const auth1 = middleware.auth1() // 普通管理员权限
@@ -67,4 +67,6 @@ module.exports = app => {
   router.post('/api/school/add', auth1, auth2, school.addSchool)
   router.delete('/api/school/delete', auth1, auth2, school.deleteSchool)
   router.put('/api/school/update', auth1, auth2, school.updateSchool)
+
+  io.of('/').route('chat', io.controller.chat.chat)
 }

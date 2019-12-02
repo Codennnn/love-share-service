@@ -1,5 +1,3 @@
-/* eslint valid-jsdoc: "off" */
-
 'use strict'
 
 /**
@@ -57,6 +55,20 @@ module.exports = appInfo => {
       zone: 'Zone_z2', // Zone_z2 华南
       bucket: 'love-share',
       baseUrl: 'https://cdn.hrspider.top/', // 用于拼接已上传文件的完整地址
+    },
+  }
+
+  config.io = {
+    init: {}, // passed to engine.io
+    namespace: {
+      '/': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      },
+      '/chat': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      },
     },
   }
 
