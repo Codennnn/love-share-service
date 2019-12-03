@@ -75,7 +75,7 @@ class GoodsService extends Service {
       .populate('category', '-_id name')
       .populate({
         path: 'seller',
-        select: '-_id avatar_url nickname school gender credit_value fans published_goods',
+        select: 'avatar_url nickname school gender credit_value fans published_goods',
         populate: { path: 'school', select: '-_id name' },
       })
       .then(goods_detail => {
