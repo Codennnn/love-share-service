@@ -68,5 +68,7 @@ module.exports = app => {
   router.delete('/api/school/delete', auth1, auth2, school.deleteSchool)
   router.put('/api/school/update', auth1, auth2, school.updateSchool)
 
-  io.of('/').route('chat', io.controller.chat.chat)
+
+  io.route('setOnline', io.controller.action.setOnline)
+  io.route('sendMessage', io.controller.chat.sendMessage)
 }
