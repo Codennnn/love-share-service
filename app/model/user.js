@@ -19,7 +19,7 @@ module.exports = app => {
     },
     avatar_url: {
       type: String,
-      default: 'https://gitee.com/chinesee/images/raw/master/img/img_012.jpg',
+      default: '',
     },
     nickname: {
       type: String,
