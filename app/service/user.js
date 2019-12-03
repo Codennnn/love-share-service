@@ -76,7 +76,7 @@ class UserService extends Service {
     const page = Number(data.page)
     const pageSize = Number(data.pageSize)
     const [ total, user_list ] = await Promise.all([
-      this.ctx.model.User.find().count(),
+      this.ctx.model.User.estimatedDocumentCount(),
       this.ctx.model.User
         .find({}, '_id avatar_url credit_value share_value nickname created_at')
         .skip((page - 1) * pageSize)
@@ -93,7 +93,7 @@ class UserService extends Service {
   getUserInfo(_id) {
     const { ctx } = this
     return ctx.model.User
-      .findOne({ _id }, '-_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles')
+      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles')
       .populate('school', '-_id name')
       .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }

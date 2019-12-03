@@ -3,19 +3,16 @@
 const Controller = require('egg').Controller
 
 class ChatController extends Controller {
-  async chat() {
+  async sendMessage() {
     const { ctx, app } = this
     const chat = app.io.of('/')
     const message = ctx.args[0] || {}
-    const socket = ctx.socket
-    const client = socket.id
-    console.log('chat 控制器打印', message)
-    chat.emit('res', message)
 
     try {
-      const { target, payload } = message
+      const { target } = message
       if (!target) return
-      const msg = ctx.helper.parseMsg('exchange', payload, { client, target })
+      const msg = ctx.helper.parseMsg(message)
+      console.log(msg)
       chat.emit(target, msg)
     } catch (error) {
       app.logger.error(error)
