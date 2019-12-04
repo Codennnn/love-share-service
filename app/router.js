@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { router, controller, middleware, io } = app
-  const { admin, user, goods, school, category, notice, common } = controller
+  const { admin, user, goods, school, category, notice, chat, common } = controller
 
   const auth1 = middleware.auth1() // 普通管理员权限
   const auth2 = middleware.auth2() // 超级管理员权限
@@ -29,7 +29,11 @@ module.exports = app => {
   router.put('/api/user/reset_password', user.resetPassword)
   router.get('/api/user/published_goods', user.getPublishedGoods)
   router.get('/api/user/purchased_goods', user.getPurchasedGoods)
-  router.get('/api/user/contact_info', user.getContactInfo)
+
+  router.get('/api/chat/contact_list', chat.getContactList)
+  router.get('/api/chat/contact_info', chat.getContactInfo)
+  router.get('/api/chat/chat_data', chat.getChatData)
+
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
