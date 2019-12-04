@@ -91,8 +91,7 @@ class UserService extends Service {
   }
 
   getUserInfo(_id) {
-    const { ctx } = this
-    return ctx.model.User
+    return this.ctx.model.User
       .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles')
       .populate('school', '-_id name')
       .then(user_info => {
@@ -452,21 +451,15 @@ class UserService extends Service {
     }
   }
 
-  async getSellerInfo(_id) {
-    try {
-      const { code, data: { user_info: { avatar_url, nickname, school, credit_value } } } = await this.getUserInfo(_id)
-      if (code === 2000) {
-        const seller_info = {
-          avatar_url,
-          nickname,
-          school,
-          credit_value,
-        }
-        return { code: 2000, msg: '获取卖家信息', data: { seller_info } }
-      }
-    } catch (err) {
-      return { code: 5000, msg: err.message }
-    }
+  getContactInfo(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, '_id avatar_url nickname')
+      .then(contact_info => {
+        return { code: 2000, msg: '获取联系人信息', data: { contact_info } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
   }
 }
 
