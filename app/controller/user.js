@@ -224,12 +224,18 @@ class UserController extends Controller {
   }
 
   /* GET
-   * 获取用户已购买的商品
+   * 获取联系人信息
    */
-  async getSellerInfo() {
+  async getContactInfo() {
     const { ctx, service } = this
-    const res = await service.user.getSellerInfo(ctx.request.query.user_id)
-    ctx.reply(res)
+
+    try {
+      ctx.validate({ user_id: 'string' }, ctx.request.query)
+      const res = await service.user.getContactInfo(ctx.request.query.user_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 }
 
