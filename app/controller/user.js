@@ -222,21 +222,6 @@ class UserController extends Controller {
     const res = await service.user.getPurchasedGoods(ctx.state.user.id)
     ctx.reply(res)
   }
-
-  /* GET
-   * 获取联系人信息
-   */
-  async getContactInfo() {
-    const { ctx, service } = this
-
-    try {
-      ctx.validate({ user_id: 'string' }, ctx.request.query)
-      const res = await service.user.getContactInfo(ctx.request.query.user_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
-  }
 }
 
 module.exports = UserController

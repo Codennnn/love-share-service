@@ -450,17 +450,6 @@ class UserService extends Service {
       },
     }
   }
-
-  getContactInfo(_id) {
-    return this.ctx.model.User
-      .findOne({ _id }, '_id avatar_url nickname')
-      .then(contact_info => {
-        return { code: 2000, msg: '获取联系人信息', data: { contact_info } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
-  }
 }
 
 module.exports = UserService

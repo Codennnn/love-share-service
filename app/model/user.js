@@ -80,6 +80,8 @@ module.exports = app => {
       type: String,
       match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
     },
+    contacts: Array,
+    chats: Object,
     fans: Array,
     follows: Array,
     collects: Array,
