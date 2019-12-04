@@ -16,7 +16,6 @@ module.exports = app => {
   router.post('/api/user/sign_up', user.signUp)
   router.get('/api/user/info', user.getUserInfo)
   router.get('/api/user/info_num', user.getUserInfoNum)
-  router.get('/api/user/seller_info', user.getSellerInfo)
   router.get('/api/user/detail', user.getUserDetail)
   router.put('/api/user/modify', user.modifyUser)
   router.put('/api/user/replace_avatar', user.replaceAvatar)
@@ -30,6 +29,7 @@ module.exports = app => {
   router.put('/api/user/reset_password', user.resetPassword)
   router.get('/api/user/published_goods', user.getPublishedGoods)
   router.get('/api/user/purchased_goods', user.getPurchasedGoods)
+  router.get('/api/user/contact_info', user.getContactInfo)
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
