@@ -30,7 +30,9 @@ module.exports = app => {
   router.get('/api/user/published_goods', user.getPublishedGoods)
   router.get('/api/user/purchased_goods', user.getPurchasedGoods)
 
-  router.get('/api/chat/contact_list', chat.getContactList)
+  router.post('/api/chat/contact/add', chat.addContact)
+  router.delete('/api/chat/contact/delete', chat.deleteContact)
+  router.get('/api/chat/contact/list', chat.getContactList)
   router.get('/api/chat/contact_info', chat.getContactInfo)
   router.get('/api/chat/chat_data', chat.getChatData)
 
