@@ -4,12 +4,11 @@ const Service = require('egg').Service
 
 class SchoolService extends Service {
   getSchoolList() {
-    const res = this.ctx.model.School
+    return this.ctx.model.School
       .find({}, '_id name')
       .then(school_list => {
         return { code: 2000, msg: '获取学校列表', data: { school_list } }
       })
-    return res
   }
 
   async addSchool(name) {
@@ -26,7 +25,7 @@ class SchoolService extends Service {
   }
 
   deleteSchool(name) {
-    const res = this.ctx.model.School
+    return this.ctx.model.School
       .deleteOne({ name })
       .then(deletedCount => {
         if (deletedCount === 1) {
@@ -34,11 +33,10 @@ class SchoolService extends Service {
         }
         return { code: 3000, msg: '无任何学校被删除' }
       })
-    return res
   }
 
   updateSchool({ _id, name }) {
-    const res = this.ctx.model.School
+    return this.ctx.model.School
       .updateOne(
         { _id },
         { name },
@@ -50,7 +48,6 @@ class SchoolService extends Service {
         }
         return { code: 3000, msg: '无任何学校名称被修改' }
       })
-    return res
   }
 }
 

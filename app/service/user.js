@@ -161,7 +161,7 @@ class UserService extends Service {
   }
 
   modifyUser(_id, data) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id },
         { $set: data },
@@ -179,7 +179,6 @@ class UserService extends Service {
         }
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   updateUser(data) {
@@ -234,7 +233,7 @@ class UserService extends Service {
   }
 
   getAddressList(_id) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .findOne({ _id }, 'default_address address_list')
       .then(({ default_address, address_list }) => {
         return {
@@ -246,11 +245,10 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   addAddress(_id, data) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id },
         { $push: { address_list: data } },
@@ -260,16 +258,15 @@ class UserService extends Service {
         if (nModified === 1) {
           return { code: 2000, msg: '成功添加一个地址' }
         }
-        return { code: 3000, msg: '没有添加地址' }
+        return { code: 3000, msg: '没有添加任何地址' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   deleteAddress(_id, { address_id }) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id },
         { $pull: { address_list: { _id: address_id } } }
@@ -278,19 +275,18 @@ class UserService extends Service {
         if (nModified === 1) {
           return { code: 2000, msg: '成功删除一个地址' }
         }
-        return { code: 3000, msg: '没有删除地址' }
+        return { code: 3000, msg: '没有删除任何地址' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   updateAddress(
     _id,
     { _id: address_id, receiver, phone, address, type }
   ) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id, 'address_list._id': address_id },
         {
@@ -312,11 +308,10 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   setDefaultAddress(_id, { address_id }) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id },
         { default_address: address_id },
@@ -331,14 +326,13 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   subscribe(_id, data) {
     if (_id === data.user_id) {
       return { code: 4003, msg: '不能关注自己' }
     }
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id },
         { $addToSet: { follows: data.user_id } }
@@ -352,11 +346,10 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   unsubscribe(_id, data) {
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { _id },
         { $pull: { follows: data.user_id } }
@@ -370,12 +363,11 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   async resetPassword({ phone, password }) {
     const hashPassword = await this.ctx.genHash(password)
-    const res = this.ctx.model.User
+    return this.ctx.model.User
       .updateOne(
         { phone },
         { password: hashPassword },
@@ -390,7 +382,6 @@ class UserService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 
   getPublishedGoods() {

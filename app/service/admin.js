@@ -48,7 +48,7 @@ class AdminService extends Service {
 
   async resetPassword(_id, { password }) {
     const hashPassword = await this.ctx.genHash(password)
-    const res = this.ctx.model.Admin
+    return this.ctx.model.Admin
       .updateOne(
         { _id },
         { password: hashPassword },
@@ -63,7 +63,6 @@ class AdminService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
-    return res
   }
 }
 

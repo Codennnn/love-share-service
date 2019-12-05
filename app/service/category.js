@@ -4,12 +4,11 @@ const Service = require('egg').Service
 
 class CategoryService extends Service {
   getCategoryList() {
-    const res = this.ctx.model.Category
+    return this.ctx.model.Category
       .find({}, '_id name')
       .then(category_list => {
         return { code: 2000, msg: '获取商品分类列表', data: { category_list } }
       })
-    return res
   }
 
   async addCategory(name) {
@@ -26,7 +25,7 @@ class CategoryService extends Service {
   }
 
   deleteCategory(name) {
-    const res = this.ctx.model.Category
+    return this.ctx.model.Category
       .deleteOne({ name })
       .then(({ deletedCount }) => {
         if (deletedCount === 1) {
@@ -34,7 +33,6 @@ class CategoryService extends Service {
         }
         return { code: 3000, msg: '无任何分类被删除' }
       })
-    return res
   }
 }
 
