@@ -11,9 +11,9 @@ class ChatController extends Controller {
     try {
       const { target } = message
       if (!target) return
-      const msg = ctx.helper.parseMsg(message)
-      // console.log(msg)
-      chat.emit(target, msg)
+      const packet = ctx.helper.parseMsg(message)
+      ctx.service.chat.addChatData(packet)
+      chat.emit(target, packet.receiver)
     } catch (error) {
       app.logger.error(error)
     }
