@@ -61,7 +61,7 @@ class ChatService extends Service {
       .findOne({ _id })
       .populate('contacts', 'nickname avatar_url')
       .then(({ contacts: contact_list }) => {
-        return { code: 2000, msg: '获取联系人列表', data: { contact_list } }
+        return { code: 2000, data: { contact_list }, msg: '获取联系人列表' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

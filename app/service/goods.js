@@ -86,28 +86,6 @@ class GoodsService extends Service {
       })
   }
 
-  async getCartList() {
-    const cart_list = [
-      {
-        goods_id: () => '123456',
-        img_list: [ 'https://cdn-demo.algolia.com/bestbuy-0118/4397400_sb.jpg' ],
-        goods_num: 1,
-        name: '富婆快乐球',
-        nickname: '令狐少侠',
-        real_name: '陈梓聪',
-        quantity: 1,
-        amount: 1,
-        delivery: 1,
-        delivery_charge: 0,
-        price: 29.90,
-        collect_num: 4,
-        is_collected: true,
-        time: '2019-10-21',
-      },
-    ]
-    return { code: 2000, msg: '获取购物车列表', data: { cart_list } }
-  }
-
   async uploadImg(id, parts) {
     const { app } = this
     let part
