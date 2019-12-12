@@ -173,10 +173,16 @@ class UserController extends Controller {
    */
   async subscribe() {
     const { ctx, service } = this
-    const id = ctx.state.user.id
-    const data = ctx.request.body
-    const res = await service.user.subscribe(id, data)
-    ctx.reply(res)
+
+    try {
+      ctx.validate({ user_id: 'string' })
+      const id = ctx.state.user.id
+      const data = ctx.request.body
+      const res = await service.user.subscribe(id, data)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* POST

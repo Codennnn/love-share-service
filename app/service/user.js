@@ -92,7 +92,7 @@ class UserService extends Service {
 
   getUserInfo(_id) {
     return this.ctx.model.User
-      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles')
+      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles fans follows collects')
       .populate('school', '-_id name')
       .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
@@ -328,14 +328,11 @@ class UserService extends Service {
       })
   }
 
-  subscribe(_id, data) {
-    if (_id === data.user_id) {
-      return { code: 4003, msg: '不能关注自己' }
-    }
+  subscribe(_id, { user_id }) {
     return this.ctx.model.User
       .updateOne(
         { _id },
-        { $addToSet: { follows: data.user_id } }
+        { $addToSet: { follows: user_id } }
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
@@ -348,11 +345,11 @@ class UserService extends Service {
       })
   }
 
-  unsubscribe(_id, data) {
+  unsubscribe(_id, { user_id }) {
     return this.ctx.model.User
       .updateOne(
         { _id },
-        { $pull: { follows: data.user_id } }
+        { $pull: { follows: user_id } }
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
@@ -384,46 +381,15 @@ class UserService extends Service {
       })
   }
 
-  getPublishedGoods() {
-    return {
-      code: 2000,
-      data: {
-        published_goods: [
-          {
-            goods_id: '123456',
-            img_urls: [ 'https://gitee.com/chinesee/images/raw/master/img/img_002.png' ],
-            name: '一加 OnePlus 7 Pro 2K+90Hz 流体屏 骁龙855旗舰 4800万超广角三摄 6GB+128GB 曜岩灰 全面屏拍照游戏手机',
-            price: '22.50',
-            time: 1563552000,
-            status: 0,
-          },
-          {
-            goods_id: '123456',
-            img_urls: [ 'https://gitee.com/chinesee/images/raw/master/img/img_002.png' ],
-            name: 'QCY T1S 5.0真无线蓝牙耳机 Air分离式运动耳麦 运动跑步迷你隐形超小双耳入耳式 苹果/安卓手机通用 黑色',
-            price: '52.50',
-            time: 1568908800,
-            status: 1,
-          },
-          {
-            goods_id: '123456',
-            img_urls: [ 'https://gitee.com/chinesee/images/raw/master/img/img_001.png' ],
-            name: 'QCY T1S 5.0真无线蓝牙耳机 Air分离式运动耳麦',
-            price: '52.50',
-            time: 1570377600,
-            status: 1,
-          },
-          {
-            goods_id: '123456',
-            img_urls: [ 'https://gitee.com/chinesee/images/raw/master/img/img_001.png' ],
-            name: 'QCY T1S 5.0真无线蓝牙耳机 Air分离式运动耳麦 运动跑步迷你隐形超小双耳入耳式 苹果/安卓手机通用 黑色',
-            price: '52.50',
-            time: 1568908700,
-            status: 0,
-          },
-        ],
-      },
-    }
+  getPublishedGoods(_id) {
+    return this.ctx.model.Goods
+      .find({ seller: _id }, 'img_list name price status created_at')
+      .then(published_goods => {
+        return { code: 2000, data: { published_goods }, msg: '查询已发布的商品' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
   }
 
   getPurchasedGoods() {
@@ -432,7 +398,7 @@ class UserService extends Service {
       data: {
         purchased_goods: [{
           goods_id: '123456',
-          img_urls: [ 'https://gitee.com/chinesee/images/raw/master/img/img_003.png' ],
+          img_list: [ 'https://gitee.com/chinesee/images/raw/master/img/img_003.png' ],
           name: '一加 OnePlus 7 Pro 2K+90Hz 流体屏 骁龙855旗舰 4800万超广角三摄 6GB+128GB 曜岩灰 全面屏拍照游戏手机',
           price: '22.50',
           time: 1563552000,
