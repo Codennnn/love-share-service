@@ -38,17 +38,8 @@ class CartController extends Controller {
    */
   async getCartList() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({
-        page: 'int',
-        page_size: 'int',
-      }, ctx.request.query)
-      const res = await service.cart.getCartList(ctx.state.user.id, ctx.request.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    const res = await service.cart.getCartList(ctx.state.user.id, ctx.request.query)
+    ctx.reply(res)
   }
 }
 
