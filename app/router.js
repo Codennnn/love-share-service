@@ -29,6 +29,8 @@ module.exports = app => {
   router.put('/api/user/reset_password', user.resetPassword)
   router.get('/api/user/published_goods', user.getPublishedGoods)
   router.get('/api/user/purchased_goods', user.getPurchasedGoods)
+  router.get('/api/user/check_in_list', user.getCheckInList)
+  router.post('/api/user/check_in', user.checkIn)
 
   router.post('/api/chat/contact/add', chat.addContact)
   router.delete('/api/chat/contact/delete', chat.deleteContact)
