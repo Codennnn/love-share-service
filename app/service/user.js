@@ -407,6 +407,31 @@ class UserService extends Service {
       },
     }
   }
+
+  getCheckInList(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, '-_id check_in')
+      .then(({ check_in: check_in_list }) => {
+        return { code: 2000, data: { check_in_list }, msg: '查询签到列表' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  checkIn(_id, check_in) {
+    return this.ctx.model.User
+      .updateOne({ _id }, { $addToSet: { check_in } })
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '签到成功' }
+        }
+        return { code: 3000, msg: '签到成功' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
 }
 
 module.exports = UserService

@@ -88,6 +88,7 @@ module.exports = app => {
     collects: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     bought_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    check_in: Array,
   })
 
   UserSchema.set('timestamps', {

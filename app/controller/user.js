@@ -228,6 +228,24 @@ class UserController extends Controller {
     const res = await service.user.getPurchasedGoods(ctx.state.user.id)
     ctx.reply(res)
   }
+
+  /* GET
+   * 获取签到列表
+   */
+  async getCheckInList() {
+    const { ctx, service } = this
+    const res = await service.user.getCheckInList(ctx.state.user.id)
+    ctx.reply(res)
+  }
+
+  /* POST
+   * 签到
+   */
+  async checkIn() {
+    const { ctx, service } = this
+    const res = await service.user.checkIn(ctx.state.user.id, ctx.request.body.check_in)
+    ctx.reply(res)
+  }
 }
 
 module.exports = UserController
