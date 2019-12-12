@@ -83,11 +83,11 @@ module.exports = app => {
     contacts: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     carts: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     chats: Array,
-    fans: Array,
-    follows: Array,
-    collects: Array,
-    published_goods: Array,
-    bought_goods: Array,
+    fans: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    collects: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    bought_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
   })
 
   UserSchema.set('timestamps', {

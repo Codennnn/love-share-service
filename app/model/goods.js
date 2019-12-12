@@ -58,6 +58,11 @@ module.exports = app => {
       required: true,
       ref: 'User',
     },
+    status: {
+      type: Number,
+      enum: [ 0, 1, 2 ],
+      default: 0,
+    },
   })
 
   GoodsSchema.set('timestamps', {
