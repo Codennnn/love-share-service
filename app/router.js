@@ -2,7 +2,9 @@
 
 module.exports = app => {
   const { router, controller, middleware, io } = app
-  const { admin, user, goods, school, category, notice, chat, cart, common } = controller
+  const {
+    admin, user, goods, order, school, category, notice, chat, cart, common,
+  } = controller
 
   const auth1 = middleware.auth1() // 普通管理员权限
   const auth2 = middleware.auth2() // 超级管理员权限
@@ -49,6 +51,8 @@ module.exports = app => {
   router.get('/api/goods/detail', goods.getGoodsDetail)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
+  // 订单模块
+  router.post('/api/order/create', order.createOrder)
   // 学校模块
   router.get('/api/school/list', school.getSchoolList)
   // 通知模块
@@ -74,6 +78,8 @@ module.exports = app => {
   // 商品分类
   router.post('/api/category/add', auth1, category.addCategory)
   router.delete('/api/category/delete', auth1, category.deleteCategory)
+  // 订单模块
+  router.get('/api/order/list', order.getOrderList)
   // 学校模块
   router.post('/api/school/add', auth1, auth2, school.addSchool)
   router.delete('/api/school/delete', auth1, auth2, school.deleteSchool)
