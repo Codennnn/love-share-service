@@ -42,6 +42,7 @@ module.exports = app => {
 
   router.post('/api/cart/add', cart.addCartItem)
   router.delete('/api/cart/delete', cart.removeCartItem)
+  router.delete('/api/cart/clear', cart.clearCartList)
   router.get('/api/cart/list', cart.getCartList)
 
   // 商品模块
