@@ -55,6 +55,7 @@ module.exports = app => {
   // 订单模块
   router.post('/api/order/create', order.createOrder)
   router.get('/api/order/detail', order.geteOrderDetail)
+  router.get('/api/order/by_user', order.geteOrdersByUser)
   // 学校模块
   router.get('/api/school/list', school.getSchoolList)
   // 通知模块
