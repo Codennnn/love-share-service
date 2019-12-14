@@ -14,7 +14,7 @@ class OrderService extends Service {
     }
   }
 
-  async geteOrdersByUser(_id) {
+  geteOrdersByUser(_id) {
     return this.ctx.model.Order
       .find({ buyer: _id }, 'goods_list created_at')
       .populate({
@@ -24,6 +24,23 @@ class OrderService extends Service {
       })
       .then(list => {
         return { code: 2000, msg: '查询用户所有的订单', data: { list } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  geteOrderDetail(_id) {
+    return this.ctx.model.Order
+      .findOne({ _id })
+      .populate('buyer', 'nickname real_name phone')
+      .populate({
+        path: 'goods_list.goods',
+        select: 'img_list name price',
+        populate: { path: 'seller', select: 'nickname' },
+      })
+      .then(order_detail => {
+        return { code: 2000, msg: '查询订单详情', data: { order_detail } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

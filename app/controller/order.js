@@ -31,8 +31,13 @@ class OrderController extends Controller {
    */
   async geteOrderDetail() {
     const { ctx, service } = this
-    const res = await service.order.geteOrderDetail(ctx.request.body.name)
-    ctx.reply(res)
+    try {
+      ctx.validate({ order_id: 'string' }, ctx.request.query)
+      const res = await service.order.geteOrderDetail(ctx.request.query.order_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* GET
