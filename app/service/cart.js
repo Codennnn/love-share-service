@@ -43,7 +43,6 @@ class CartService extends Service {
   }
 
   clearCartList(_id, cart_id_list) {
-    console.log(cart_id_list)
     return this.ctx.model.User
       .updateOne(
         { _id },

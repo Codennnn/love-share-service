@@ -23,7 +23,6 @@ class CartController extends Controller {
    */
   async removeCartItem() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ cart_id: 'string' })
       const res = await service.cart.removeCartItem(ctx.state.user.id, ctx.request.body)
