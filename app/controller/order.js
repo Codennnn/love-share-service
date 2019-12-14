@@ -13,6 +13,15 @@ class OrderController extends Controller {
   }
 
   /* GET
+   * 获取订单详情
+   */
+  async geteOrderDetail() {
+    const { ctx, service } = this
+    const res = await service.school.geteOrderDetail(ctx.request.body.name)
+    ctx.reply(res)
+  }
+
+  /* GET
    * 获取订单列表
    */
   async getOrderList() {
