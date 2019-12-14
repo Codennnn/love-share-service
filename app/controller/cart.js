@@ -10,8 +10,8 @@ class CartController extends Controller {
     const { ctx, service } = this
 
     try {
-      ctx.validate({ goods_id: 'string' })
-      const res = await service.cart.addCartItem(ctx.state.user.id, ctx.request.body.goods_id)
+      ctx.validate({ amount: 'int', goods_id: 'string' })
+      const res = await service.cart.addCartItem(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -25,8 +25,25 @@ class CartController extends Controller {
     const { ctx, service } = this
 
     try {
-      ctx.validate({ goods_id: 'string' })
-      const res = await service.cart.removeCartItem(ctx.state.user.id, ctx.request.body.goods_id)
+      ctx.validate({ cart_id: 'string' })
+      const res = await service.cart.removeCartItem(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* DELETE
+   * 清空购物车
+   */
+  async clearCartList() {
+    const { ctx, service } = this
+
+    try {
+      ctx.validate({ cart_id_list: 'array' })
+      const id = ctx.state.user.id
+      const { cart_id_list } = ctx.request.body
+      const res = await service.cart.clearCartList(id, cart_id_list)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

@@ -81,7 +81,10 @@ module.exports = app => {
       match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
     },
     contacts: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    carts: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    carts: [ new Schema({
+      amount: { type: Number, required: true },
+      goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
+    }) ],
     chats: Array,
     fans: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],

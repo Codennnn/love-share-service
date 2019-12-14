@@ -3,12 +3,12 @@
 const Service = require('egg').Service
 
 class CartService extends Service {
-  addCartItem(_id, goods_id) {
+  addCartItem(_id, { amount, goods_id: goods }) {
     return this.ctx.model.User
       .updateOne(
         { _id },
         {
-          $addToSet: { carts: goods_id },
+          $addToSet: { carts: { amount, goods } },
         },
         { runValidators: true }
       )
@@ -23,12 +23,12 @@ class CartService extends Service {
       })
   }
 
-  removeCartItem(_id, goods_id) {
+  removeCartItem(_id, { cart_id }) {
     return this.ctx.model.User
       .updateOne(
         { _id },
         {
-          $pull: { carts: goods_id },
+          $pull: { carts: { _id: cart_id } },
         }
       )
       .then(({ nModified }) => {
@@ -42,11 +42,31 @@ class CartService extends Service {
       })
   }
 
+  clearCartList(_id, cart_id_list) {
+    console.log(cart_id_list)
+    return this.ctx.model.User
+      .updateOne(
+        { _id },
+        {
+          $pull: { carts: { _id: { $in: cart_id_list } } },
+        }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功清空购物车' }
+        }
+        return { code: 3000, msg: '清空购物车失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   async getCartList(_id) {
     return this.ctx.model.User
-      .findOne({ _id })
+      .findOne({ _id }, 'carts')
       .populate({
-        path: 'carts',
+        path: 'carts.goods',
         select: 'img_list goods_num name quantity delivery delivery_charge price time',
         populate: { path: 'seller', select: 'nickname real_name' },
       })

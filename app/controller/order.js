@@ -8,7 +8,9 @@ class OrderController extends Controller {
    */
   async createOrder() {
     const { ctx, service } = this
-    const res = await service.school.createOrder(ctx.request.body.name)
+    const id = ctx.state.user.id
+    const data = ctx.request.body
+    const res = await service.order.createOrder(id, data)
     ctx.reply(res)
   }
 
@@ -17,7 +19,7 @@ class OrderController extends Controller {
    */
   async geteOrderDetail() {
     const { ctx, service } = this
-    const res = await service.school.geteOrderDetail(ctx.request.body.name)
+    const res = await service.order.geteOrderDetail(ctx.request.body.name)
     ctx.reply(res)
   }
 
@@ -26,8 +28,16 @@ class OrderController extends Controller {
    */
   async getOrderList() {
     const { ctx, service } = this
-    const res = await service.school.getOrderList(ctx.request.body.name)
-    ctx.reply(res)
+    try {
+      ctx.validate({
+        page: 'int',
+        page_size: 'int',
+      }, ctx.request.query)
+      const res = await service.order.getOrderList(ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 }
 
