@@ -5,11 +5,11 @@ module.exports = app => {
   const Schema = mongoose.Schema
 
   const OrderSchema = new Schema({
-    name: {
-      type: String,
+    goods_list: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    buyer: {
+      type: Schema.Types.ObjectId,
       required: true,
-      unique: true,
-      trim: true,
+      ref: 'User',
     },
   })
 
