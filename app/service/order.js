@@ -3,19 +3,31 @@
 const Service = require('egg').Service
 
 class OrderService extends Service {
-  async createOrder(buyer, { goods_list }) {
-    const order = new this.ctx.model.Order({
-      goods_list,
-      buyer,
-    })
+  async createOrder(buyer, data) {
+    const order = new this.ctx.model.Order(data)
 
     try {
-      const res = await order.save()
-      console.log(res)
-      return { code: 2000, msg: '成功创建订单' }
+      const { _id } = await order.save()
+      return { code: 2000, msg: '成功创建订单', data: { order_id: _id } }
     } catch (err) {
       return { code: 5000, msg: err.message }
     }
+  }
+
+  async geteOrdersByUser(_id) {
+    return this.ctx.model.Order
+      .find({ buyer: _id }, 'goods_list created_at')
+      .populate({
+        path: 'goods_list.goods',
+        select: 'img_list name price',
+        populate: { path: 'seller', select: 'nickname' },
+      })
+      .then(list => {
+        return { code: 2000, msg: '查询用户所有的订单', data: { list } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
   }
 
   async getOrderList({ page, page_size: pageSize }) {
