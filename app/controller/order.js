@@ -10,8 +10,20 @@ class OrderController extends Controller {
     const { ctx, service } = this
     const id = ctx.state.user.id
     const data = ctx.request.body
-    const res = await service.order.createOrder(id, data)
-    ctx.reply(res)
+    try {
+      ctx.validate({
+        goods_list: 'array',
+        payment: 'string',
+        address: 'object',
+        total_price: 'number',
+        actual_price: 'number',
+      })
+      data.buyer = id
+      const res = await service.order.createOrder(id, data)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* GET
@@ -20,6 +32,15 @@ class OrderController extends Controller {
   async geteOrderDetail() {
     const { ctx, service } = this
     const res = await service.order.geteOrderDetail(ctx.request.body.name)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 获取订单详情
+   */
+  async geteOrdersByUser() {
+    const { ctx, service } = this
+    const res = await service.order.geteOrdersByUser(ctx.state.user.id)
     ctx.reply(res)
   }
 
