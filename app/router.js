@@ -53,6 +53,7 @@ module.exports = app => {
   router.delete('/api/goods/img/delete', goods.deleteImg)
   // 订单模块
   router.post('/api/order/create', order.createOrder)
+  router.get('/api/order/detail', order.geteOrderDetail)
   // 学校模块
   router.get('/api/school/list', school.getSchoolList)
   // 通知模块
