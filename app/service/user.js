@@ -385,7 +385,7 @@ class UserService extends Service {
     return this.ctx.model.Goods
       .find({ seller: _id }, 'img_list name price status created_at')
       .then(published_goods => {
-        return { code: 2000, data: { published_goods }, msg: '查询已发布的商品' }
+        return { code: 2000, msg: '查询已发布的商品', data: { published_goods } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
@@ -427,6 +427,18 @@ class UserService extends Service {
           return { code: 2000, msg: '签到成功' }
         }
         return { code: 3000, msg: '签到成功' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  getUserFollows(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, 'follows')
+      .populate('follows', 'avatar_url nickname introduction')
+      .then(({ follows }) => {
+        return { code: 2000, msg: '查询关注的人', data: { follows } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
