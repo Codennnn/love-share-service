@@ -41,7 +41,7 @@ class GoodsService extends Service {
     const [ total, goods_list ] = await Promise.all([
       this.ctx.model.Goods.estimatedDocumentCount(),
       this.ctx.model.Goods
-        .find({}, 'img_list name price')
+        .find({ status: 1 }, 'img_list name price')
         .skip((page - 1) * pageSize)
         .limit(pageSize),
     ])
@@ -139,6 +139,23 @@ class GoodsService extends Service {
       return { code: 5001, msg: '部分图片删除失败' }
     }
     return { code: 5000, msg: '所有图片删除失败' }
+  }
+
+  updateManyGoodsStatus(goodsIdList, status = 1) {
+    return this.ctx.model.Goods
+      .updateMany(
+        { _id: { $in: goodsIdList } },
+        { status }
+      )
+      .then(({ nModified }) => {
+        if (nModified === goodsIdList.length) {
+          return { code: 2000, msg: '全部商品的状态已更新' }
+        }
+        return { code: 3000, msg: '部分商品的状态更新失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
   }
 }
 

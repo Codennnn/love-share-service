@@ -4,9 +4,11 @@ const Service = require('egg').Service
 
 class OrderService extends Service {
   async createOrder(buyer, data) {
-    const order = new this.ctx.model.Order(data)
-
+    const { ctx, service } = this
+    const order = new ctx.model.Order(data)
+    const goodsIdList = data.goods_list.map(el => el.goods)
     try {
+      await service.goods.updateManyGoodsStatus(goodsIdList, 2)
       const { _id } = await order.save()
       return { code: 2000, msg: '成功创建订单', data: { order_id: _id } }
     } catch (err) {

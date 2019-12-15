@@ -60,8 +60,8 @@ module.exports = app => {
     },
     status: {
       type: Number,
-      enum: [ 0, 1, 2 ],
-      default: 0,
+      enum: [ 1, 2, 3 ], // 1-待出售，2-已出售
+      default: 1,
     },
   })
 

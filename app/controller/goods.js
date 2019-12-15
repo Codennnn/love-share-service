@@ -108,10 +108,24 @@ class GoodsController extends Controller {
    */
   async deleteImg() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ img_list: 'array' })
       const res = await service.goods.deleteImg(ctx.request.body.img_list)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 批量更新商品的状态
+   */
+  async updateManyGoodsStatus() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ goods_id_list: 'array', status: 'int' })
+      const { goods_id_list, status } = ctx.request.body
+      const res = await service.goods.updateManyGoodsStatus(goods_id_list, status)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
