@@ -52,6 +52,7 @@ module.exports = app => {
   router.get('/api/goods/detail', goods.getGoodsDetail)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
+  router.put('/api/goods/status/update_many', goods.updateManyGoodsStatus)
   // 订单模块
   router.post('/api/order/create', order.createOrder)
   router.get('/api/order/detail', order.geteOrderDetail)
