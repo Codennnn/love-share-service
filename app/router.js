@@ -33,6 +33,7 @@ module.exports = app => {
   router.get('/api/user/purchased_goods', user.getPurchasedGoods)
   router.get('/api/user/check_in_list', user.getCheckInList)
   router.post('/api/user/check_in', user.checkIn)
+  router.get('/api/user/follows', user.getUserFollows)
 
   router.post('/api/chat/contact/add', chat.addContact)
   router.delete('/api/chat/contact/delete', chat.deleteContact)
