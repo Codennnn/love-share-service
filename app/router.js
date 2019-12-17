@@ -46,6 +46,10 @@ module.exports = app => {
   router.delete('/api/cart/clear', cart.clearCartList)
   router.get('/api/cart/list', cart.getCartList)
 
+  router.get('/api/notice/unread', notice.getUnreadNotices)
+  router.post('/api/notice/add', notice.addNotice)
+  router.put('/api/notice/set_read', notice.setNoticeRead)
+
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
