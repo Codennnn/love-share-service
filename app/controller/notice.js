@@ -21,6 +21,20 @@ class NoticeController extends Controller {
     }
   }
 
+  /* DELETE
+   * 删除消息
+   */
+  async deleteNotice() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ notice_id: 'string' })
+      const res = await service.notice.deleteNotice(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* GET
    * 获取未读消息
    */
