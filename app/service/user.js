@@ -392,22 +392,6 @@ class UserService extends Service {
       })
   }
 
-  getPurchasedGoods() {
-    return {
-      code: 2000,
-      data: {
-        purchased_goods: [{
-          goods_id: '123456',
-          img_list: [ 'https://gitee.com/chinesee/images/raw/master/img/img_003.png' ],
-          name: '一加 OnePlus 7 Pro 2K+90Hz 流体屏 骁龙855旗舰 4800万超广角三摄 6GB+128GB 曜岩灰 全面屏拍照游戏手机',
-          price: '22.50',
-          time: 1563552000,
-          status: 0,
-        }],
-      },
-    }
-  }
-
   getCheckInList(_id) {
     return this.ctx.model.User
       .findOne({ _id }, '-_id check_in')

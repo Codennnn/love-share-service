@@ -42,12 +42,12 @@ class CartService extends Service {
       })
   }
 
-  clearCartList(_id, cart_id_list) {
+  clearCartList(_id, cartIdList) {
     return this.ctx.model.User
       .updateOne(
         { _id },
         {
-          $pull: { carts: { _id: { $in: cart_id_list } } },
+          $pull: { carts: { _id: { $in: cartIdList } } },
         }
       )
       .then(({ nModified }) => {
@@ -66,7 +66,7 @@ class CartService extends Service {
       .findOne({ _id }, 'carts')
       .populate({
         path: 'carts.goods',
-        select: 'img_list goods_num name quantity delivery delivery_charge price time',
+        select: 'img_list goods_num name quantity delivery delivery_charge price time created_at',
         populate: { path: 'seller', select: 'nickname real_name' },
       })
       .then(({ carts: cart_list }) => {
