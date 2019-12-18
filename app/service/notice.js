@@ -4,7 +4,9 @@ const Service = require('egg').Service
 
 class NoticeService extends Service {
   addNotice(_id, data) {
-    return this.ctx.model.User
+    const { ctx, app } = this
+    data.time = Date.now()
+    return ctx.model.User
       .updateOne(
         { _id },
         {
@@ -14,6 +16,7 @@ class NoticeService extends Service {
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
+          app.io.of('/').emit('receiveNotice', data)
           return { code: 2000, msg: '成功添加一条通知' }
         }
       })

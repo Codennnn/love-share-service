@@ -92,6 +92,7 @@ module.exports = app => {
       content: { type: String },
       type: { type: Number, enum: [ 1, 2, 3, 4 ] },
       is_read: { type: Boolean, default: false },
+      time: Number,
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     }) ],
