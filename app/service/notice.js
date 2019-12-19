@@ -16,7 +16,7 @@ class NoticeService extends Service {
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
-          app.io.of('/').emit('receiveNotice', data)
+          app.io.of('/').emit(`receiveNotice${_id}`, data)
           return { code: 2000, msg: '成功添加一条通知' }
         }
       })
@@ -83,6 +83,21 @@ class NoticeService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
+  }
+
+  async setAllNoticesRead(_id, { notice_id_list: list }) {
+    const res = await Promise.all(list.map(id => this.ctx.model.User.updateOne(
+      { _id, 'notices._id': id },
+      {
+        $set: { 'notices.$.is_read': true },
+      },
+      { runValidators: true }
+    )))
+
+    if (res.every(({ nModified }) => nModified === 1)) {
+      return { code: 2000, msg: '全部通知设为已读' }
+    }
+    return { code: 3000, msg: '全部通知设为已读失败' }
   }
 }
 

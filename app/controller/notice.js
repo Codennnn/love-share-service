@@ -53,7 +53,7 @@ class NoticeController extends Controller {
     ctx.reply(res)
   }
 
-  /* GET
+  /* PUT
    * 获取通知列表
    */
   async setNoticeRead() {
@@ -62,6 +62,20 @@ class NoticeController extends Controller {
       ctx.validate({ notice_id: 'string' })
       const { notice_id } = ctx.request.body
       const res = await service.notice.setNoticeRead(ctx.state.user.id, notice_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 获取通知列表
+   */
+  async setAllNoticesRead() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ notice_id_list: 'array' })
+      const res = await service.notice.setAllNoticesRead(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
