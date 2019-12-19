@@ -35,21 +35,26 @@ module.exports = app => {
   router.post('/api/user/check_in', user.checkIn)
   router.get('/api/user/follows', user.getUserFollows)
 
+  // 聊天模块
   router.post('/api/chat/contact/add', chat.addContact)
   router.delete('/api/chat/contact/delete', chat.deleteContact)
   router.get('/api/chat/contact/list', chat.getContactList)
   router.get('/api/chat/contact_info', chat.getContactInfo)
   router.get('/api/chat/chat_data', chat.getChatData)
 
+  // 购物车模块
   router.post('/api/cart/add', cart.addCartItem)
   router.delete('/api/cart/delete', cart.removeCartItem)
   router.delete('/api/cart/clear', cart.clearCartList)
   router.get('/api/cart/list', cart.getCartList)
 
+  // 通知模块
+  router.get('/api/notice/list', notice.getNoticeList)
   router.get('/api/notice/unread', notice.getUnreadNotices)
   router.post('/api/notice/add', notice.addNotice)
   router.delete('/api/notice/delete', notice.deleteNotice)
   router.put('/api/notice/set_read', notice.setNoticeRead)
+  router.put('/api/notice/set_all_read', notice.setAllNoticesRead)
 
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
@@ -65,8 +70,6 @@ module.exports = app => {
   router.get('/api/order/by_user', order.geteOrdersByUser)
   // 学校模块
   router.get('/api/school/list', school.getSchoolList)
-  // 通知模块
-  router.get('/api/notice/list', notice.getNoticeList)
   // 公共模块
   router.post('/api/common/check_phone_number', common.checkPhoneNumber)
   router.post('/api/common/verification_code', common.getVerificationCode)
