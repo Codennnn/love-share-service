@@ -43,6 +43,24 @@ class NoticeService extends Service {
       })
   }
 
+  deleteManyNotices(_id, { notice_id_list }) {
+    return this.ctx.model.User
+      .updateOne(
+        { _id },
+        {
+          $pull: { notices: { _id: { $in: notice_id_list } } },
+        }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功删除多条通知' }
+        }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   getUnreadNotices(_id) {
     return this.ctx.model.User
       .findOne({ _id }, 'notices')

@@ -35,6 +35,20 @@ class NoticeController extends Controller {
     }
   }
 
+  /* DELETE
+   * 删除消息
+   */
+  async deleteManyNotices() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ notice_id_list: 'array' })
+      const res = await service.notice.deleteManyNotices(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* GET
    * 获取未读消息
    */
@@ -54,7 +68,7 @@ class NoticeController extends Controller {
   }
 
   /* PUT
-   * 获取通知列表
+   * 通知设为已读
    */
   async setNoticeRead() {
     const { ctx, service } = this
@@ -69,7 +83,7 @@ class NoticeController extends Controller {
   }
 
   /* PUT
-   * 获取通知列表
+   * 全部通知设为已读
    */
   async setAllNoticesRead() {
     const { ctx, service } = this
