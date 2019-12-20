@@ -53,6 +53,7 @@ module.exports = app => {
   router.get('/api/notice/unread', notice.getUnreadNotices)
   router.post('/api/notice/add', notice.addNotice)
   router.delete('/api/notice/delete', notice.deleteNotice)
+  router.delete('/api/notice/delete_many', notice.deleteManyNotices)
   router.put('/api/notice/set_read', notice.setNoticeRead)
   router.put('/api/notice/set_all_read', notice.setAllNoticesRead)
 
