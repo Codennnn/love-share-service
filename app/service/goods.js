@@ -78,6 +78,11 @@ class GoodsService extends Service {
         select: 'avatar_url nickname school gender credit_value fans published_goods',
         populate: { path: 'school', select: '-_id name' },
       })
+      .populate({
+        path: 'comments.sender',
+        select: 'avatar_url nickname',
+        populate: { path: 'replies', select: '-_id name' },
+      })
       .then(goods_detail => {
         return { code: 2000, msg: '查询商品详情', data: { goods_detail } }
       })
@@ -152,6 +157,24 @@ class GoodsService extends Service {
           return { code: 2000, msg: '全部商品的状态已更新' }
         }
         return { code: 3000, msg: '部分商品的状态更新失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  postComment(_id, { goods_id, content }) {
+    return this.ctx.model.Goods
+      .updateOne(
+        { _id: goods_id },
+        { $push: { comments: { content, sender: _id } } },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '已成功发送一条留言' }
+        }
+        return { code: 3000, msg: '留言失败' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
