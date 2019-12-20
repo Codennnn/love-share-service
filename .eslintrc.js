@@ -4,6 +4,7 @@ module.exports = {
   rules: {
     'generator-star-spacing': 'off',
     'babel/generator-star-spacing': 'off',
-    semi: ["error", "never"]
+    'array-bracket-spacing': ["error", "never"],
+    semi: ["error", "never"],
   }
 }
