@@ -5,7 +5,7 @@ const Service = require('egg').Service
 class ChatService extends Service {
   async addContact(_id, contact_id) {
     const count = await this.ctx.model.User.countDocuments({
-      _id, contacts: { $in: [ contact_id ] },
+      _id, contacts: { $in: [contact_id] },
     })
 
     if (count >= 1) {

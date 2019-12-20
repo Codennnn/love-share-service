@@ -32,7 +32,7 @@ class UserService extends Service {
   }
 
   async createUser(data) {
-    const { phone, password, nickname, real_name, school, roles = [ 'user' ] } = data
+    const { phone, password, nickname, real_name, school, roles = ['user'] } = data
     const hashPassword = await this.ctx.genHash(password)
     const user = new this.ctx.model.User({
       phone,
@@ -75,7 +75,7 @@ class UserService extends Service {
   async getUserList(data) {
     const page = Number(data.page)
     const pageSize = Number(data.pageSize)
-    const [ total, user_list ] = await Promise.all([
+    const [total, user_list] = await Promise.all([
       this.ctx.model.User.estimatedDocumentCount(),
       this.ctx.model.User
         .find({}, '_id avatar_url credit_value share_value nickname created_at')
@@ -115,7 +115,7 @@ class UserService extends Service {
         },
       },
     ])
-      .then(([ res ]) => {
+      .then(([res]) => {
         return { code: 2000, msg: '获取用户关注、粉丝、收藏的数量信息', data: { info_num: res } }
       })
       .catch(err => {
@@ -151,7 +151,7 @@ class UserService extends Service {
         },
       },
     ])
-      .then(([ user_detail ]) => {
+      .then(([user_detail]) => {
         user_detail.school = user_detail.school[0].name
         return { code: 2000, msg: '获取用户详细信息', data: { user_detail } }
       })

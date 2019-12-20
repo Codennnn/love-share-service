@@ -34,7 +34,7 @@ module.exports = app => {
     roles: {
       type: Array,
       required: true,
-      default: [ 'admin' ],
+      default: ['admin'],
     },
     gender: {
       type: String,

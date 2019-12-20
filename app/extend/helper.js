@@ -2,7 +2,7 @@
 
 module.exports = {
   parseMsg(message) {
-    const [ target, client ] = [ message.client, message.target ]
+    const [target, client] = [message.client, message.target]
     return {
       sender: Object.assign({}, message, {
         time: Date.now(),

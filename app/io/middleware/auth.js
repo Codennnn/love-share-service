@@ -11,7 +11,7 @@ module.exports = () => {
 
     // 用户信息
     const { room, userId } = query
-    const rooms = [ room ]
+    const rooms = [room]
 
     logger.debug('#user_info', id, room, userId)
 

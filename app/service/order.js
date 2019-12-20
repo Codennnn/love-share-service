@@ -50,7 +50,7 @@ class OrderService extends Service {
   }
 
   async getOrderList({ page, page_size: pageSize }) {
-    const [ total, order_list ] = await Promise.all([
+    const [total, order_list] = await Promise.all([
       this.ctx.model.Order.estimatedDocumentCount(),
       this.ctx.model.Order
         .find({})

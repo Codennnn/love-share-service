@@ -34,7 +34,7 @@ module.exports = app => {
     },
     delivery: {
       type: String,
-      enum: [ '1', '2', '3' ],
+      enum: ['1', '2', '3'],
       default: '1',
     },
     delivery_charge: {
@@ -58,9 +58,15 @@ module.exports = app => {
       required: true,
       ref: 'User',
     },
+    comments: [new Schema({
+      content: { type: String, maxlength: 300 },
+      time: Number,
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    })],
     status: {
       type: Number,
-      enum: [ 1, 2, 3 ], // 1-待出售，2-已出售
+      enum: [1, 2, 3], // 1-待出售，2-已出售
       default: 1,
     },
   })

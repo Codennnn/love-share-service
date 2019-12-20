@@ -41,7 +41,7 @@ module.exports = app => {
     roles: {
       type: Array,
       required: true,
-      default: [ 'user' ],
+      default: ['user'],
     },
     gender: {
       type: String,
@@ -73,7 +73,7 @@ module.exports = app => {
       type: {
         type: String,
         required: true,
-        enum: [ '学校', '家庭', '公司' ],
+        enum: ['学校', '家庭', '公司'],
       },
     }],
     email: {
@@ -81,21 +81,21 @@ module.exports = app => {
       match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
     },
     contacts: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    carts: [ new Schema({
+    carts: [new Schema({
       amount: { type: Number, required: true },
       goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    }) ],
-    notices: [ new Schema({
+    })],
+    notices: [new Schema({
       title: { type: String, required: true, maxlength: 30 },
       content: { type: String },
-      type: { type: Number, enum: [ 1, 2, 3, 4 ] },
+      type: { type: Number, enum: [1, 2, 3, 4] },
       is_read: { type: Boolean, default: false },
       time: Number,
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    }) ],
+    })],
     chats: Array,
     fans: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],

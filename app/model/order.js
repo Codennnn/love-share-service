@@ -5,10 +5,10 @@ module.exports = app => {
   const Schema = mongoose.Schema
 
   const OrderSchema = new Schema({
-    goods_list: [ new Schema({
+    goods_list: [new Schema({
       amount: { type: Number, required: true },
       goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
-    }) ],
+    })],
     payment: { type: String, required: true },
     address: { type: Object, required: true },
     total_price: { type: Number, required: true },
@@ -20,7 +20,7 @@ module.exports = app => {
     },
     status: {
       type: Number,
-      enum: [ 1, 2, 3 ],
+      enum: [1, 2, 3],
       default: 1,
     },
   })
