@@ -34,20 +34,17 @@ module.exports = app => {
   router.get('/api/user/check_in_list', user.getCheckInList)
   router.post('/api/user/check_in', user.checkIn)
   router.get('/api/user/follows', user.getUserFollows)
-
   // 聊天模块
   router.post('/api/chat/contact/add', chat.addContact)
   router.delete('/api/chat/contact/delete', chat.deleteContact)
   router.get('/api/chat/contact/list', chat.getContactList)
   router.get('/api/chat/contact_info', chat.getContactInfo)
   router.get('/api/chat/chat_data', chat.getChatData)
-
   // 购物车模块
   router.post('/api/cart/add', cart.addCartItem)
   router.delete('/api/cart/delete', cart.removeCartItem)
   router.delete('/api/cart/clear', cart.clearCartList)
   router.get('/api/cart/list', cart.getCartList)
-
   // 通知模块
   router.get('/api/notice/list', notice.getNoticeList)
   router.get('/api/notice/unread', notice.getUnreadNotices)
@@ -56,7 +53,6 @@ module.exports = app => {
   router.delete('/api/notice/delete_many', notice.deleteManyNotices)
   router.put('/api/notice/set_read', notice.setNoticeRead)
   router.put('/api/notice/set_all_read', notice.setAllNoticesRead)
-
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
@@ -65,6 +61,7 @@ module.exports = app => {
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
   router.put('/api/goods/status/update_many', goods.updateManyGoodsStatus)
+  router.post('/api/goods/comment/post', goods.postComment)
   // 订单模块
   router.post('/api/order/create', order.createOrder)
   router.get('/api/order/detail', order.geteOrderDetail)
