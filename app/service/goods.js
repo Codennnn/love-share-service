@@ -81,7 +81,14 @@ class GoodsService extends Service {
       .populate({
         path: 'comments.sender',
         select: 'avatar_url nickname',
-        populate: { path: 'replies', select: '-_id name' },
+      })
+      .populate({
+        path: 'comments.replies.sender',
+        select: 'nickname',
+      })
+      .populate({
+        path: 'comments.replies.at',
+        select: 'nickname',
       })
       .then(goods_detail => {
         return { code: 2000, msg: '查询商品详情', data: { goods_detail } }
@@ -175,6 +182,26 @@ class GoodsService extends Service {
           return { code: 2000, msg: '已成功发送一条留言' }
         }
         return { code: 3000, msg: '留言失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  replyOthers(_id, { goods_id, comment_id, at, content }) {
+    return this.ctx.model.Goods
+      .updateOne(
+        { _id: goods_id, 'comments._id': comment_id },
+        {
+          $push: { 'comments.$.replies': { sender: _id, at, content } },
+        },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '已成功回复一条留言' }
+        }
+        return { code: 3000, msg: '回复留言失败' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

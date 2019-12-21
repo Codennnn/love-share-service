@@ -59,13 +59,27 @@ module.exports = app => {
       ref: 'User',
     },
     comments: [new Schema({
-      content: { type: String, maxlength: 50 },
+      content: { type: String, minlength: 1, maxlength: 50 },
       sender: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'User',
       },
-      replies: Array,
+      replies: [new Schema({
+        sender: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: 'User',
+        },
+        at: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: 'User',
+        },
+        content: { type: String, minlength: 1, maxlength: 50 },
+      }, {
+        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+      })],
       time: Number,
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

@@ -145,6 +145,25 @@ class GoodsController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* POST
+   * 回复别人
+   */
+  async replyOthers() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        goods_id: 'string',
+        comment_id: 'string',
+        at: 'string',
+        content: { type: 'string', min: 1, max: 50 },
+      })
+      const res = await service.goods.replyOthers(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = GoodsController
