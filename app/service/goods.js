@@ -71,25 +71,8 @@ class GoodsService extends Service {
 
   getGoodsDetail(_id) {
     return this.ctx.model.Goods
-      .findOne({ _id })
+      .findOne({ _id }, '-comments')
       .populate('category', '-_id name')
-      .populate({
-        path: 'seller',
-        select: 'avatar_url nickname school gender credit_value fans published_goods',
-        populate: { path: 'school', select: '-_id name' },
-      })
-      .populate({
-        path: 'comments.sender',
-        select: 'avatar_url nickname',
-      })
-      .populate({
-        path: 'comments.replies.sender',
-        select: 'nickname',
-      })
-      .populate({
-        path: 'comments.replies.at',
-        select: 'nickname',
-      })
       .then(goods_detail => {
         return { code: 2000, msg: '查询商品详情', data: { goods_detail } }
       })
@@ -170,6 +153,45 @@ class GoodsService extends Service {
       })
   }
 
+  getGoodsSeller(_id) {
+    return this.ctx.model.Goods
+      .findOne({ _id }, 'seller')
+      .populate({
+        path: 'seller',
+        select: 'avatar_url nickname school gender credit_value fans published_goods',
+        populate: { path: 'school', select: '-_id name' },
+      })
+      .then(({ seller }) => {
+        return { code: 2000, msg: '获取商品卖家信息', data: { seller } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  getGoodsComments(_id) {
+    return this.ctx.model.Goods
+      .findOne({ _id }, 'comments')
+      .populate({
+        path: 'comments.sender',
+        select: 'avatar_url nickname',
+      })
+      .populate({
+        path: 'comments.replies.sender',
+        select: 'nickname',
+      })
+      .populate({
+        path: 'comments.replies.at',
+        select: 'nickname',
+      })
+      .then(({ comments }) => {
+        return { code: 2000, msg: '获取商品留言', data: { comments } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   postComment(_id, { goods_id, content }) {
     return this.ctx.model.Goods
       .updateOne(
@@ -188,7 +210,7 @@ class GoodsService extends Service {
       })
   }
 
-  replyOthers(_id, { goods_id, comment_id, at, content }) {
+  replyComment(_id, { goods_id, comment_id, at, content }) {
     return this.ctx.model.Goods
       .updateOne(
         { _id: goods_id, 'comments._id': comment_id },

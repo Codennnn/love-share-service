@@ -132,6 +132,34 @@ class GoodsController extends Controller {
     }
   }
 
+  /* GET
+   * 获取商品的卖家信息
+   */
+  async getGoodsSeller() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ goods_id: 'string' }, ctx.request.query)
+      const res = await service.goods.getGoodsSeller(ctx.request.query.goods_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取商品的评论
+   */
+  async getGoodsComments() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ goods_id: 'string' }, ctx.request.query)
+      const res = await service.goods.getGoodsComments(ctx.request.query.goods_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* POST
    * 发表评论
    */
@@ -149,7 +177,7 @@ class GoodsController extends Controller {
   /* POST
    * 回复别人
    */
-  async replyOthers() {
+  async replyComment() {
     const { ctx, service } = this
     try {
       ctx.validate({
@@ -158,7 +186,7 @@ class GoodsController extends Controller {
         at: 'string',
         content: { type: 'string', min: 1, max: 50 },
       })
-      const res = await service.goods.replyOthers(ctx.state.user.id, ctx.request.body)
+      const res = await service.goods.replyComment(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
