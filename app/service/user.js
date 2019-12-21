@@ -328,38 +328,44 @@ class UserService extends Service {
       })
   }
 
-  subscribe(_id, { user_id }) {
-    return this.ctx.model.User
-      .updateOne(
-        { _id },
-        { $addToSet: { follows: user_id } }
-      )
-      .then(({ nModified }) => {
-        if (nModified === 1) {
-          return { code: 2000, msg: '关注成功' }
-        }
-        return { code: 3000, msg: '关注失败' }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+  async subscribe(_id, { user_id }) {
+    const res = await Promise.all([
+      this.ctx.model.User
+        .updateOne(
+          { _id },
+          { $addToSet: { follows: user_id } }
+        ),
+      this.ctx.model.User
+        .updateOne(
+          { _id: user_id },
+          { $addToSet: { fans: _id } }
+        ),
+    ])
+
+    if (res.every(el => el.nModified === 1)) {
+      return { code: 2000, msg: '关注成功' }
+    }
+    return { code: 3000, msg: '关注失败' }
   }
 
-  unsubscribe(_id, { user_id }) {
-    return this.ctx.model.User
-      .updateOne(
-        { _id },
-        { $pull: { follows: user_id } }
-      )
-      .then(({ nModified }) => {
-        if (nModified === 1) {
-          return { code: 2000, msg: '取消关注成功' }
-        }
-        return { code: 3000, msg: '取消关注失败' }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+  async unsubscribe(_id, { user_id }) {
+    const res = await Promise.all([
+      this.ctx.model.User
+        .updateOne(
+          { _id },
+          { $pull: { follows: user_id } }
+        ),
+      this.ctx.model.User
+        .updateOne(
+          { _id: user_id },
+          { $pull: { fans: _id } }
+        ),
+    ])
+
+    if (res.every(el => el.nModified === 1)) {
+      return { code: 2000, msg: '取消关注成功' }
+    }
+    return { code: 3000, msg: '取消关注失败' }
   }
 
   async resetPassword({ phone, password }) {
@@ -423,6 +429,18 @@ class UserService extends Service {
       .populate('follows', 'avatar_url nickname introduction')
       .then(({ follows }) => {
         return { code: 2000, msg: '查询关注的人', data: { follows } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  getUserFans(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, 'fans')
+      .populate('fans', 'avatar_url nickname introduction')
+      .then(({ fans }) => {
+        return { code: 2000, msg: '查询关注的人', data: { fans } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
