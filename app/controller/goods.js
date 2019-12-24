@@ -82,7 +82,6 @@ class GoodsController extends Controller {
    */
   async getGoodsDetail() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ goods_id: 'string' }, ctx.request.query)
       const res = await service.goods.getGoodsDetail(ctx.request.query.goods_id)
@@ -187,6 +186,20 @@ class GoodsController extends Controller {
         content: { type: 'string', min: 1, max: 50 },
       })
       const res = await service.goods.replyComment(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 是否收藏了该商品
+   */
+  async isGoodsCollected() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ goods_id: 'string' }, ctx.request.query)
+      const res = await service.goods.isGoodsCollected(ctx.state.user.id, ctx.request.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

@@ -229,6 +229,15 @@ class GoodsService extends Service {
         return { code: 5000, msg: err.message }
       })
   }
+
+  isGoodsCollected(_id, { goods_id }) {
+    return this.ctx.model.User
+      .findOne({ _id }, 'collections')
+      .then(({ collections }) => {
+        const is_collected = collections.some(el => String(el.goods) === goods_id)
+        return { code: 2000, msg: '查询商品详情', data: { is_collected } }
+      })
+  }
 }
 
 module.exports = GoodsService

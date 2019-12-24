@@ -99,7 +99,11 @@ module.exports = app => {
     chats: Array,
     fans: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    collects: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    collections: [new Schema({
+      goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    })],
     published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     bought_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     check_in: Array,
