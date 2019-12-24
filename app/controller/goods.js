@@ -198,8 +198,8 @@ class GoodsController extends Controller {
   async isGoodsCollected() {
     const { ctx, service } = this
     try {
-      ctx.validate({ goods_id: 'string' }, ctx.request.query)
-      const res = await service.goods.isGoodsCollected(ctx.state.user.id, ctx.request.query)
+      ctx.validate({ goods_id: 'string' })
+      const res = await service.goods.isGoodsCollected(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

@@ -251,6 +251,21 @@ class UserController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* GET
+   * 移除用户收藏的商品
+   */
+  async isUserFollowed() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ user_id: 'string' })
+      const id = ctx.state.user.id
+      const res = await service.user.isUserFollowed(id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = UserController

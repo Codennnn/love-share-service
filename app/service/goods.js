@@ -235,7 +235,7 @@ class GoodsService extends Service {
       .findOne({ _id }, 'collections')
       .then(({ collections }) => {
         const is_collected = collections.some(el => String(el.goods) === goods_id)
-        return { code: 2000, msg: '查询商品详情', data: { is_collected } }
+        return { code: 2000, msg: '是否收藏了该商品', data: { is_collected } }
       })
   }
 }

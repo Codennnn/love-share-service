@@ -23,6 +23,7 @@ module.exports = app => {
   router.get('/api/user/detail', user.getUserDetail)
   router.put('/api/user/modify', user.modifyUser)
   router.put('/api/user/replace_avatar', user.replaceAvatar)
+  router.post('/api/user/is_followed', user.isUserFollowed)
 
   router.get('/api/user/address_list', address.getAddressList)
   router.post('/api/user/address/add', address.addAddress)
@@ -83,7 +84,7 @@ module.exports = app => {
   router.post('/api/goods/comment/post', goods.postComment)
   router.post('/api/goods/comment/reply', goods.replyComment)
 
-  router.get('/api/goods/is_collected', goods.isGoodsCollected)
+  router.post('/api/goods/is_collected', goods.isGoodsCollected)
 
   // 订单模块
   router.post('/api/order/create', order.createOrder)

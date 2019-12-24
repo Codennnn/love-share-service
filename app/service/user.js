@@ -92,7 +92,7 @@ class UserService extends Service {
 
   getUserInfo(_id) {
     return this.ctx.model.User
-      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles fans follows collects')
+      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq roles')
       .populate('school', '-_id name')
       .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
@@ -237,12 +237,12 @@ class UserService extends Service {
       this.ctx.model.User
         .updateOne(
           { _id },
-          { $addToSet: { follows: user_id } }
+          { $addToSet: { follows: { user: user_id } } }
         ),
       this.ctx.model.User
         .updateOne(
           { _id: user_id },
-          { $addToSet: { fans: _id } }
+          { $addToSet: { fans: { user: _id } } }
         ),
     ])
 
@@ -257,12 +257,12 @@ class UserService extends Service {
       this.ctx.model.User
         .updateOne(
           { _id },
-          { $pull: { follows: user_id } }
+          { $pull: { follows: { user: user_id } } }
         ),
       this.ctx.model.User
         .updateOne(
           { _id: user_id },
-          { $pull: { fans: _id } }
+          { $pull: { fans: { user: _id } } }
         ),
     ])
 
@@ -330,7 +330,7 @@ class UserService extends Service {
   getUserFollows(_id) {
     return this.ctx.model.User
       .findOne({ _id }, 'follows')
-      .populate('follows', 'avatar_url nickname introduction')
+      .populate('follows.user', 'avatar_url nickname introduction')
       .then(({ follows }) => {
         return { code: 2000, msg: '查询关注的人', data: { follows } }
       })
@@ -402,6 +402,15 @@ class UserService extends Service {
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
+      })
+  }
+
+  isUserFollowed(_id, { user_id }) {
+    return this.ctx.model.User
+      .findOne({ _id }, 'follows')
+      .then(({ follows = [] }) => {
+        const is_followed = follows.some(el => String(el.user) === user_id)
+        return { code: 2000, msg: '是否关注了此用户', data: { is_followed } }
       })
   }
 }
