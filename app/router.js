@@ -95,6 +95,7 @@ module.exports = app => {
   router.get('/api/school/list', school.getSchoolList)
 
   // 公共模块
+  router.post('/api/common/check_nickname', common.checkNickname)
   router.post('/api/common/check_phone_number', common.checkPhoneNumber)
   router.post('/api/common/verification_code', common.getVerificationCode)
   router.get('/api/category/list', category.getCategoryList)

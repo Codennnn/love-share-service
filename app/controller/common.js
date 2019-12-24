@@ -13,15 +13,22 @@ class CommonController extends Controller {
   }
 
   /* POST
+   * 检测手机号是否已被注册
+   */
+  async checkNickname() {
+    const { ctx, service } = this
+    const res = await service.common.checkNickname(ctx.request.body.nickname)
+    ctx.reply(res)
+  }
+
+  /* POST
    * 获取用户注册验证码
    */
   async getVerificationCode() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ phone: 'string' })
-      const { phone } = ctx.request.body
-      const res = await service.common.getVerificationCode(phone)
+      const res = await service.common.getVerificationCode(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

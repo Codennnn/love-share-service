@@ -342,7 +342,7 @@ class UserService extends Service {
   getUserFans(_id) {
     return this.ctx.model.User
       .findOne({ _id }, 'fans')
-      .populate('fans', 'avatar_url nickname introduction')
+      .populate('fans.user', 'avatar_url nickname introduction')
       .then(({ fans }) => {
         return { code: 2000, msg: '查询关注的人', data: { fans } }
       })

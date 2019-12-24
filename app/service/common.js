@@ -11,18 +11,30 @@ class CommonService extends Service {
     return { code: 2000, msg: '手机号可使用' }
   }
 
-  async getVerificationCode() {
-    const code = await new Promise(resolve => {
-      setTimeout(() => {
-        const code = Math
-          .random()
-          .toFixed(6)
-          .toString()
-          .slice(-6)
-        resolve(code)
-      }, 200)
-    })
-    return { code: 2000, msg: '获取验证码', data: { code } }
+  async checkNickname(nickname) {
+    const count = await this.ctx.model.User.countDocuments({ nickname })
+    if (count >= 1) {
+      return { code: 4003, msg: '昵称已被使用' }
+    }
+    return { code: 2000, msg: '昵称可使用' }
+  }
+
+  async getVerificationCode(_id, { phone }) {
+    const res = await this.ctx.model.User.findOne({ _id }, 'phone')
+    if (res.phone === phone) {
+      const code = await new Promise(resolve => {
+        setTimeout(() => {
+          const code = Math
+            .random()
+            .toFixed(6)
+            .toString()
+            .slice(-6)
+          resolve(code)
+        }, 200)
+      })
+      return { code: 2000, msg: '获取验证码', data: { code } }
+    }
+    return { code: 3000, msg: '手机号码错误' }
   }
 }
 

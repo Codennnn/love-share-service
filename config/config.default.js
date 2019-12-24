@@ -86,8 +86,8 @@ module.exports = appInfo => {
         '/api/user/reset_password',
         '/api/school/list',
         '/api/category/list',
+        '/api/common/check_nickname',
         '/api/common/check_phone_number',
-        '/api/common/verification_code',
       ],
     },
   }
