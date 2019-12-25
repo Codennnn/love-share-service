@@ -37,6 +37,20 @@ class GoodsService extends Service {
     }
   }
 
+  async updateGoods(_id, data) {
+    data.seller = _id
+    return this.ctx.model.Goods
+      .updateOne({ _id: data._id }, data)
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功更新商品信息' }
+        }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   async getRecommendGoodsList(_id, { page, page_size: pageSize }) {
     const [total, goods_list] = await Promise.all([
       this.ctx.model.Goods.estimatedDocumentCount(),

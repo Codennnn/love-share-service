@@ -12,7 +12,7 @@ class NoticeController extends Controller {
       ctx.validate({
         title: 'string',
         content: 'string',
-        type: 'int',
+        type: [1, 2, 3, 4],
       })
       const res = await service.notice.addNotice(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)

@@ -293,7 +293,7 @@ class UserService extends Service {
 
   getPublishedGoods(_id) {
     return this.ctx.model.Goods
-      .find({ seller: _id }, 'img_list name price status created_at')
+      .find({ seller: _id }, 'img_list name price status created_at updated_at')
       .then(published_goods => {
         return { code: 2000, msg: '查询已发布的商品', data: { published_goods } }
       })

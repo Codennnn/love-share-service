@@ -72,6 +72,7 @@ module.exports = app => {
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
+  router.put('/api/goods/update', goods.updateGoods)
 
   router.get('/api/goods/detail', goods.getGoodsDetail)
   router.get('/api/goods/list/recommend', goods.getRecommendGoodsList)

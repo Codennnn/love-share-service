@@ -27,8 +27,8 @@ class GoodsController extends Controller {
     }
   }
 
-  /* GET
-   * 创建商品
+  /* DELETE
+   * 删除商品
    */
   async deleteGoods() {
     const { ctx, service } = this
@@ -36,6 +36,29 @@ class GoodsController extends Controller {
     try {
       ctx.validate({ goods_id: 'string' })
       const res = await service.goods.deleteGoods(ctx.request.body.goods_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 更新商品信息
+   */
+  async updateGoods() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        img_list: { type: 'array', itemType: 'string' },
+        price: 'number',
+        original_price: 'number',
+        quantity: 'number',
+        delivery: 'string',
+        description: { type: 'string', max: 400, required: false },
+        can_bargain: 'boolean',
+        can_return: 'boolean',
+      })
+      const res = await service.goods.updateGoods(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
