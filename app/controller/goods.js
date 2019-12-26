@@ -58,7 +58,7 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     try {
       ctx.validate({
-        goods_list: { type: 'array', itemType: 'string' },
+        goods_id_list: { type: 'array', itemType: 'string' },
       })
       const res = await service.goods.updateManyGoods(ctx.request.body)
       ctx.reply(res)

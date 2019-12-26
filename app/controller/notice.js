@@ -4,7 +4,7 @@ const Controller = require('egg').Controller
 
 class NoticeController extends Controller {
   /* POST
-   * 获取未读消息
+   * 添加消息
    */
   async addNotice() {
     const { ctx, service } = this
