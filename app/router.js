@@ -72,13 +72,13 @@ module.exports = app => {
   // 商品模块
   router.post('/api/goods/create', goods.createGoods)
   router.delete('/api/goods/delete', goods.deleteGoods)
-  router.put('/api/goods/update', goods.updateGoods)
+  router.put('/api/goods/edit', goods.editGoods)
 
   router.get('/api/goods/detail', goods.getGoodsDetail)
   router.get('/api/goods/list/recommend', goods.getRecommendGoodsList)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
-  router.put('/api/goods/status/update_many', goods.updateManyGoodsStatus)
+  router.put('/api/goods/status/update_many', goods.updateManyGoods)
   router.get('/api/goods/seller', goods.getGoodsSeller)
 
   router.get('/api/goods/comments', goods.getGoodsComments)
@@ -89,6 +89,7 @@ module.exports = app => {
 
   // 订单模块
   router.post('/api/order/create', order.createOrder)
+  router.delete('/api/order/delete', order.deleteOrder)
   router.get('/api/order/detail', order.geteOrderDetail)
   router.get('/api/order/by_user', order.geteOrdersByUser)
 
@@ -108,17 +109,21 @@ module.exports = app => {
   // 管理员模块
   router.post('/api/admin/login', admin.login)
   router.post('/api/admin/create', admin.createAdmin)
+
   // 用户模块
   router.get('/api/user/list', auth1, user.getUserList)
   router.put('/api/user/update', auth1, auth2, user.updateUser)
   router.delete('/api/user/delete', auth1, auth2, user.deleteUser)
+
   // 商品模块
   router.get('/api/goods/list', auth1, goods.getGoodsList)
-  // 商品分类
   router.post('/api/category/add', auth1, category.addCategory)
   router.delete('/api/category/delete', auth1, category.deleteCategory)
+  router.put('/api/goods/update', goods.updateGoods)
+
   // 订单模块
   router.get('/api/order/list', order.getOrderList)
+
   // 学校模块
   router.post('/api/school/add', auth1, auth2, school.addSchool)
   router.delete('/api/school/delete', auth1, auth2, school.deleteSchool)
