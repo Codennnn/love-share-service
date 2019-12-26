@@ -18,8 +18,21 @@ class OrderController extends Controller {
         total_price: 'number',
         actual_price: 'number',
       })
-      data.buyer = id
       const res = await service.order.createOrder(id, data)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* DELETE
+   * 删除订单
+   */
+  async deleteOrder() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ order_id: 'string' })
+      const res = await service.order.deleteOrder(ctx.request.body.order_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

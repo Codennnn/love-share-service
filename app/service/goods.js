@@ -37,13 +37,44 @@ class GoodsService extends Service {
     }
   }
 
-  async updateGoods(_id, data) {
-    data.seller = _id
+  updateGoods(data) {
     return this.ctx.model.Goods
-      .updateOne({ _id: data._id }, data)
+      .updateOne({ _id: data.goods_id }, data)
       .then(({ nModified }) => {
         if (nModified === 1) {
           return { code: 2000, msg: '成功更新商品信息' }
+        }
+        return { code: 2000, msg: '没有更新任何商品' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  updateManyGoods(goodsIdList, data) {
+    return this.ctx.model.Goods
+      .updateMany(
+        { _id: { $in: goodsIdList } },
+        data
+      )
+      .then(({ nModified }) => {
+        if (nModified === goodsIdList.length) {
+          return { code: 2000, msg: '全部商品的状态已更新' }
+        }
+        return { code: 3000, msg: '部分商品的状态更新失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  async editGoods(_id, data) {
+    data.seller = _id
+    return this.ctx.model.Goods
+      .updateOne({ _id: data._id, status: 1 }, data)
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功编辑商品信息' }
         }
       })
       .catch(err => {
@@ -148,23 +179,6 @@ class GoodsService extends Service {
       return { code: 5001, msg: '部分图片删除失败' }
     }
     return { code: 5000, msg: '所有图片删除失败' }
-  }
-
-  updateManyGoodsStatus(goodsIdList, status = 1) {
-    return this.ctx.model.Goods
-      .updateMany(
-        { _id: { $in: goodsIdList } },
-        { status }
-      )
-      .then(({ nModified }) => {
-        if (nModified === goodsIdList.length) {
-          return { code: 2000, msg: '全部商品的状态已更新' }
-        }
-        return { code: 3000, msg: '部分商品的状态更新失败' }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
   }
 
   getGoodsSeller(_id) {

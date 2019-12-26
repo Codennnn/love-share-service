@@ -4,16 +4,37 @@ const Service = require('egg').Service
 
 class OrderService extends Service {
   async createOrder(buyer, data) {
+    data.buyer = buyer
     const { ctx, service } = this
-    const order = new ctx.model.Order(data)
     const goodsIdList = data.goods_list.map(el => el.goods)
     try {
-      await service.goods.updateManyGoodsStatus(goodsIdList, 2)
-      const { _id } = await order.save()
-      return { code: 2000, msg: '成功创建订单', data: { order_id: _id } }
+      const order = new ctx.model.Order(data)
+      const { _id: order_id } = await order.save()
+      await service.goods.updateManyGoods(goodsIdList, {
+        buyer,
+        status: 2,
+        sell_time: Date.now(),
+      })
+      return { code: 2000, msg: '成功创建订单', data: { order_id } }
     } catch (err) {
+      await service.goods.updateManyGoods(goodsIdList, {
+        buyer: null,
+        status: 1,
+        sell_time: null,
+      })
       return { code: 5000, msg: err.message }
     }
+  }
+
+  deleteOrder(_id) {
+    return this.ctx.model.Order
+      .deleteOne({ _id })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 1) {
+          return { code: 2000, msg: '删除了一个订单' }
+        }
+        return { code: 3000, msg: '无任何订单被删除' }
+      })
   }
 
   geteOrdersByUser(_id) {

@@ -47,6 +47,31 @@ class GoodsController extends Controller {
    */
   async updateGoods() {
     const { ctx, service } = this
+    const res = await service.goods.updateGoods(ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* PUT
+   * 更新商品信息
+   */
+  async updateManyGoods() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        goods_list: { type: 'array', itemType: 'string' },
+      })
+      const res = await service.goods.updateManyGoods(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 编辑商品信息
+   */
+  async editGoods() {
+    const { ctx, service } = this
     try {
       ctx.validate({
         img_list: { type: 'array', itemType: 'string' },
@@ -58,7 +83,7 @@ class GoodsController extends Controller {
         can_bargain: 'boolean',
         can_return: 'boolean',
       })
-      const res = await service.goods.updateGoods(ctx.state.user.id, ctx.request.body)
+      const res = await service.goods.editGoods(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

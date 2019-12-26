@@ -58,6 +58,10 @@ module.exports = app => {
       required: true,
       ref: 'User',
     },
+    buyer: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
     comments: [new Schema({
       content: { type: String, minlength: 1, maxlength: 50 },
       sender: {
@@ -89,6 +93,7 @@ module.exports = app => {
       enum: [1, 2, 3], // 1-待出售，2-已出售
       default: 1,
     },
+    sell_time: Number,
   })
 
   GoodsSchema.set('timestamps', {

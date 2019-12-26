@@ -20,7 +20,7 @@ module.exports = app => {
     },
     status: {
       type: Number,
-      enum: [1, 2, 3],
+      enum: [1, 2, 3], // 1-进行中， 2-已完成
       default: 1,
     },
   })
