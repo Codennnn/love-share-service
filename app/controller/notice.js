@@ -12,7 +12,8 @@ class NoticeController extends Controller {
       ctx.validate({
         title: 'string',
         content: 'string',
-        type: [1, 2, 3, 4],
+        // type: [1, 2, 3, 4],
+        type: 'int',
       })
       const res = await service.notice.addNotice(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
@@ -63,8 +64,16 @@ class NoticeController extends Controller {
    */
   async getNoticeList() {
     const { ctx, service } = this
-    const res = await service.notice.getNoticeList(ctx.state.user.id)
-    ctx.reply(res)
+    try {
+      ctx.validate({
+        page: 'int',
+        page_size: 'int',
+      }, ctx.request.query)
+      const res = await service.notice.getNoticeList(ctx.state.user.id, ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* PUT

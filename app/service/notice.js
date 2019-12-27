@@ -4,13 +4,13 @@ const Service = require('egg').Service
 
 class NoticeService extends Service {
   addNotice(_id, data) {
-    const { ctx, app } = this
     data.time = Date.now()
+    const { ctx, app } = this
     return ctx.model.User
       .updateOne(
         { _id },
         {
-          $addToSet: { notices: data },
+          $push: { notices: data },
         },
         { runValidators: true }
       )
@@ -73,9 +73,9 @@ class NoticeService extends Service {
       })
   }
 
-  getNoticeList(_id) {
+  getNoticeList(_id, { page, page_size }) {
     return this.ctx.model.User
-      .findOne({ _id })
+      .findOne({ _id }, { notices: { $slice: [page * page_size, page_size] } })
       .then(({ notices: notice_list }) => {
         return { code: 2000, msg: '获取通知列表', data: { notice_list } }
       })
