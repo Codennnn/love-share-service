@@ -26,6 +26,10 @@ module.exports = app => {
       type: Number,
       default: 1,
     },
+    degree: {
+      type: Number,
+      default: 50,
+    },
     category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     description: {
       type: String,
