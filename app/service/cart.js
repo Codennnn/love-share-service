@@ -66,7 +66,7 @@ class CartService extends Service {
       .findOne({ _id }, 'carts')
       .populate({
         path: 'carts.goods',
-        select: 'img_list goods_num name quantity delivery delivery_charge price time buyer created_at',
+        select: 'img_list goods_num name quantity delivery delivery_charge price time status created_at',
         populate: { path: 'seller', select: 'nickname real_name' },
       })
       .then(({ carts: cart_list }) => {

@@ -23,6 +23,10 @@ module.exports = app => {
       enum: [1, 2, 3], // 1-进行中， 2-已完成
       default: 1,
     },
+    step: {
+      type: Number,
+      default: 1,
+    },
   })
 
   OrderSchema.set('timestamps', {
