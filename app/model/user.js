@@ -65,6 +65,10 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
+    beans: {
+      type: Number,
+      default: 0,
+    },
     default_address: Schema.Types.ObjectId,
     address_list: [{
       receiver: { type: String, required: true },
