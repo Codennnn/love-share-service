@@ -19,6 +19,7 @@ module.exports = app => {
   router.post('/api/user/sign_up', user.signUp)
   router.put('/api/user/reset_password', user.resetPassword)
   router.get('/api/user/info', user.getUserInfo)
+  router.get('/api/user/other/info', user.getOtherUserInfo)
   router.get('/api/user/info_num', user.getUserInfoNum)
   router.get('/api/user/detail', user.getUserDetail)
   router.put('/api/user/modify', user.modifyUser)
