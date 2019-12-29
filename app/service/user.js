@@ -102,6 +102,18 @@ class UserService extends Service {
       })
   }
 
+  getOtherUserInfo(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq')
+      .populate('school', '-_id name')
+      .then(user_info => {
+        return { code: 2000, msg: '获取其他用户信息', data: { user_info } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   getUserInfoNum(_id) {
     const { ctx, app } = this
     return ctx.model.User.aggregate([

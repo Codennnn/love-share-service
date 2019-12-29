@@ -44,13 +44,27 @@ class UserController extends Controller {
   }
 
   /* GET
-   * 获取用户信息
+   * 获取用户自身信息
    */
   async getUserInfo() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.state.user.id
     const res = await service.user.getUserInfo(id)
     ctx.reply(res)
+  }
+
+  /* GET
+   * 获取其他用户信息
+   */
+  async getOtherUserInfo() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ user_id: 'string' }, ctx.request.query)
+      const res = await service.user.getOtherUserInfo(ctx.request.query.user_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* GET
@@ -90,7 +104,6 @@ class UserController extends Controller {
    */
   async updateUser() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ user_id: 'string' })
       const res = await service.user.updateUser(ctx.request.body)
