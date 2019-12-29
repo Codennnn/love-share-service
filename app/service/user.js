@@ -379,16 +379,19 @@ class UserService extends Service {
   }
 
   addCollection(_id, { goods_id }) {
-    return this.ctx.model.User
+    const { ctx } = this
+    return ctx.model.User
       .updateOne(
         { _id },
-        {
-          $push: { collections: { goods: goods_id } },
-        },
+        { $push: { collections: { goods: goods_id } } },
         { runValidators: true }
       )
-      .then(({ nModified }) => {
-        if (nModified === 1) {
+      .then(async ({ nModified }) => {
+        const { nModified: nM } = await ctx.model.Goods.updateOne(
+          { _id: goods_id },
+          { $inc: { collect_num: 1 } }
+        )
+        if (nModified === 1 && nM === 1) {
           return { code: 2000, msg: '已成功添加一个收藏' }
         }
         return { code: 3000, msg: '添加收藏失败' }
@@ -399,15 +402,18 @@ class UserService extends Service {
   }
 
   deleteCollection(_id, { goods_id }) {
-    return this.ctx.model.User
+    const { ctx } = this
+    return ctx.model.User
       .updateOne(
         { _id },
-        {
-          $pull: { collections: { goods: goods_id } },
-        }
+        { $pull: { collections: { goods: goods_id } } }
       )
-      .then(({ nModified }) => {
-        if (nModified === 1) {
+      .then(async ({ nModified }) => {
+        const { nModified: nM } = await ctx.model.Goods.updateOne(
+          { _id: goods_id },
+          { $inc: { collect_num: -1 } }
+        )
+        if (nModified === 1 && nM === 1) {
           return { code: 2000, msg: '已成功移除一个收藏' }
         }
         return { code: 3000, msg: '移除收藏失败' }
