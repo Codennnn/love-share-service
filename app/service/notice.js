@@ -10,7 +10,7 @@ class NoticeService extends Service {
       .updateOne(
         { _id },
         {
-          $push: { notices: data },
+          $push: { notices: { $each: [data], $position: 0 } },
         },
         { runValidators: true }
       )
