@@ -175,7 +175,8 @@ class UserController extends Controller {
    */
   async getPublishedGoods() {
     const { ctx, service } = this
-    const res = await service.user.getPublishedGoods(ctx.state.user.id)
+    const id = ctx.request.query.user_id || ctx.state.user.id
+    const res = await service.user.getPublishedGoods(id)
     ctx.reply(res)
   }
 
