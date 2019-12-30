@@ -22,7 +22,7 @@ class AddressService extends Service {
     return this.ctx.model.User
       .updateOne(
         { _id },
-        { $push: { address_list: data } },
+        { $push: { address_list: { $each: [data], $position: 0 } } },
         { runValidators: true }
       )
       .then(({ nModified }) => {

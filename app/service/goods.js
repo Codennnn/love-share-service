@@ -224,7 +224,7 @@ class GoodsService extends Service {
     return this.ctx.model.Goods
       .updateOne(
         { _id: goods_id },
-        { $push: { comments: { content, sender: _id } } },
+        { $push: { comments: { $each: [{ content, sender: _id }], $position: 0 } } },
         { runValidators: true }
       )
       .then(({ nModified }) => {

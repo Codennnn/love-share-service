@@ -249,12 +249,12 @@ class UserService extends Service {
       this.ctx.model.User
         .updateOne(
           { _id },
-          { $addToSet: { follows: { user: user_id } } }
+          { $push: { follows: { $each: [{ user: user_id }], $position: 0 } } }
         ),
       this.ctx.model.User
         .updateOne(
           { _id: user_id },
-          { $addToSet: { fans: { user: _id } } }
+          { $push: { fans: { $each: [{ user: _id }], $position: 0 } } }
         ),
     ])
 
@@ -327,7 +327,10 @@ class UserService extends Service {
 
   checkIn(_id, check_in) {
     return this.ctx.model.User
-      .updateOne({ _id }, { $addToSet: { check_in } })
+      .updateOne(
+        { _id },
+        { $push: { check_in: { $each: [check_in], $position: 0 } } }
+      )
       .then(({ nModified }) => {
         if (nModified === 1) {
           return { code: 2000, msg: '签到成功' }
@@ -383,7 +386,7 @@ class UserService extends Service {
     return ctx.model.User
       .updateOne(
         { _id },
-        { $push: { collections: { goods: goods_id } } },
+        { $push: { collections: { $each: [{ goods: goods_id }], $position: 0 } } },
         { runValidators: true }
       )
       .then(async ({ nModified }) => {

@@ -8,7 +8,7 @@ class CartService extends Service {
       .updateOne(
         { _id },
         {
-          $addToSet: { carts: { amount, goods } },
+          $push: { carts: { $each: [{ amount, goods }], $position: 0 } },
         },
         { runValidators: true }
       )
