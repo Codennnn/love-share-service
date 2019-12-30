@@ -199,8 +199,12 @@ class GoodsController extends Controller {
   async getGoodsComments() {
     const { ctx, service } = this
     try {
-      ctx.validate({ goods_id: 'string' }, ctx.request.query)
-      const res = await service.goods.getGoodsComments(ctx.request.query.goods_id)
+      ctx.validate({
+        goods_id: 'string',
+        page: 'int',
+        page_size: 'int',
+      }, ctx.request.query)
+      const res = await service.goods.getGoodsComments(ctx.request.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

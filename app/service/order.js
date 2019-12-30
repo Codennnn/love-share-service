@@ -16,6 +16,7 @@ class OrderService extends Service {
         sell_time: Date.now(),
       })
 
+      // 通知卖家
       await Promise.all(data.goods_list.map(el => {
         const notice = {
           title: '您有一件闲置被买走啦',

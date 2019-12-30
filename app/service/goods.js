@@ -87,6 +87,7 @@ class GoodsService extends Service {
       this.ctx.model.Goods.estimatedDocumentCount(),
       this.ctx.model.Goods
         .find({ status: 1 }, 'img_list name price')
+        .sort({ created_at: -1 })
         .skip((page - 1) * pageSize)
         .limit(pageSize),
     ])
@@ -197,27 +198,43 @@ class GoodsService extends Service {
       })
   }
 
-  getGoodsComments(_id) {
-    return this.ctx.model.Goods
-      .findOne({ _id }, 'comments')
-      .populate({
-        path: 'comments.sender',
-        select: 'avatar_url nickname',
-      })
-      .populate({
-        path: 'comments.replies.sender',
-        select: 'nickname',
-      })
-      .populate({
-        path: 'comments.replies.at',
-        select: 'nickname',
-      })
-      .then(({ comments }) => {
-        return { code: 2000, msg: '获取商品留言', data: { comments } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+  async getGoodsComments({ goods_id: _id, page, page_size }) {
+    const { ctx, app } = this
+    const [{ comments }, [{ total }]] = await Promise.all([
+      ctx.model.Goods
+        .findOne({ _id }, { comments: { $slice: [(page - 1) * page_size, page_size] } })
+        .populate({
+          path: 'comments.sender',
+          select: 'avatar_url nickname',
+        })
+        .populate({
+          path: 'comments.replies.sender',
+          select: 'nickname',
+        })
+        .populate({
+          path: 'comments.replies.at',
+          select: 'nickname',
+        }),
+      ctx.model.Goods.aggregate([
+        { $match: { _id: app.mongoose.Types.ObjectId(_id) } },
+        {
+          $project: {
+            _id: 0,
+            total: { $size: '$comments' },
+          },
+        },
+      ]),
+    ])
+    return {
+      code: 2000,
+      msg: '获取商品留言',
+      data: {
+        comments,
+        pagination: {
+          total, page, page_size,
+        },
+      },
+    }
   }
 
   postComment(_id, { goods_id, content }) {
