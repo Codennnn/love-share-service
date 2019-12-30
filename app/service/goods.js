@@ -99,6 +99,34 @@ class GoodsService extends Service {
     return { code: 2000, msg: '查询推荐商品列表', data: { goods_list, pagination } }
   }
 
+  async getGoodsListOfSameSchool(_id, { page, page_size: pageSize }) {
+    const { ctx } = this
+    return ctx.model.User
+      .findOne({ _id }, 'school')
+      .then(async ({ school }) => {
+        const goods_list = await ctx.model.Goods.aggregate([
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'seller',
+              foreignField: '_id',
+              as: 'seller',
+            },
+          },
+          { $match: { 'seller.school': school } },
+          {
+            $project: { seller: 0 },
+          },
+        ])
+        const pagination = {
+          page,
+          pageSize,
+          total: goods_list.length,
+        }
+        return { code: 2000, msg: '查询同校商品列表', data: { goods_list, pagination } }
+      })
+  }
+
   async getGoodsList({ page, page_size: pageSize }) {
     const [total, goods_list] = await Promise.all([
       this.ctx.model.Goods.estimatedDocumentCount(),

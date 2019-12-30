@@ -101,21 +101,30 @@ module.exports = app => {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
     chats: Array,
-    fans: [new Schema({
-      user: { type: Schema.Types.ObjectId, ref: 'User' },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
-    follows: [new Schema({
-      user: { type: Schema.Types.ObjectId, ref: 'User' },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
-    collections: [new Schema({
-      goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+    fans: {
+      type: [new Schema({
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+      }, {
+        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+      })],
+      default: [],
+    },
+    follows: {
+      type: [new Schema({
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+      }, {
+        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+      })],
+      default: [],
+    },
+    collections: {
+      type: [new Schema({
+        goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
+      }, {
+        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+      })],
+      default: [],
+    },
     published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     bought_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     check_in: Array,

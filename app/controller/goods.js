@@ -112,13 +112,29 @@ class GoodsController extends Controller {
    */
   async getGoodsList() {
     const { ctx, service } = this
-
     try {
       ctx.validate({
         page: 'int',
         page_size: 'int',
       }, ctx.request.query)
       const res = await service.goods.getGoodsList(ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取同校商品列表
+   */
+  async getGoodsListOfSameSchool() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        page: 'int',
+        page_size: 'int',
+      }, ctx.request.query)
+      const res = await service.goods.getGoodsListOfSameSchool(ctx.state.user.id, ctx.request.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

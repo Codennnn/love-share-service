@@ -66,32 +66,35 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    comments: [new Schema({
-      content: { type: String, minlength: 1, maxlength: 50 },
-      sender: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'User',
-      },
-      replies: [new Schema({
+    comments: {
+      type: [new Schema({
+        content: { type: String, minlength: 1, maxlength: 50 },
         sender: {
           type: Schema.Types.ObjectId,
           required: true,
           ref: 'User',
         },
-        at: {
-          type: Schema.Types.ObjectId,
-          required: true,
-          ref: 'User',
-        },
-        content: { type: String, minlength: 1, maxlength: 50 },
+        replies: [new Schema({
+          sender: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'User',
+          },
+          at: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'User',
+          },
+          content: { type: String, minlength: 1, maxlength: 50 },
+        }, {
+          timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+        })],
+        time: Number,
       }, {
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
       })],
-      time: Number,
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+      default: [],
+    },
     status: {
       type: Number,
       enum: [1, 2, 3], // 1-待出售，2-已出售
