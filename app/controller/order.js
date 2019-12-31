@@ -69,8 +69,8 @@ class OrderController extends Controller {
     const { ctx, service } = this
     try {
       ctx.validate({
-        page: 'int',
-        page_size: 'int',
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 0 },
       }, ctx.request.query)
       const res = await service.order.getOrderList(ctx.request.query)
       ctx.reply(res)

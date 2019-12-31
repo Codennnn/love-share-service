@@ -97,7 +97,7 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     try {
       ctx.validate({
-        page: 'int',
+        page: { type: 'int', min: 1 },
         page_size: 'int',
       }, ctx.request.query)
       const res = await service.goods.getRecommendGoodsList(ctx.state.user.id, ctx.request.query)
@@ -114,8 +114,8 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     try {
       ctx.validate({
-        page: 'int',
-        page_size: 'int',
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 0 },
       }, ctx.request.query)
       const res = await service.goods.getGoodsList(ctx.request.query)
       ctx.reply(res)
@@ -132,8 +132,8 @@ class GoodsController extends Controller {
     try {
       ctx.validate({
         school_id: 'string',
-        page: 'int',
-        page_size: 'int',
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 0 },
       }, ctx.request.query)
       const res = await service.goods.getGoodsListOfSameSchool(ctx.state.user.id, ctx.request.query)
       ctx.reply(res)
@@ -218,8 +218,8 @@ class GoodsController extends Controller {
     try {
       ctx.validate({
         goods_id: 'string',
-        page: 'int',
-        page_size: 'int',
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 0 },
       }, ctx.request.query)
       const res = await service.goods.getGoodsComments(ctx.request.query)
       ctx.reply(res)
