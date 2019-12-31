@@ -67,7 +67,7 @@ class NoticeController extends Controller {
     try {
       ctx.validate({
         page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 0 },
+        page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
       const res = await service.notice.getNoticeList(ctx.state.user.id, ctx.request.query)
       ctx.reply(res)

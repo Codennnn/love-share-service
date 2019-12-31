@@ -115,7 +115,7 @@ class GoodsController extends Controller {
     try {
       ctx.validate({
         page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 0 },
+        page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
       const res = await service.goods.getGoodsList(ctx.request.query)
       ctx.reply(res)
@@ -133,7 +133,7 @@ class GoodsController extends Controller {
       ctx.validate({
         school_id: 'string',
         page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 0 },
+        page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
       const res = await service.goods.getGoodsListOfSameSchool(ctx.state.user.id, ctx.request.query)
       ctx.reply(res)
@@ -219,7 +219,7 @@ class GoodsController extends Controller {
       ctx.validate({
         goods_id: 'string',
         page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 0 },
+        page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
       const res = await service.goods.getGoodsComments(ctx.request.query)
       ctx.reply(res)
