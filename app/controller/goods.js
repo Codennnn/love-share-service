@@ -135,7 +135,7 @@ class GoodsController extends Controller {
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
-      const res = await service.goods.getGoodsListOfSameSchool(ctx.state.user.id, ctx.request.query)
+      const res = await service.goods.getGoodsListOfSameSchool(ctx.request.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
