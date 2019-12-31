@@ -131,6 +131,7 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     try {
       ctx.validate({
+        school_id: 'string',
         page: 'int',
         page_size: 'int',
       }, ctx.request.query)

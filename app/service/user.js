@@ -93,7 +93,7 @@ class UserService extends Service {
   getUserInfo(_id) {
     return this.ctx.model.User
       .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value beans phone email gender wechat qq roles')
-      .populate('school', '-_id name')
+      .populate('school', 'name')
       .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
       })
@@ -105,7 +105,7 @@ class UserService extends Service {
   getOtherUserInfo(_id) {
     return this.ctx.model.User
       .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value phone email gender wechat qq')
-      .populate('school', '-_id name')
+      .populate('school', 'name')
       .then(user_info => {
         return { code: 2000, msg: '获取其他用户信息', data: { user_info } }
       })
