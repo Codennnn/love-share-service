@@ -80,7 +80,7 @@ module.exports = app => {
   router.get('/api/goods/list/same_school', goods.getGoodsListOfSameSchool)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
-  router.put('/api/goods/status/update_many', goods.updateManyGoods)
+  router.put('/api/goods/update_many', goods.updateManyGoods)
   router.get('/api/goods/seller', goods.getGoodsSeller)
 
   router.get('/api/goods/comments', goods.getGoodsComments)
@@ -121,7 +121,6 @@ module.exports = app => {
   router.get('/api/goods/list', auth1, goods.getGoodsList)
   router.post('/api/category/add', auth1, category.addCategory)
   router.delete('/api/category/delete', auth1, category.deleteCategory)
-  router.put('/api/goods/update', goods.updateGoods)
 
   // 订单模块
   router.get('/api/order/list', order.getOrderList)

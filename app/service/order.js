@@ -10,7 +10,8 @@ class OrderService extends Service {
     try {
       const order = new ctx.model.Order(data)
       const { _id: order_id } = await order.save()
-      await service.goods.updateManyGoods(goodsIdList, {
+      await service.goods.updateManyGoods({
+        goods_id_list: goodsIdList,
         buyer,
         status: 2,
         sell_time: Date.now(),
@@ -30,7 +31,8 @@ class OrderService extends Service {
 
       return { code: 2000, msg: '成功创建订单', data: { order_id } }
     } catch (err) {
-      await service.goods.updateManyGoods(goodsIdList, {
+      await service.goods.updateManyGoods({
+        goods_id_list: goodsIdList,
         buyer: null,
         status: 1,
         sell_time: null,

@@ -51,14 +51,14 @@ class GoodsService extends Service {
       })
   }
 
-  updateManyGoods(goodsIdList, data) {
+  updateManyGoods(data) {
     return this.ctx.model.Goods
       .updateMany(
-        { _id: { $in: goodsIdList } },
+        { _id: { $in: data.goods_id_list } },
         data
       )
       .then(({ nModified }) => {
-        if (nModified === goodsIdList.length) {
+        if (nModified === data.goods_id_list.length) {
           return { code: 2000, msg: '全部商品的状态已更新' }
         }
         return { code: 3000, msg: '部分商品的状态更新失败' }
