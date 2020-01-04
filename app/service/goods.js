@@ -110,7 +110,12 @@ class GoodsService extends Service {
           as: 'seller',
         },
       },
-      { $match: { 'seller.school': app.mongoose.Types.ObjectId(school_id) } },
+      {
+        $match: {
+          'seller.school': app.mongoose.Types.ObjectId(school_id),
+          status: 1,
+        },
+      },
       { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
       { $sort: { created_at: -1 } },
       { $skip: (page - 1) * pageSize },
