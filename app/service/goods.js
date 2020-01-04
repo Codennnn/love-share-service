@@ -99,9 +99,42 @@ class GoodsService extends Service {
     return { code: 2000, msg: '查询推荐商品列表', data: { goods_list, pagination } }
   }
 
-  async getGoodsListOfSameSchool({ school_id, page, page_size: pageSize }) {
+  async getGoodsListOfSameSchool({ school_id, page, page_size: pageSize, category = null }) {
     const { ctx, app } = this
-    const goods_list = await ctx.model.Goods.aggregate([
+    let goods_list
+    let pagination
+
+    if (!category) {
+      goods_list = await ctx.model.Goods.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'seller',
+            foreignField: '_id',
+            as: 'seller',
+          },
+        },
+        {
+          $match: {
+            'seller.school': app.mongoose.Types.ObjectId(school_id),
+            status: 1,
+          },
+        },
+        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+        { $sort: { created_at: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+      ])
+      pagination = {
+        page,
+        pageSize,
+        total: goods_list.length,
+      }
+      return { code: 2000, msg: '查询同校商品列表', data: { goods_list, pagination } }
+    }
+
+    const categories = category.map(el => app.mongoose.Types.ObjectId(el))
+    goods_list = await ctx.model.Goods.aggregate([
       {
         $lookup: {
           from: 'users',
@@ -112,6 +145,7 @@ class GoodsService extends Service {
       },
       {
         $match: {
+          category: { $in: categories },
           'seller.school': app.mongoose.Types.ObjectId(school_id),
           status: 1,
         },
@@ -121,12 +155,12 @@ class GoodsService extends Service {
       { $skip: (page - 1) * pageSize },
       { $limit: pageSize },
     ])
-    const pagination = {
+    pagination = {
       page,
       pageSize,
       total: goods_list.length,
     }
-    return { code: 2000, msg: '查询同校商品列表', data: { goods_list, pagination } }
+    return { code: 2000, msg: '根据分类查询同校商品列表', data: { goods_list, pagination } }
   }
 
   async getGoodsList({ page, page_size: pageSize }) {

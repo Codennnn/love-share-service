@@ -134,8 +134,9 @@ class GoodsController extends Controller {
         school_id: 'string',
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.goods.getGoodsListOfSameSchool(ctx.request.query)
+        category: 'array?',
+      })
+      const res = await service.goods.getGoodsListOfSameSchool(ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

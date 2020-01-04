@@ -11,6 +11,10 @@ module.exports = app => {
       unique: true,
       trim: true,
     },
+    hit: {
+      type: Number,
+      default: 0,
+    },
   })
 
   CategorySchema.set('timestamps', {
