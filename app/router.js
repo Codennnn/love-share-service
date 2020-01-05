@@ -77,6 +77,7 @@ module.exports = app => {
 
   router.get('/api/goods/detail', goods.getGoodsDetail)
   router.get('/api/goods/list/recommend', goods.getRecommendGoodsList)
+  router.get('/api/goods/list/by_category', goods.getGoodsListByCategory)
   router.post('/api/goods/list/same_school', goods.getGoodsListOfSameSchool)
   router.post('/api/goods/img/upload', goods.uploadImg)
   router.delete('/api/goods/img/delete', goods.deleteImg)
