@@ -92,7 +92,7 @@ class UserService extends Service {
 
   getUserInfo(_id) {
     return this.ctx.model.User
-      .findOne({ _id }, '_id avatar_url nickname real_name introduction credit_value share_value beans phone email gender wechat qq roles')
+      .findOne({ _id }, '_id avatar_url nickname real_name introduction balance credit_value share_value beans phone email gender wechat qq roles')
       .populate('school', 'name')
       .then(user_info => {
         return { code: 2000, msg: '获取用户信息', data: { user_info } }
@@ -326,13 +326,15 @@ class UserService extends Service {
   }
 
   checkIn(_id, check_in) {
-    return this.ctx.model.User
+    const { ctx, service } = this
+    return ctx.model.User
       .updateOne(
         { _id },
         { $push: { check_in: { $each: [check_in], $position: 0 } } }
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
+          service.user.updateBean(_id, 10)
           return { code: 2000, msg: '签到成功' }
         }
         return { code: 3000, msg: '签到成功' }

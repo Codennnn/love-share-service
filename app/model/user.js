@@ -57,17 +57,25 @@ module.exports = app => {
     qq: {
       type: String,
     },
+    balance: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     credit_value: {
       type: Number,
       default: 500,
+      min: 0,
     },
     share_value: {
       type: Number,
       default: 0,
+      min: 0,
     },
     beans: {
       type: Number,
       default: 0,
+      min: 0,
     },
     default_address: Schema.Types.ObjectId,
     address_list: [{
