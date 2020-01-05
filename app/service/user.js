@@ -435,7 +435,7 @@ class UserService extends Service {
       })
   }
 
-  updateCreditValue(_id, { value }) {
+  updateCreditValue(_id, value) {
     return this.ctx.model.User
       .updateOne(
         { _id },
@@ -453,7 +453,7 @@ class UserService extends Service {
       })
   }
 
-  updateShareValue(_id, { value }) {
+  updateShareValue(_id, value) {
     return this.ctx.model.User
       .updateOne(
         { _id },
@@ -471,7 +471,7 @@ class UserService extends Service {
       })
   }
 
-  updateBean(_id, { value }) {
+  updateBean(_id, value) {
     return this.ctx.model.User
       .updateOne(
         { _id },

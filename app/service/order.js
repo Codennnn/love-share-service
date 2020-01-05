@@ -10,6 +10,7 @@ class OrderService extends Service {
     try {
       const order = new ctx.model.Order(data)
       const { _id: order_id } = await order.save()
+      // 更新商品信息
       await service.goods.updateManyGoods({
         goods_id_list: goodsIdList,
         buyer,
@@ -28,6 +29,12 @@ class OrderService extends Service {
         app.io.of('/').emit(`receiveNotice${el.seller}`, notice)
         return service.notice.addNotice(el.seller, notice)
       }))
+
+      // 更新用户乐享信用值和乐享值
+      await Promise.all([
+        service.user.updateCreditValue(buyer, 10),
+        service.user.updateShareValue(buyer, 10),
+      ])
 
       return { code: 2000, msg: '成功创建订单', data: { order_id } }
     } catch (err) {

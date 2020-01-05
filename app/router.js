@@ -26,6 +26,10 @@ module.exports = app => {
   router.put('/api/user/replace_avatar', user.replaceAvatar)
   router.post('/api/user/is_followed', user.isUserFollowed)
 
+  router.put('/api/user/credit_value', user.updateCreditValue)
+  router.put('/api/user/share_value', user.updateShareValue)
+  router.put('/api/user/beans', user.updateBean)
+
   router.get('/api/user/address_list', address.getAddressList)
   router.post('/api/user/address/add', address.addAddress)
   router.delete('/api/user/address/delete', address.deleteAddress)

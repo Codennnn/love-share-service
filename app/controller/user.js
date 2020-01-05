@@ -290,7 +290,7 @@ class UserController extends Controller {
       ctx.validate({ value: 'number' })
       const res = await service.user.updateCreditValue(
         ctx.state.user.id,
-        ctx.request.body
+        ctx.request.body.value
       )
       ctx.reply(res)
     } catch (err) {
@@ -307,7 +307,7 @@ class UserController extends Controller {
       ctx.validate({ value: 'number' })
       const res = await service.user.updateShareValue(
         ctx.state.user.id,
-        ctx.request.body
+        ctx.request.body.value
       )
       ctx.reply(res)
     } catch (err) {
@@ -324,7 +324,7 @@ class UserController extends Controller {
       ctx.validate({ value: 'number' })
       const res = await service.user.updateBean(
         ctx.state.user.id,
-        ctx.request.body
+        ctx.request.body.value
       )
       ctx.reply(res)
     } catch (err) {
