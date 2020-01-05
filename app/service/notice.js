@@ -75,7 +75,7 @@ class NoticeService extends Service {
 
   getNoticeList(_id, { page, page_size }) {
     return this.ctx.model.User
-      .findOne({ _id }, { notices: { $slice: [page * page_size, page_size] } })
+      .findOne({ _id }, { notices: { $slice: [(page - 1) * page_size, page_size] } })
       .then(({ notices: notice_list }) => {
         return { code: 2000, msg: '获取通知列表', data: { notice_list } }
       })
