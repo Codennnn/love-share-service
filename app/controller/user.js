@@ -280,6 +280,57 @@ class UserController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* PUT
+   * 更新用户乐享信用值
+   */
+  async updateCreditValue() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ value: 'number' })
+      const res = await service.user.updateCreditValue(
+        ctx.state.user.id,
+        ctx.request.body
+      )
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 更新用户乐享值
+   */
+  async updateShareValue() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ value: 'number' })
+      const res = await service.user.updateShareValue(
+        ctx.state.user.id,
+        ctx.request.body
+      )
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 更新用户乐豆数量
+   */
+  async updateBean() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ value: 'number' })
+      const res = await service.user.updateBean(
+        ctx.state.user.id,
+        ctx.request.body
+      )
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = UserController

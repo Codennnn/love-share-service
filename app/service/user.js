@@ -434,6 +434,60 @@ class UserService extends Service {
         return { code: 2000, msg: '是否关注了此用户', data: { is_followed } }
       })
   }
+
+  updateCreditValue(_id, { value }) {
+    return this.ctx.model.User
+      .updateOne(
+        { _id },
+        { $inc: { credit_value: value } },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '修改用户乐享信用值成功' }
+        }
+        return { code: 3000, msg: '无任何用户乐享信用值被修改' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  updateShareValue(_id, { value }) {
+    return this.ctx.model.User
+      .updateOne(
+        { _id },
+        { $inc: { share_value: value } },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '修改用户乐享值成功' }
+        }
+        return { code: 3000, msg: '无任何用户乐享值被修改' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  updateBean(_id, { value }) {
+    return this.ctx.model.User
+      .updateOne(
+        { _id },
+        { $inc: { beans: value } },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '修改用户乐豆数量成功' }
+        }
+        return { code: 3000, msg: '无任何用户乐豆数量被修改' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
 }
 
 module.exports = UserService
