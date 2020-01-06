@@ -5,7 +5,7 @@ const Service = require('egg').Service
 class NoticeService extends Service {
   addNotice(_id, data) {
     data.time = Date.now()
-    const { ctx, app } = this
+    const { app, ctx } = this
     return ctx.model.User
       .updateOne(
         { _id },

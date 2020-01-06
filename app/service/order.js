@@ -5,7 +5,7 @@ const Service = require('egg').Service
 class OrderService extends Service {
   async createOrder(buyer, data) {
     data.buyer = buyer
-    const { ctx, service, app } = this
+    const { ctx, service } = this
     const goodsIdList = data.goods_list.map(el => el.goods)
     try {
       const order = new ctx.model.Order(data)
@@ -24,9 +24,7 @@ class OrderService extends Service {
           title: '您有一件闲置被买走啦',
           content: `您发布的闲置物品 <b>${el.name}</b> 被人拍走啦~`,
           type: 2,
-          time: Date.now(),
         }
-        app.io.of('/').emit(`receiveNotice${el.seller}`, notice)
         return service.notice.addNotice(el.seller, notice)
       }))
 
