@@ -69,7 +69,10 @@ class NoticeController extends Controller {
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
-      const res = await service.notice.getNoticeList(ctx.state.user.id, ctx.request.query)
+      const res = await service.notice.getNoticeList(
+        ctx.state.user.id,
+        ctx.request.query
+      )
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

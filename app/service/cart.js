@@ -61,7 +61,7 @@ class CartService extends Service {
       })
   }
 
-  async getCartList(_id) {
+  getCartList(_id) {
     return this.ctx.model.User
       .findOne({ _id }, 'carts')
       .populate({

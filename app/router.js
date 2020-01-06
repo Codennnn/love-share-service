@@ -4,7 +4,7 @@ module.exports = app => {
   const { router, controller, middleware, io } = app
   const {
     admin, user, goods, order, address, school, category,
-    notice, chat, cart, common,
+    notice, chat, cart, begging, common,
   } = controller
 
   const auth1 = middleware.auth1() // 普通管理员权限
@@ -93,6 +93,10 @@ module.exports = app => {
   router.post('/api/goods/comment/reply', goods.replyComment)
 
   router.post('/api/goods/is_collected', goods.isGoodsCollected)
+
+  // 求购模块
+  router.get('/api/begging/list', begging.getBeggingList)
+  router.post('/api/begging', begging.addBegging)
 
   // 订单模块
   router.post('/api/order/create', order.createOrder)
