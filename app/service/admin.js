@@ -3,9 +3,8 @@
 const Service = require('egg').Service
 
 class AdminService extends Service {
-  async login({ account, password }) {
+  async signIn({ account, password }) {
     const { ctx, app } = this
-
     const res = await ctx.model.Admin.findOne({ account })
 
     if (res) {
@@ -19,7 +18,7 @@ class AdminService extends Service {
         const token = app.jwt.sign(
           { id, roles },
           app.config.jwt.secret,
-          { expiresIn: '30d' }
+          { expiresIn: '7d' }
         )
         return { code: 2000, msg: '登录校验成功', data: { token } }
       }
@@ -59,6 +58,17 @@ class AdminService extends Service {
           return { code: 2000, msg: '密码已重置' }
         }
         return { code: 3000, msg: '密码重置失败' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  async getAdminInfo(_id) {
+    return this.ctx.model.Admin
+      .findOne({ _id }, 'avatar_url nickname email gender roles')
+      .then(admin_info => {
+        return { code: 2000, msg: '获取管理员信息', data: { admin_info } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

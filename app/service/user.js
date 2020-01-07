@@ -4,10 +4,8 @@ const path = require('path')
 const Service = require('egg').Service
 
 class UserService extends Service {
-  async signIn(data) {
+  async signIn({ account, password }) {
     const { ctx, app } = this
-    const { account, password } = data
-
     let res = await ctx.model.User.findOne({ phone: account })
 
     if (!res) {

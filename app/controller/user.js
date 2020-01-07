@@ -48,8 +48,7 @@ class UserController extends Controller {
    */
   async getUserInfo() {
     const { ctx, service } = this
-    const id = ctx.state.user.id
-    const res = await service.user.getUserInfo(id)
+    const res = await service.user.getUserInfo(ctx.state.user.id)
     ctx.reply(res)
   }
 
