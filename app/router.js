@@ -118,8 +118,9 @@ module.exports = app => {
    */
 
   // 管理员模块
-  router.post('/api/admin/login', admin.login)
   router.post('/api/admin/create', admin.createAdmin)
+  router.post('/api/admin/sign_in', admin.signIn)
+  router.get('/api/admin/info', admin.getAdminInfo)
 
   // 用户模块
   router.get('/api/user/list', auth1, user.getUserList)
