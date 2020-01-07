@@ -129,6 +129,9 @@ module.exports = app => {
 
   // 商品模块
   router.get('/api/goods/list', auth1, goods.getGoodsList)
+  router.get('/api/goods/list/on_sell', auth1, goods.getGoodsListOnSell)
+  router.get('/api/goods/list/off_sell', auth1, goods.getGoodsListOffSell)
+
   router.post('/api/category/add', auth1, category.addCategory)
   router.delete('/api/category/delete', auth1, category.deleteCategory)
 

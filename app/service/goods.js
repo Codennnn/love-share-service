@@ -369,6 +369,24 @@ class GoodsService extends Service {
         return { code: 2000, msg: '是否收藏了该商品', data: { is_collected } }
       })
   }
+
+  async getGoodsListOnSell({ page, page_size: pageSize }) {
+    const [total, goods_list] = await Promise.all([
+      this.ctx.model.Goods.estimatedDocumentCount(),
+      this.ctx.model.Goods
+        .find({ status: 1 }, 'name category seller price created_at')
+        .populate('seller', 'avatar_url real_name nickname')
+        .populate('category', 'name')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total,
+    }
+    return { code: 2000, msg: '查询已上架的商品列表', data: { goods_list, pagination } }
+  }
 }
 
 module.exports = GoodsService

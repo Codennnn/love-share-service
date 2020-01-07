@@ -278,6 +278,40 @@ class GoodsController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* GET
+   * 获取已上架的商品列表
+   */
+  async getGoodsListOnSell() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 1 },
+      }, ctx.request.query)
+      const res = await service.goods.getGoodsListOnSell(ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取已下架的商品列表
+   */
+  async getGoodsListOffSell() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 1 },
+      }, ctx.request.query)
+      const res = await service.goods.getGoodsListOffSell(ctx.request.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = GoodsController
