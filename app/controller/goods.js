@@ -280,6 +280,15 @@ class GoodsController extends Controller {
   }
 
   /* GET
+   * 获取商品列表信息
+   */
+  async getGoodsListInfo() {
+    const { ctx, service } = this
+    const res = await service.goods.getGoodsListInfo()
+    ctx.reply(res)
+  }
+
+  /* GET
    * 获取已上架的商品列表
    */
   async getGoodsListOnSell() {
@@ -289,7 +298,7 @@ class GoodsController extends Controller {
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
-      const res = await service.goods.getGoodsListOnSell(ctx.request.query)
+      const res = await service.goods.getGoodsListByStatus(1, ctx.request.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -306,7 +315,7 @@ class GoodsController extends Controller {
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
       }, ctx.request.query)
-      const res = await service.goods.getGoodsListOffSell(ctx.request.query)
+      const res = await service.goods.getGoodsListByStatus(3, ctx.request.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

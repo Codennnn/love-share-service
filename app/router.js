@@ -129,6 +129,7 @@ module.exports = app => {
 
   // 商品模块
   router.get('/api/goods/list', auth1, goods.getGoodsList)
+  router.get('/api/goods/list/info', auth1, goods.getGoodsListInfo)
   router.get('/api/goods/list/on_sell', auth1, goods.getGoodsListOnSell)
   router.get('/api/goods/list/off_sell', auth1, goods.getGoodsListOffSell)
 

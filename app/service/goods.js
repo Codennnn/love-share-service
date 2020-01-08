@@ -370,11 +370,19 @@ class GoodsService extends Service {
       })
   }
 
-  async getGoodsListOnSell({ page, page_size: pageSize }) {
+  async getGoodsListInfo() {
+    const [on_sell_count, off_sell_count] = await Promise.all([
+      this.ctx.model.Goods.countDocuments({ status: 1 }),
+      this.ctx.model.Goods.countDocuments({ status: 3 }),
+    ])
+    return { code: 2000, data: { on_sell_count, off_sell_count } }
+  }
+
+  async getGoodsListByStatus(status, { page, page_size: pageSize }) {
     const [total, goods_list] = await Promise.all([
       this.ctx.model.Goods.estimatedDocumentCount(),
       this.ctx.model.Goods
-        .find({ status: 1 }, 'name category seller price created_at')
+        .find({ status }, 'name category seller price created_at')
         .populate('seller', 'avatar_url real_name nickname')
         .populate('category', 'name')
         .skip((page - 1) * pageSize)
@@ -385,7 +393,7 @@ class GoodsService extends Service {
       pageSize,
       total,
     }
-    return { code: 2000, msg: '查询已上架的商品列表', data: { goods_list, pagination } }
+    return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
   }
 }
 
