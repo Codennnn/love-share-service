@@ -382,7 +382,7 @@ class GoodsService extends Service {
     const [total, goods_list] = await Promise.all([
       this.ctx.model.Goods.estimatedDocumentCount(),
       this.ctx.model.Goods
-        .find({ status }, 'name category seller price created_at')
+        .find({ status }, 'name category seller price collect_num created_at')
         .populate('seller', 'avatar_url real_name nickname')
         .populate('category', 'name')
         .skip((page - 1) * pageSize)

@@ -38,6 +38,15 @@ class AdminController extends Controller {
     }
   }
 
+  /* GET
+   * 获取管理员列表
+   */
+  async getAdminList() {
+    const { ctx, service } = this
+    const res = await service.admin.getAdminList()
+    ctx.reply(res)
+  }
+
   /* POST
    * 重置管理员密码
    */

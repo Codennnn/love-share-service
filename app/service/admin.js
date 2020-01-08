@@ -45,6 +45,17 @@ class AdminService extends Service {
     }
   }
 
+  async getAdminList() {
+    return this.ctx.model.Admin
+      .find({}, 'avatar_url nickname real_name email gender roles permissions created_at updated_at')
+      .then(admin_list => {
+        return { code: 2000, msg: '获取管理员列表', data: { admin_list } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   async resetPassword(_id, { password }) {
     const hashPassword = await this.ctx.genHash(password)
     return this.ctx.model.Admin
@@ -66,7 +77,7 @@ class AdminService extends Service {
 
   async getAdminInfo(_id) {
     return this.ctx.model.Admin
-      .findOne({ _id }, 'avatar_url nickname email gender roles')
+      .findOne({ _id }, 'avatar_url nickname real_name email gender roles permissions created_at updated_at')
       .then(admin_info => {
         return { code: 2000, msg: '获取管理员信息', data: { admin_info } }
       })

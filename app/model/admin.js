@@ -31,11 +31,26 @@ module.exports = app => {
       minlength: 2,
       maxlength: 8,
     },
+    real_name: {
+      type: String,
+      required: true,
+    },
     roles: {
       type: Array,
       required: true,
       default: ['admin'],
     },
+    permissions: [new Schema({
+      module: {
+        type: String,
+        required: true,
+      },
+      purview: {
+        type: Array,
+        required: true,
+        default: ['read'],
+      },
+    })],
     gender: {
       type: String,
       default: '0',
