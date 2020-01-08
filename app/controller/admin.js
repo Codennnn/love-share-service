@@ -67,6 +67,20 @@ class AdminController extends Controller {
     const res = await service.admin.getAdminInfo(ctx.state.user.id)
     ctx.reply(res)
   }
+
+  /* GET
+   * 获取管理员信息
+   */
+  async getAdminDetail() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ admin_id: 'string' }, ctx.request.query)
+      const res = await service.admin.getAdminDetail(ctx.request.query.admin_id)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = AdminController

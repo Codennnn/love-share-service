@@ -48,7 +48,12 @@ module.exports = app => {
       purview: {
         type: Array,
         required: true,
-        default: ['read'],
+        default: [
+          { read: false },
+          { write: false },
+          { create: false },
+          { delete: false },
+        ],
       },
     })],
     gender: {

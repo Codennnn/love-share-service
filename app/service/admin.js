@@ -85,6 +85,17 @@ class AdminService extends Service {
         return { code: 5000, msg: err.message }
       })
   }
+
+  async getAdminDetail(_id) {
+    return this.ctx.model.Admin
+      .findOne({ _id }, 'account avatar_url nickname real_name email gender roles permissions created_at updated_at')
+      .then(admin_detail => {
+        return { code: 2000, msg: '获取管理员信息', data: { admin_detail } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
 }
 
 module.exports = AdminService
