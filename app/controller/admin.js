@@ -75,7 +75,7 @@ class AdminController extends Controller {
   }
 
   /* GET
-   * 获取管理员信息
+   * 获取其他管理员的详细
    */
   async getAdminDetail() {
     const { ctx, service } = this
@@ -88,18 +88,35 @@ class AdminController extends Controller {
     }
   }
 
-  /* GET
-   * 获取管理员信息
+  /* POST
+   * 上传头像
    */
-  async replaceAvatar() {
+  async uploadAvatar() {
     const { ctx, service } = this
     const stream = await ctx.getFileStream()
     try {
-      const res = await service.user.replaceAvatar(ctx.state.user.id, stream)
+      const res = await service.admin.uploadAvatar(stream)
+      ctx.reply(res)
+    } catch (err) {
+      await sendToWormhole(stream)
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* POST
+   * 替换管理员的头像
+   */
+  async replaceAvatar() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        admin_id: 'string',
+        avatar_url: 'string',
+      })
+      const res = await service.admin.replaceAvatar(ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
-      await sendToWormhole(stream)
     }
   }
 }

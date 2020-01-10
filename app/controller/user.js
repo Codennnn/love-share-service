@@ -122,8 +122,8 @@ class UserController extends Controller {
       const res = await service.user.replaceAvatar(ctx.state.user.id, stream)
       ctx.reply(res)
     } catch (err) {
-      ctx.reply(err, 400)
       await sendToWormhole(stream)
+      ctx.reply(err, 400)
     }
   }
 

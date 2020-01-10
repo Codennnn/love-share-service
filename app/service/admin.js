@@ -48,7 +48,7 @@ class AdminService extends Service {
 
   async getAdminList() {
     return this.ctx.model.Admin
-      .find({}, 'avatar_url nickname real_name email gender roles permissions created_at updated_at')
+      .find({}, 'avatar_url nickname real_name gender created_at updated_at')
       .sort({ created_at: -1 })
       .then(admin_list => {
         return { code: 2000, msg: '获取管理员列表', data: { admin_list } }
@@ -99,35 +99,51 @@ class AdminService extends Service {
       })
   }
 
-  async replaceAvatar(_id, stream) {
-    const { app, ctx } = this
-    const name = `avatar-${_id}-${path.basename(stream.filename)}`
+  async uploadAvatar(stream) {
+    const name = `avatar-${path.basename(stream.filename)}`
 
     try {
-      const { avatar_url: originalAvatar } = await ctx.model.User
-        .findOne({ _id }, 'avatar_url')
-      const { ok, url: avatar_url } = await app.fullQiniu
+      const { ok, url: avatar_url } = await this.app.fullQiniu
         .uploadStream(name, stream)
       if (ok) {
-        return ctx.model.User
-          .updateOne(
-            { _id },
-            { avatar_url }
-          )
-          .then(async ({ nModified }) => {
-            if (nModified === 1) {
-              const { ok } = await app.fullQiniu
-                .delete(path.basename(originalAvatar))
-              if (ok) {
-                return { code: 2000, msg: '头像更换成功', data: { avatar_url } }
-              }
-              return { code: 4003, msg: '原头像删除失败' }
-            }
-            return { code: 3000, msg: '没有更换到头像' }
-          })
+        return { code: 2000, msg: '头像上传成功', data: { avatar_url } }
       }
-      return { code: 5000, msg: '头像更换失败：上传图片失败' }
+      return { code: 5000, msg: '头像上传失败' }
     } catch (err) {
+      return { code: 5000, msg: err.message }
+    }
+  }
+
+  async replaceAvatar({ admin_id: _id, avatar_url }) {
+    const { app, ctx } = this
+    try {
+      const { avatar_url: originalAvatar } = await ctx.model.Admin
+        .findOne({ _id }, 'avatar_url')
+      return ctx.model.Admin
+        .updateOne(
+          { _id },
+          { avatar_url }
+        )
+        .then(async ({ nModified }) => {
+          if (nModified === 1) {
+            if (
+              originalAvatar === 'https://cdn.hrspider.top/default_avatar_female.jpg'
+              || originalAvatar === 'https://cdn.hrspider.top/default_avatar_male.jpg'
+            ) {
+              return { code: 2000, msg: '头像更换成功' }
+            }
+            // 如果不是默认头像，则删除原来的头像
+            const { ok } = await app.fullQiniu
+              .delete(path.basename(originalAvatar))
+            if (ok) {
+              return { code: 2000, msg: '头像更换成功' }
+            }
+            return { code: 4003, msg: '原头像删除失败' }
+          }
+          return { code: 3000, msg: '没有更换到头像' }
+        })
+    } catch (err) {
+      await app.fullQiniu.delete(path.basename(avatar_url))
       return { code: 5000, msg: err.message }
     }
   }
