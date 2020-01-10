@@ -27,6 +27,20 @@ class AdminController extends Controller {
     }
   }
 
+  /* PUT
+   * 更新管理员
+   */
+  async updateAdmin() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ admin_id: 'string' })
+      const res = await service.admin.updateAdmin(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* POST
    * 管理员登录
    */

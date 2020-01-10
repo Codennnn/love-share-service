@@ -22,6 +22,24 @@ class AdminService extends Service {
     }
   }
 
+  async updateAdmin(data) {
+    return this.ctx.model.Admin
+      .updateOne(
+        { _id: data.admin_id },
+        { $set: data },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '管理员信息更新成功' }
+        }
+        return { code: 3000, msg: '无可更新的数据' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   async signIn({ account, password }) {
     const { ctx, app } = this
     const res = await ctx.model.Admin.findOne({ account })
