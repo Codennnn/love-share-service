@@ -16,6 +16,10 @@ module.exports = app => {
       required: true,
       trim: true,
     },
+    gender: {
+      type: Number,
+      default: 0,
+    },
     email: {
       type: String,
       trim: true,
@@ -51,10 +55,6 @@ module.exports = app => {
         default: [],
       },
     })],
-    gender: {
-      type: String,
-      default: '0',
-    },
   })
 
   AdminSchema.set('timestamps', {

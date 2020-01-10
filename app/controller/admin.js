@@ -1,5 +1,6 @@
 'use strict'
 
+const sendToWormhole = require('stream-wormhole')
 const Controller = require('egg').Controller
 
 class AdminController extends Controller {
@@ -13,6 +14,11 @@ class AdminController extends Controller {
         account: 'string',
         password: 'string',
         nickname: 'string',
+        real_name: 'string',
+        permissions: { type: 'array', itemType: 'object' },
+        avatar_url: 'string',
+        gender: [0, 1],
+        email: 'email?',
       })
       const res = await service.admin.createAdmin(ctx.request.body)
       ctx.reply(res)
@@ -79,6 +85,21 @@ class AdminController extends Controller {
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取管理员信息
+   */
+  async replaceAvatar() {
+    const { ctx, service } = this
+    const stream = await ctx.getFileStream()
+    try {
+      const res = await service.user.replaceAvatar(ctx.state.user.id, stream)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+      await sendToWormhole(stream)
     }
   }
 }

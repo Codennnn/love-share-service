@@ -1,8 +1,27 @@
 'use strict'
 
+const path = require('path')
 const Service = require('egg').Service
 
 class AdminService extends Service {
+  async createAdmin(data) {
+    const hashPassword = await this.ctx.genHash(data.password)
+    data.password = hashPassword
+    const admin = new this.ctx.model.Admin(data)
+    try {
+      await admin.save()
+      return { code: 2000, msg: '成功创建管理员' }
+    } catch (err) {
+      if (err.message.includes('duplicate key error')) {
+        if (err.message.includes('nickname')) {
+          return { code: 4002, msg: '昵称已被使用' }
+        }
+        return { code: 4003, msg: '已注册管理员，请前往登录' }
+      }
+      return { code: 5000, msg: err.message }
+    }
+  }
+
   async signIn({ account, password }) {
     const { ctx, app } = this
     const res = await ctx.model.Admin.findOne({ account })
@@ -27,27 +46,10 @@ class AdminService extends Service {
     return { code: 4001, msg: '账号尚未注册' }
   }
 
-  async createAdmin(data) {
-    const hashPassword = await this.ctx.genHash(data.password)
-    data.password = hashPassword
-    const admin = new this.ctx.model.Admin(data)
-    try {
-      await admin.save()
-      return { code: 2001, msg: '成功创建管理员' }
-    } catch (err) {
-      if (err.message.includes('duplicate key error')) {
-        if (err.message.includes('nickname')) {
-          return { code: 3000, msg: '昵称已被使用' }
-        }
-        return { code: 3000, msg: '已注册管理员，请前往登录' }
-      }
-      return { code: 5000, msg: err.message }
-    }
-  }
-
   async getAdminList() {
     return this.ctx.model.Admin
       .find({}, 'avatar_url nickname real_name email gender roles permissions created_at updated_at')
+      .sort({ created_at: -1 })
       .then(admin_list => {
         return { code: 2000, msg: '获取管理员列表', data: { admin_list } }
       })
@@ -95,6 +97,39 @@ class AdminService extends Service {
       .catch(err => {
         return { code: 5000, msg: err.message }
       })
+  }
+
+  async replaceAvatar(_id, stream) {
+    const { app, ctx } = this
+    const name = `avatar-${_id}-${path.basename(stream.filename)}`
+
+    try {
+      const { avatar_url: originalAvatar } = await ctx.model.User
+        .findOne({ _id }, 'avatar_url')
+      const { ok, url: avatar_url } = await app.fullQiniu
+        .uploadStream(name, stream)
+      if (ok) {
+        return ctx.model.User
+          .updateOne(
+            { _id },
+            { avatar_url }
+          )
+          .then(async ({ nModified }) => {
+            if (nModified === 1) {
+              const { ok } = await app.fullQiniu
+                .delete(path.basename(originalAvatar))
+              if (ok) {
+                return { code: 2000, msg: '头像更换成功', data: { avatar_url } }
+              }
+              return { code: 4003, msg: '原头像删除失败' }
+            }
+            return { code: 3000, msg: '没有更换到头像' }
+          })
+      }
+      return { code: 5000, msg: '头像更换失败：上传图片失败' }
+    } catch (err) {
+      return { code: 5000, msg: err.message }
+    }
   }
 }
 

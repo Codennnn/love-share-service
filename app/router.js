@@ -123,6 +123,7 @@ module.exports = app => {
   router.get('/api/admin/info', admin.getAdminInfo)
   router.get('/api/admin/detail', admin.getAdminDetail)
   router.get('/api/admin/list', admin.getAdminList)
+  router.put('/api/admin/replace_avatar', admin.replaceAvatar)
 
   // 用户模块
   router.get('/api/user/list', auth1, user.getUserList)
