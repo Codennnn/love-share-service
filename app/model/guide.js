@@ -5,23 +5,23 @@ module.exports = app => {
   const Schema = mongoose.Schema
 
   const GuideSchema = new Schema({
-    guides: [new Schema({
+    section: {
+      type: String,
+      require: true,
+      unique: true,
+      trim: true,
+    },
+    articles: [new Schema({
       title: {
         type: String,
         require: true,
       },
-      articles: [new Schema({
-        title: {
-          type: String,
-          require: true,
-        },
-        content: {
-          type: String,
-          require: true,
-        },
-      }, {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-      })],
+      content: {
+        type: String,
+        require: true,
+      },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
   })
 

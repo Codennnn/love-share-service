@@ -4,7 +4,7 @@ module.exports = app => {
   const { router, controller, middleware, io } = app
   const {
     admin, user, goods, order, address, school, category,
-    notice, chat, cart, begging, common,
+    notice, chat, cart, begging, guide, common,
   } = controller
   const { get, post, put, delete: dele } = router
   const { auth } = middleware
@@ -212,9 +212,22 @@ module.exports = app => {
     school.updateSchool)
 
   // 资讯模块
+  get(
+    '/api/guide/list',
+    auth('admin', ['read']),
+    guide.getGuideList)
   post(
-    '/api/service/add',
-    school.addSchool)
+    '/api/guide/create',
+    auth('admin', ['create']),
+    guide.createGuide)
+  post(
+    '/api/guide/article/add',
+    auth('admin', ['create']),
+    guide.addArticle)
+  get(
+    '/api/guide/article',
+    auth('admin', ['read']),
+    guide.getArticle)
 
 
   io.route('setOnline', io.controller.action.setOnline)
