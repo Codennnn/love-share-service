@@ -45,7 +45,7 @@ class AdminService extends Service {
     const res = await ctx.model.Admin.findOne({ account })
 
     if (res) {
-      const { _id: id, password: hashPassword, roles } = res
+      const { _id: id, password: hashPassword, permissions } = res
 
       // 对比 hash 加密后的密码是否相等
       const isMatch = await ctx.compare(password, hashPassword)
@@ -53,7 +53,7 @@ class AdminService extends Service {
       if (isMatch) {
         // 创建 JWT，有效期为7天
         const token = app.jwt.sign(
-          { id, roles },
+          { id, permissions },
           app.config.jwt.secret,
           { expiresIn: '7d' }
         )

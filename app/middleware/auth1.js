@@ -1,7 +1,8 @@
 'use strict'
 
-module.exports = () => {
+module.exports = op => {
   return async function auth1(ctx, next) {
+    console.log(op)
     const { roles } = ctx.state.user
     // 如果是普通管理员，则放行
     if (roles) {

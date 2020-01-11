@@ -6,6 +6,8 @@ module.exports = app => {
     admin, user, goods, order, address, school, category,
     notice, chat, cart, begging, common,
   } = controller
+  const { get, post, put, delete: dele } = router
+  const { auth } = middleware
 
   const auth1 = middleware.auth1() // 普通管理员权限
   const auth2 = middleware.auth2() // 超级管理员权限
@@ -15,139 +17,139 @@ module.exports = app => {
    */
 
   // 用户模块
-  router.post('/api/user/sign_in', user.signIn)
-  router.post('/api/user/sign_up', user.signUp)
-  router.put('/api/user/reset_password', user.resetPassword)
-  router.get('/api/user/info', user.getUserInfo)
-  router.get('/api/user/other/info', user.getOtherUserInfo)
-  router.get('/api/user/info_num', user.getUserInfoNum)
-  router.get('/api/user/detail', user.getUserDetail)
-  router.put('/api/user/modify', user.modifyUser)
-  router.put('/api/user/replace_avatar', user.replaceAvatar)
-  router.post('/api/user/is_followed', user.isUserFollowed)
+  post('/api/user/sign_in', user.signIn)
+  post('/api/user/sign_up', user.signUp)
+  put('/api/user/reset_password', user.resetPassword)
+  get('/api/user/info', user.getUserInfo)
+  get('/api/user/other/info', user.getOtherUserInfo)
+  get('/api/user/info_num', user.getUserInfoNum)
+  get('/api/user/detail', user.getUserDetail)
+  put('/api/user/modify', user.modifyUser)
+  put('/api/user/replace_avatar', user.replaceAvatar)
+  post('/api/user/is_followed', user.isUserFollowed)
 
-  router.put('/api/user/credit_value', user.updateCreditValue)
-  router.put('/api/user/share_value', user.updateShareValue)
-  router.put('/api/user/beans', user.updateBean)
+  put('/api/user/credit_value', user.updateCreditValue)
+  put('/api/user/share_value', user.updateShareValue)
+  put('/api/user/beans', user.updateBean)
 
-  router.get('/api/user/address_list', address.getAddressList)
-  router.post('/api/user/address/add', address.addAddress)
-  router.delete('/api/user/address/delete', address.deleteAddress)
-  router.put('/api/user/address/update', address.updateAddress)
-  router.put('/api/user/address/default', address.setDefaultAddress)
+  get('/api/user/address_list', address.getAddressList)
+  post('/api/user/address/add', address.addAddress)
+  dele('/api/user/address/delete', address.deleteAddress)
+  put('/api/user/address/update', address.updateAddress)
+  put('/api/user/address/default', address.setDefaultAddress)
 
-  router.post('/api/user/subscribe', user.subscribe)
-  router.delete('/api/user/unsubscribe', user.unsubscribe)
+  post('/api/user/subscribe', user.subscribe)
+  dele('/api/user/unsubscribe', user.unsubscribe)
 
-  router.get('/api/user/published_goods', user.getPublishedGoods)
-  router.get('/api/user/purchased_goods', user.getPurchasedGoods)
+  get('/api/user/published_goods', user.getPublishedGoods)
+  get('/api/user/purchased_goods', user.getPurchasedGoods)
 
-  router.get('/api/user/check_in_list', user.getCheckInList)
-  router.post('/api/user/check_in', user.checkIn)
+  get('/api/user/check_in_list', user.getCheckInList)
+  post('/api/user/check_in', user.checkIn)
 
-  router.get('/api/user/follows', user.getUserFollows)
-  router.get('/api/user/fans', user.getUserFans)
+  get('/api/user/follows', user.getUserFollows)
+  get('/api/user/fans', user.getUserFans)
 
-  router.get('/api/user/collection/list', user.getCollectionList)
-  router.post('/api/user/collection/add', user.addCollection)
-  router.delete('/api/user/collection/delete', user.deleteCollection)
+  get('/api/user/collection/list', user.getCollectionList)
+  post('/api/user/collection/add', user.addCollection)
+  dele('/api/user/collection/delete', user.deleteCollection)
 
   // 聊天模块
-  router.post('/api/chat/contact/add', chat.addContact)
-  router.delete('/api/chat/contact/delete', chat.deleteContact)
-  router.get('/api/chat/contact/list', chat.getContactList)
-  router.get('/api/chat/contact_info', chat.getContactInfo)
-  router.get('/api/chat/chat_data', chat.getChatData)
+  post('/api/chat/contact/add', chat.addContact)
+  dele('/api/chat/contact/delete', chat.deleteContact)
+  get('/api/chat/contact/list', chat.getContactList)
+  get('/api/chat/contact_info', chat.getContactInfo)
+  get('/api/chat/chat_data', chat.getChatData)
 
   // 购物车模块
-  router.post('/api/cart/add', cart.addCartItem)
-  router.delete('/api/cart/delete', cart.removeCartItem)
-  router.delete('/api/cart/clear', cart.clearCartList)
-  router.get('/api/cart/list', cart.getCartList)
+  post('/api/cart/add', cart.addCartItem)
+  dele('/api/cart/delete', cart.removeCartItem)
+  dele('/api/cart/clear', cart.clearCartList)
+  get('/api/cart/list', cart.getCartList)
 
   // 通知模块
-  router.get('/api/notice/list', notice.getNoticeList)
-  router.get('/api/notice/unread', notice.getUnreadNotices)
-  router.post('/api/notice/add', notice.addNotice)
-  router.delete('/api/notice/delete', notice.deleteNotice)
-  router.delete('/api/notice/delete_many', notice.deleteManyNotices)
-  router.put('/api/notice/set_read', notice.setNoticeRead)
-  router.put('/api/notice/set_all_read', notice.setAllNoticesRead)
+  get('/api/notice/list', notice.getNoticeList)
+  get('/api/notice/unread', notice.getUnreadNotices)
+  post('/api/notice/add', notice.addNotice)
+  dele('/api/notice/delete', notice.deleteNotice)
+  dele('/api/notice/delete_many', notice.deleteManyNotices)
+  put('/api/notice/set_read', notice.setNoticeRead)
+  put('/api/notice/set_all_read', notice.setAllNoticesRead)
 
   // 商品模块
-  router.post('/api/goods/create', goods.createGoods)
-  router.delete('/api/goods/delete', goods.deleteGoods)
-  router.put('/api/goods/edit', goods.editGoods)
+  post('/api/goods/create', goods.createGoods)
+  dele('/api/goods/delete', goods.deleteGoods)
+  put('/api/goods/edit', goods.editGoods)
 
-  router.get('/api/goods/detail', goods.getGoodsDetail)
-  router.get('/api/goods/list/recommend', goods.getRecommendGoodsList)
-  router.get('/api/goods/list/by_category', goods.getGoodsListByCategory)
-  router.post('/api/goods/list/same_school', goods.getGoodsListOfSameSchool)
-  router.post('/api/goods/img/upload', goods.uploadImg)
-  router.delete('/api/goods/img/delete', goods.deleteImg)
-  router.put('/api/goods/update_many', goods.updateManyGoods)
-  router.get('/api/goods/seller', goods.getGoodsSeller)
+  get('/api/goods/detail', goods.getGoodsDetail)
+  get('/api/goods/list/recommend', goods.getRecommendGoodsList)
+  get('/api/goods/list/by_category', goods.getGoodsListByCategory)
+  post('/api/goods/list/same_school', goods.getGoodsListOfSameSchool)
+  post('/api/goods/img/upload', goods.uploadImg)
+  dele('/api/goods/img/delete', goods.deleteImg)
+  put('/api/goods/update_many', goods.updateManyGoods)
+  get('/api/goods/seller', goods.getGoodsSeller)
 
-  router.get('/api/goods/comments', goods.getGoodsComments)
-  router.post('/api/goods/comment/post', goods.postComment)
-  router.post('/api/goods/comment/reply', goods.replyComment)
+  get('/api/goods/comments', goods.getGoodsComments)
+  post('/api/goods/comment/post', goods.postComment)
+  post('/api/goods/comment/reply', goods.replyComment)
 
-  router.post('/api/goods/is_collected', goods.isGoodsCollected)
+  post('/api/goods/is_collected', goods.isGoodsCollected)
 
   // 求购模块
-  router.get('/api/begging/list', begging.getBeggingList)
-  router.post('/api/begging', begging.addBegging)
+  get('/api/begging/list', begging.getBeggingList)
+  post('/api/begging', begging.addBegging)
 
   // 订单模块
-  router.post('/api/order/create', order.createOrder)
-  router.delete('/api/order/delete', order.deleteOrder)
-  router.get('/api/order/detail', order.geteOrderDetail)
-  router.get('/api/order/by_user', order.geteOrdersByUser)
+  post('/api/order/create', order.createOrder)
+  dele('/api/order/delete', order.deleteOrder)
+  get('/api/order/detail', order.geteOrderDetail)
+  get('/api/order/by_user', order.geteOrdersByUser)
 
   // 学校模块
-  router.get('/api/school/list', school.getSchoolList)
+  get('/api/school/list', school.getSchoolList)
 
   // 公共模块
-  router.post('/api/common/check_nickname', common.checkNickname)
-  router.post('/api/common/check_phone_number', common.checkPhoneNumber)
-  router.post('/api/common/verification_code', common.getVerificationCode)
-  router.get('/api/category/list', category.getCategoryList)
+  post('/api/common/check_nickname', common.checkNickname)
+  post('/api/common/check_phone_number', common.checkPhoneNumber)
+  post('/api/common/verification_code', common.getVerificationCode)
+  get('/api/category/list', category.getCategoryList)
 
   /*
    * 管理端
    */
 
   // 管理员模块
-  router.post('/api/admin/create', admin.createAdmin)
-  router.put('/api/admin/update', admin.updateAdmin)
-  router.post('/api/admin/sign_in', admin.signIn)
-  router.get('/api/admin/info', admin.getAdminInfo)
-  router.get('/api/admin/detail', admin.getAdminDetail)
-  router.get('/api/admin/list', admin.getAdminList)
-  router.post('/api/admin/upload_avatar', admin.uploadAvatar)
-  router.put('/api/admin/replace_avatar', admin.replaceAvatar)
+  post('/api/admin/create', admin.createAdmin)
+  put('/api/admin/update', admin.updateAdmin)
+  post('/api/admin/sign_in', admin.signIn)
+  get('/api/admin/info', admin.getAdminInfo)
+  get('/api/admin/detail', admin.getAdminDetail)
+  get('/api/admin/list', admin.getAdminList)
+  post('/api/admin/upload_avatar', auth('admin', ['read']), admin.uploadAvatar)
+  put('/api/admin/replace_avatar', admin.replaceAvatar)
 
   // 用户模块
-  router.get('/api/user/list', auth1, user.getUserList)
-  router.put('/api/user/update', auth1, auth2, user.updateUser)
-  router.delete('/api/user/delete', auth1, auth2, user.deleteUser)
+  get('/api/user/list', auth1, user.getUserList)
+  put('/api/user/update', auth1, auth2, user.updateUser)
+  dele('/api/user/delete', auth1, auth2, user.deleteUser)
 
   // 商品模块
-  router.get('/api/goods/list', auth1, goods.getGoodsList)
-  router.get('/api/goods/list/info', auth1, goods.getGoodsListInfo)
-  router.get('/api/goods/list/on_sell', auth1, goods.getGoodsListOnSell)
-  router.get('/api/goods/list/off_sell', auth1, goods.getGoodsListOffSell)
+  get('/api/goods/list', auth1, goods.getGoodsList)
+  get('/api/goods/list/info', auth1, goods.getGoodsListInfo)
+  get('/api/goods/list/on_sell', auth1, goods.getGoodsListOnSell)
+  get('/api/goods/list/off_sell', auth1, goods.getGoodsListOffSell)
 
-  router.post('/api/category/add', auth1, category.addCategory)
-  router.delete('/api/category/delete', auth1, category.deleteCategory)
+  post('/api/category/add', auth1, category.addCategory)
+  dele('/api/category/delete', auth1, category.deleteCategory)
 
   // 订单模块
-  router.get('/api/order/list', order.getOrderList)
+  get('/api/order/list', order.getOrderList)
 
   // 学校模块
-  router.post('/api/school/add', auth1, auth2, school.addSchool)
-  router.delete('/api/school/delete', auth1, auth2, school.deleteSchool)
-  router.put('/api/school/update', auth1, auth2, school.updateSchool)
+  post('/api/school/add', auth1, auth2, school.addSchool)
+  dele('/api/school/delete', auth1, auth2, school.deleteSchool)
+  put('/api/school/update', auth1, auth2, school.updateSchool)
 
 
   io.route('setOnline', io.controller.action.setOnline)
