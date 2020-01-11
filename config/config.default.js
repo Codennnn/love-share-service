@@ -86,7 +86,7 @@ module.exports = appInfo => {
       enable: true,
       ignore: [
         '/api/admin/sign_in',
-        '/api/admin/create',
+        '/api/admin/sign_out',
 
         '/api/user/sign_in',
         '/api/user/sign_up',

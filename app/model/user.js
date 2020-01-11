@@ -26,7 +26,7 @@ module.exports = app => {
       required: true,
       unique: true,
       minlength: 2,
-      maxlength: 8,
+      maxlength: 12,
     },
     real_name: {
       type: String,

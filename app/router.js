@@ -120,14 +120,35 @@ module.exports = app => {
    */
 
   // 管理员模块
-  post('/api/admin/create', admin.createAdmin)
-  put('/api/admin/update', admin.updateAdmin)
+  post(
+    '/api/admin/create',
+    auth('admin', ['write', 'create']),
+    admin.createAdmin)
+  put(
+    '/api/admin/update',
+    auth('admin', ['write']),
+    admin.updateAdmin)
   post('/api/admin/sign_in', admin.signIn)
-  get('/api/admin/info', admin.getAdminInfo)
-  get('/api/admin/detail', admin.getAdminDetail)
-  get('/api/admin/list', admin.getAdminList)
-  post('/api/admin/upload_avatar', auth('admin', ['read']), admin.uploadAvatar)
-  put('/api/admin/replace_avatar', admin.replaceAvatar)
+  get(
+    '/api/admin/info',
+    auth('admin'),
+    admin.getAdminInfo)
+  get(
+    '/api/admin/detail',
+    auth('admin'),
+    admin.getAdminDetail)
+  get(
+    '/api/admin/list',
+    auth('admin'),
+    admin.getAdminList)
+  post(
+    '/api/admin/upload_avatar',
+    auth('admin', ['write']),
+    admin.uploadAvatar)
+  put(
+    '/api/admin/replace_avatar',
+    auth('admin', ['write']),
+    admin.replaceAvatar)
 
   // 用户模块
   get('/api/user/list', auth1, user.getUserList)

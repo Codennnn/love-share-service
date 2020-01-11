@@ -66,7 +66,7 @@ class AdminService extends Service {
 
   async getAdminList() {
     return this.ctx.model.Admin
-      .find({}, 'avatar_url nickname real_name gender created_at updated_at')
+      .find({}, 'account avatar_url nickname real_name gender created_at updated_at')
       .sort({ created_at: -1 })
       .then(admin_list => {
         return { code: 2000, msg: '获取管理员列表', data: { admin_list } }
