@@ -9,9 +9,6 @@ module.exports = app => {
   const { get, post, put, delete: dele } = router
   const { auth } = middleware
 
-  const auth1 = middleware.auth1() // 普通管理员权限
-  const auth2 = middleware.auth2() // 超级管理员权限
-
   /*
    * 客户端
    */
@@ -128,18 +125,20 @@ module.exports = app => {
     '/api/admin/update',
     auth('admin', ['write']),
     admin.updateAdmin)
-  post('/api/admin/sign_in', admin.signIn)
+  post(
+    '/api/admin/sign_in',
+    admin.signIn)
   get(
     '/api/admin/info',
-    auth('admin'),
+    auth('admin', ['read']),
     admin.getAdminInfo)
   get(
     '/api/admin/detail',
-    auth('admin'),
+    auth('admin', ['read']),
     admin.getAdminDetail)
   get(
     '/api/admin/list',
-    auth('admin'),
+    auth('admin', ['read']),
     admin.getAdminList)
   post(
     '/api/admin/upload_avatar',
@@ -151,26 +150,71 @@ module.exports = app => {
     admin.replaceAvatar)
 
   // 用户模块
-  get('/api/user/list', auth1, user.getUserList)
-  put('/api/user/update', auth1, auth2, user.updateUser)
-  dele('/api/user/delete', auth1, auth2, user.deleteUser)
+  get(
+    '/api/user/list',
+    auth('user', ['read']),
+    user.getUserList)
+  put(
+    '/api/user/update',
+    auth('user', ['write']),
+    user.updateUser)
+  dele(
+    '/api/user/delete',
+    auth('user', ['delete']),
+    user.deleteUser)
 
   // 商品模块
-  get('/api/goods/list', auth1, goods.getGoodsList)
-  get('/api/goods/list/info', auth1, goods.getGoodsListInfo)
-  get('/api/goods/list/on_sell', auth1, goods.getGoodsListOnSell)
-  get('/api/goods/list/off_sell', auth1, goods.getGoodsListOffSell)
+  get(
+    '/api/goods/list',
+    auth('goods', ['read']),
+    goods.getGoodsList)
+  get(
+    '/api/goods/list/info',
+    auth('user', ['read']),
+    goods.getGoodsListInfo)
+  get(
+    '/api/goods/list/on_sell',
+    auth('user', ['read']),
+    goods.getGoodsListOnSell)
+  get(
+    '/api/goods/list/off_sell',
+    auth('user', ['read']),
+    goods.getGoodsListOffSell)
 
-  post('/api/category/add', auth1, category.addCategory)
-  dele('/api/category/delete', auth1, category.deleteCategory)
+  // 分类模块
+  post(
+    '/api/category/add',
+    auth('goods', ['create']),
+    category.addCategory)
+  dele(
+    '/api/category/delete',
+    auth('goods', ['delete']),
+    category.deleteCategory)
 
   // 订单模块
-  get('/api/order/list', order.getOrderList)
+  get(
+    '/api/order/list',
+    auth('order', ['read']),
+    order.getOrderList)
 
   // 学校模块
-  post('/api/school/add', auth1, auth2, school.addSchool)
-  dele('/api/school/delete', auth1, auth2, school.deleteSchool)
-  put('/api/school/update', auth1, auth2, school.updateSchool)
+  post(
+    '/api/school/add',
+    auth('order', ['read']),
+    school.addSchool)
+  dele(
+    '/api/school/delete',
+    auth('order', ['delete']),
+    school.deleteSchool)
+  put(
+    '/api/school/update',
+    auth('order', ['write']),
+    school.updateSchool)
+
+  // 资讯模块
+  post(
+    '/api/service/add',
+    school.addSchool)
 
 
   io.route('setOnline', io.controller.action.setOnline)
