@@ -30,10 +30,23 @@ class GuideService extends Service {
       })
   }
 
-  addArticle({ section, title, content = '' }) {
+  getArticle({ section_id: _id, article_id }) {
+    return this.ctx.model.Guide
+      .findOne({ _id }, 'articles')
+      .then(({ articles }) => {
+        const [article] = articles.filter(el => String(el._id) === article_id
+        )
+        return { code: 2000, msg: '获取文章内容', data: { article } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  addArticle({ section_id: _id, title, content = '' }) {
     return this.ctx.model.Guide
       .updateOne(
-        { section },
+        { _id },
         { $push: { articles: { title, content } } }
       )
       .then(({ nModified }) => {
@@ -47,13 +60,39 @@ class GuideService extends Service {
       })
   }
 
-  getArticle({ section_id: _id, article_id }) {
+  updateArticle({ _id, title, content = '' }) {
     return this.ctx.model.Guide
-      .findOne({ _id }, 'articles')
-      .then(({ articles }) => {
-        const [article] = articles.filter(el => String(el._id) === article_id
-        )
-        return { code: 2000, msg: '获取文章内容', data: { article } }
+      .updateOne(
+        { 'articles._id': _id },
+        {
+          $set: {
+            'articles.$.title': title,
+            'articles.$.content': content,
+          },
+        }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功修改一篇文章' }
+        }
+        return { code: 3000, msg: '没有修改任何文章' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  deleteArticle({ article_id: _id }) {
+    return this.ctx.model.Guide
+      .updateOne(
+        { 'articles._id': _id },
+        { $pull: { articles: { _id } } }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功删除一篇文章' }
+        }
+        return { code: 3000, msg: '没有删除任何文章' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

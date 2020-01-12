@@ -228,6 +228,14 @@ module.exports = app => {
     '/api/guide/article',
     auth('admin', ['read']),
     guide.getArticle)
+  put(
+    '/api/guide/article/update',
+    auth('admin', ['create']),
+    guide.updateArticle)
+  dele(
+    '/api/guide/article/delete',
+    auth('admin', ['create']),
+    guide.deleteArticle)
 
 
   io.route('setOnline', io.controller.action.setOnline)
