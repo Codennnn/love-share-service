@@ -232,6 +232,10 @@ module.exports = app => {
     '/api/guide/create',
     auth('guide', ['create']),
     guide.createGuide)
+  dele(
+    '/api/guide/delete',
+    auth('guide', ['delete']),
+    guide.deleteGuide)
   post(
     '/api/guide/article/add',
     auth('guide', ['create']),

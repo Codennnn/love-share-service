@@ -3,6 +3,19 @@
 const Controller = require('egg').Controller
 
 class GuideController extends Controller {
+  /* GET
+   * 获取帮助指引
+   */
+  async getGuideList() {
+    const { ctx, service } = this
+    try {
+      const res = await service.guide.getGuideList()
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* POST
    * 创建指引
    */
@@ -20,13 +33,14 @@ class GuideController extends Controller {
     }
   }
 
-  /* GET
-   * 获取帮助指引
+  /* DELETE
+   * 删除指引
    */
-  async getGuideList() {
+  async deleteGuide() {
     const { ctx, service } = this
     try {
-      const res = await service.guide.getGuideList()
+      ctx.validate({ section_id: 'string' })
+      const res = await service.guide.deleteGuide(ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

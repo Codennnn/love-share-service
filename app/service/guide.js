@@ -3,6 +3,18 @@
 const Service = require('egg').Service
 
 class GuideService extends Service {
+  getGuideList() {
+    return this.ctx.model.Guide
+      .find({})
+      .sort({ created_at: -1 })
+      .then(guide_list => {
+        return { code: 2000, msg: '获取指引列表', data: { guide_list } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   async createGuide(data) {
     const guide = new this.ctx.model.Guide(data)
     try {
@@ -18,15 +30,14 @@ class GuideService extends Service {
     }
   }
 
-  getGuideList() {
+  deleteGuide({ section_id: _id }) {
     return this.ctx.model.Guide
-      .find({})
-      .sort({ created_at: -1 })
-      .then(guide_list => {
-        return { code: 2000, msg: '获取指引列表', data: { guide_list } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
+      .deleteOne({ _id })
+      .then(({ deletedCount }) => {
+        if (deletedCount === 1) {
+          return { code: 2000, msg: '删除了一个栏目' }
+        }
+        return { code: 3000, msg: '无任何分类被删除' }
       })
   }
 
