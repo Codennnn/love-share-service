@@ -181,16 +181,6 @@ module.exports = app => {
     auth('user', ['read']),
     goods.getGoodsListOffSell)
 
-  // 分类模块
-  post(
-    '/api/category/add',
-    auth('goods', ['create']),
-    category.addCategory)
-  dele(
-    '/api/category/delete',
-    auth('goods', ['delete']),
-    category.deleteCategory)
-
   // 订单模块
   get(
     '/api/order/list',
@@ -208,20 +198,6 @@ module.exports = app => {
     '/api/order/num',
     auth('order', ['read']),
     order.getOrderNum)
-
-  // 学校模块
-  post(
-    '/api/school/add',
-    auth('order', ['read']),
-    school.addSchool)
-  dele(
-    '/api/school/delete',
-    auth('order', ['delete']),
-    school.deleteSchool)
-  put(
-    '/api/school/update',
-    auth('order', ['write']),
-    school.updateSchool)
 
   // 资讯模块
   get(
@@ -252,6 +228,38 @@ module.exports = app => {
     '/api/guide/article/delete',
     auth('guide', ['delete']),
     guide.deleteArticle)
+
+  // 求购模块
+  get(
+    '/api/begging/list',
+    auth('guide', ['delete']),
+    begging.getBeggingList
+  )
+  post('/api/begging', begging.addBegging)
+
+  // 分类模块
+  post(
+    '/api/category/add',
+    auth('goods', ['create']),
+    category.addCategory)
+  dele(
+    '/api/category/delete',
+    auth('goods', ['delete']),
+    category.deleteCategory)
+
+  // 学校模块
+  post(
+    '/api/school/add',
+    auth('order', ['read']),
+    school.addSchool)
+  dele(
+    '/api/school/delete',
+    auth('order', ['delete']),
+    school.deleteSchool)
+  put(
+    '/api/school/update',
+    auth('order', ['write']),
+    school.updateSchool)
 
 
   io.route('setOnline', io.controller.action.setOnline)
