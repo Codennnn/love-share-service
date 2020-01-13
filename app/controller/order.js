@@ -78,6 +78,45 @@ class OrderController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* GET
+   * 获取订单交易量
+   */
+  async getOrderTransaction() {
+    const { ctx, service } = this
+    try {
+      const res = await service.order.getOrderTransaction()
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取订单成交量
+   */
+  async getOrderVolume() {
+    const { ctx, service } = this
+    try {
+      const res = await service.order.getOrderVolume()
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 获取订单数量
+   */
+  async getOrderNum() {
+    const { ctx, service } = this
+    try {
+      const res = await service.order.getOrderNum()
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = OrderController

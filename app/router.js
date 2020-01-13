@@ -196,6 +196,18 @@ module.exports = app => {
     '/api/order/list',
     auth('order', ['read']),
     order.getOrderList)
+  get(
+    '/api/order/transaction',
+    auth('order', ['read']),
+    order.getOrderTransaction)
+  get(
+    '/api/order/volume',
+    auth('order', ['read']),
+    order.getOrderVolume)
+  get(
+    '/api/order/num',
+    auth('order', ['read']),
+    order.getOrderNum)
 
   // 学校模块
   post(
@@ -214,27 +226,27 @@ module.exports = app => {
   // 资讯模块
   get(
     '/api/guide/list',
-    auth('admin', ['read']),
+    auth('guide', ['read']),
     guide.getGuideList)
   post(
     '/api/guide/create',
-    auth('admin', ['create']),
+    auth('guide', ['create']),
     guide.createGuide)
   post(
     '/api/guide/article/add',
-    auth('admin', ['create']),
+    auth('guide', ['create']),
     guide.addArticle)
   get(
     '/api/guide/article',
-    auth('admin', ['read']),
+    auth('guide', ['read']),
     guide.getArticle)
   put(
     '/api/guide/article/update',
-    auth('admin', ['create']),
+    auth('guide', ['write']),
     guide.updateArticle)
   dele(
     '/api/guide/article/delete',
-    auth('admin', ['create']),
+    auth('guide', ['delete']),
     guide.deleteArticle)
 
 
