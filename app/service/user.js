@@ -209,6 +209,46 @@ class UserService extends Service {
       })
   }
 
+  getUserDetailByAdmin(_id) {
+    const { ctx, app } = this
+    return ctx.model.User.aggregate([
+      { $match: { _id: app.mongoose.Types.ObjectId(_id) } },
+      {
+        $lookup: {
+          from: 'schools',
+          localField: 'school',
+          foreignField: '_id',
+          as: 'school',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          avatar_url: 1,
+          nickname: 1,
+          real_name: 1,
+          credit_value: 1,
+          share_value: 1,
+          gender: 1,
+          phone: 1,
+          email: 1,
+          wechat: 1,
+          qq: 1,
+          fans_num: { $size: '$fans' },
+          follow_num: { $size: '$follows' },
+          'school.name': 1,
+        },
+      },
+    ])
+      .then(([user_detail]) => {
+        Object.assign(user_detail, { school: user_detail.school[0].name })
+        return { code: 2000, msg: '获取用户信息', data: { user_detail } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   async replaceAvatar(_id, stream) {
     const { app, ctx } = this
     const name = `avatar-${_id}-${path.basename(stream.filename)}`

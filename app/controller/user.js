@@ -112,6 +112,16 @@ class UserController extends Controller {
     }
   }
 
+  /* GET
+   * 获取用户详情[管理端]
+   */
+  async getUserDetailByAdmin() {
+    const { ctx, service } = this
+    const id = ctx.request.query.user_id
+    const res = await service.user.getUserDetailByAdmin(id)
+    ctx.reply(res)
+  }
+
   /* PUT
    * 更换头像
    */

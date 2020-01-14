@@ -154,6 +154,10 @@ module.exports = app => {
     '/api/user/list',
     auth('user', ['read']),
     user.getUserList)
+  get(
+    '/api/user/detail_by_admin',
+    auth('user', ['read']),
+    user.getUserDetailByAdmin)
   put(
     '/api/user/update',
     auth('user', ['write']),
