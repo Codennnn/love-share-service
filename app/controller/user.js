@@ -341,6 +341,19 @@ class UserController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* GET
+   * 获取每日新增用户的统计数据
+   */
+  async getUserDailyStatistics() {
+    const { ctx, service } = this
+    try {
+      const res = await service.user.getUserDailyStatistics()
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = UserController

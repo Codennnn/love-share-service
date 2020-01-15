@@ -209,44 +209,60 @@ class UserService extends Service {
       })
   }
 
-  getUserDetailByAdmin(_id) {
-    const { ctx, app } = this
-    return ctx.model.User.aggregate([
-      { $match: { _id: app.mongoose.Types.ObjectId(_id) } },
-      {
-        $lookup: {
-          from: 'schools',
-          localField: 'school',
-          foreignField: '_id',
-          as: 'school',
+  async getUserDetailByAdmin(_id) {
+    const { app, ctx, service } = this
+    const [{ data: { published_goods } }, [user_detail]] = await Promise.all([
+      service.user.getPublishedGoods(_id),
+      ctx.model.User.aggregate([
+        { $match: { _id: app.mongoose.Types.ObjectId(_id) } },
+        {
+          $lookup: {
+            from: 'schools',
+            localField: 'school',
+            foreignField: '_id',
+            as: 'school',
+          },
         },
-      },
-      {
-        $project: {
-          _id: 0,
-          avatar_url: 1,
-          nickname: 1,
-          real_name: 1,
-          credit_value: 1,
-          share_value: 1,
-          gender: 1,
-          phone: 1,
-          email: 1,
-          wechat: 1,
-          qq: 1,
-          fans_num: { $size: '$fans' },
-          follow_num: { $size: '$follows' },
-          'school.name': 1,
+        {
+          $project: {
+            _id: 0,
+            avatar_url: 1,
+            nickname: 1,
+            real_name: 1,
+            credit_value: 1,
+            share_value: 1,
+            gender: 1,
+            phone: 1,
+            email: 1,
+            wechat: 1,
+            qq: 1,
+            introduction: 1,
+            fans_num: { $size: '$fans' },
+            follow_num: { $size: '$follows' },
+            'school._id': 1,
+            'school.name': 1,
+            balance: 1,
+            beans: 1,
+          },
         },
-      },
+      ]),
     ])
-      .then(([user_detail]) => {
-        Object.assign(user_detail, { school: user_detail.school[0].name })
-        return { code: 2000, msg: '获取用户信息', data: { user_detail } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+    Object.assign(
+      user_detail,
+      { school: user_detail.school[0], published_goods }
+    )
+    return {
+      code: 2000,
+      msg: '管理员获取用户详情',
+      data: { user_detail },
+    }
+    // .then(([user_detail]) => {
+    //   Object.assign(user_detail, { school: user_detail.school[0].name })
+    //   return { code: 2000, msg: '获取用户信息', data: { user_detail } }
+    // })
+    // .catch(err => {
+    //   return { code: 5000, msg: err.message }
+    // })
   }
 
   async replaceAvatar(_id, stream) {
@@ -523,6 +539,39 @@ class UserService extends Service {
           return { code: 2000, msg: '修改用户乐豆数量成功' }
         }
         return { code: 3000, msg: '无任何用户乐豆数量被修改' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  getUserDailyStatistics() {
+    return this.ctx.model.User
+      .countDocuments({
+        created_at: {
+          $gte: new Date('2019-12-03'),
+          $lt: new Date('2019-12-25'),
+        },
+      })
+      // .aggregate([
+      //   {
+      //     $project: {
+      //       m: { $month: '$created_at' },
+      //     },
+      //   },
+      //   {
+      //     $group: {
+      //       _id: { month: '$m' },
+      //     },
+      //   },
+      // ])
+      // .find({
+      //   created_at: {
+      //     $gte: new Date(2019, 11, 17), $lt: new Date(2019, 12, 17),
+      //   },
+      // })
+      .then(res => {
+        return res
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

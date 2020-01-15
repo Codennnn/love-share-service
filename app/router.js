@@ -158,6 +158,10 @@ module.exports = app => {
     '/api/user/detail_by_admin',
     auth('user', ['read']),
     user.getUserDetailByAdmin)
+  get(
+    '/api/user/daily_statistics',
+    auth('user', ['read']),
+    user.getUserDailyStatistics)
   put(
     '/api/user/update',
     auth('user', ['write']),
