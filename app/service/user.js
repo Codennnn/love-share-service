@@ -256,13 +256,6 @@ class UserService extends Service {
       msg: '管理员获取用户详情',
       data: { user_detail },
     }
-    // .then(([user_detail]) => {
-    //   Object.assign(user_detail, { school: user_detail.school[0].name })
-    //   return { code: 2000, msg: '获取用户信息', data: { user_detail } }
-    // })
-    // .catch(err => {
-    //   return { code: 5000, msg: err.message }
-    // })
   }
 
   async replaceAvatar(_id, stream) {
@@ -545,37 +538,26 @@ class UserService extends Service {
       })
   }
 
-  getUserDailyStatistics() {
-    return this.ctx.model.User
-      .countDocuments({
-        created_at: {
-          $gte: new Date('2019-12-03'),
-          $lt: new Date('2019-12-25'),
-        },
-      })
-      // .aggregate([
-      //   {
-      //     $project: {
-      //       m: { $month: '$created_at' },
-      //     },
-      //   },
-      //   {
-      //     $group: {
-      //       _id: { month: '$m' },
-      //     },
-      //   },
-      // ])
-      // .find({
-      //   created_at: {
-      //     $gte: new Date(2019, 11, 17), $lt: new Date(2019, 12, 17),
-      //   },
-      // })
-      .then(res => {
-        return res
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+  async getUserDailyStatistics({ date_list }) {
+    const data = await Promise.all(date_list.map(
+      el => this.ctx.model.User
+        .countDocuments({
+          created_at: {
+            $gte: new Date(`${el} 00:00:00`),
+            $lte: new Date(`${el} 23:59:59`),
+          },
+        })
+    ))
+    return {
+      code: 2000,
+      msg: '获取新增用户统计数据',
+      data: {
+        series: [{
+          name: '用户数量',
+          data,
+        }],
+      },
+    }
   }
 }
 

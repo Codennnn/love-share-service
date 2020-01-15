@@ -348,7 +348,7 @@ class UserController extends Controller {
   async getUserDailyStatistics() {
     const { ctx, service } = this
     try {
-      const res = await service.user.getUserDailyStatistics()
+      const res = await service.user.getUserDailyStatistics(ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
