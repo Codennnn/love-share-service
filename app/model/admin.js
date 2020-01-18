@@ -39,6 +39,17 @@ module.exports = app => {
       type: String,
       required: true,
     },
+    todos: [new Schema({
+      title: { type: String, required: true },
+      content: { type: String, required: true },
+      is_done: { type: Boolean, default: false },
+      is_important: { type: Boolean, default: false },
+      is_starred: { type: Boolean, default: false },
+      is_trashed: { type: Boolean, default: false },
+      tags: { type: Array },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    })],
     roles: {
       type: Array,
       required: true,
@@ -54,6 +65,8 @@ module.exports = app => {
         required: true,
         default: [],
       },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
   })
 

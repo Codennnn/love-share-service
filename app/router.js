@@ -4,7 +4,7 @@ module.exports = app => {
   const { router, controller, middleware, io } = app
   const {
     admin, user, goods, order, address, school, category,
-    notice, chat, cart, begging, guide, common,
+    notice, chat, cart, begging, guide, todo, common,
   } = controller
   const { get, post, put, delete: dele } = router
   const { auth } = middleware
@@ -148,6 +148,21 @@ module.exports = app => {
     '/api/admin/replace_avatar',
     auth('admin', ['write']),
     admin.replaceAvatar)
+  get(
+    '/api/admin/todo/list',
+    todo.getTodoList)
+  post(
+    '/api/admin/todo/add',
+    todo.addTodo)
+  dele(
+    '/api/admin/todo/delete',
+    todo.deleteTodo)
+  put(
+    '/api/admin/todo/update',
+    todo.updateTodo)
+  put(
+    '/api/admin/todo/update_type',
+    todo.updateTodoType)
 
   // 用户模块
   get(
