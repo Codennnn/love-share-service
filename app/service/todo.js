@@ -36,6 +36,24 @@ class TodoService extends Service {
       })
   }
 
+  deleteTodo(_id, { todo_id }) {
+    return this.ctx.model.Admin
+      .updateOne(
+        { _id },
+        { $pull: { todos: { _id: todo_id } } },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功删除一个任务' }
+        }
+        return { code: 3000, msg: '没有删除任何任务' }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   updateTodo(_id, { _id: todo_id, title, content, is_done, is_important, is_starred, is_trashed, tags }) {
     return this.ctx.model.Admin
       .updateOne(
