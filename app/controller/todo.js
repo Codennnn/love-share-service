@@ -21,7 +21,7 @@ class TodoController extends Controller {
     try {
       ctx.validate({
         title: 'string',
-        content: 'string',
+        content: 'string?',
         is_done: 'boolean',
         is_important: 'boolean',
         is_starred: 'boolean',

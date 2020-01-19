@@ -6,6 +6,8 @@
 module.exports = appInfo => {
   const config = (exports = {})
 
+  config.proxy = true
+
   config.onerror = {
     all(err, ctx) {
       // JWT 过期

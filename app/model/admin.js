@@ -41,7 +41,7 @@ module.exports = app => {
     },
     todos: [new Schema({
       title: { type: String, required: true },
-      content: { type: String, required: true },
+      content: { type: String, maxlength: 300 },
       is_done: { type: Boolean, default: false },
       is_important: { type: Boolean, default: false },
       is_starred: { type: Boolean, default: false },
@@ -55,6 +55,12 @@ module.exports = app => {
       required: true,
       default: ['admin'],
     },
+    sign_log: [new Schema({
+      position: { type: Object, required: true },
+      device: { type: String, required: true },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    })],
     permissions: [new Schema({
       module: {
         type: String,

@@ -40,7 +40,7 @@ class AdminService extends Service {
       })
   }
 
-  async signIn({ account, password }) {
+  async signIn({ account, password, position, device }) {
     const { ctx, app } = this
     const res = await ctx.model.Admin.findOne({ account })
 
@@ -51,6 +51,23 @@ class AdminService extends Service {
       const isMatch = await ctx.compare(password, hashPassword)
 
       if (isMatch) {
+        // 更新登录时间
+        await ctx.model.Admin.updateOne(
+          { account },
+          {
+            $push: {
+              sign_log: {
+                $each: [{
+                  position,
+                  device,
+                  ip: ctx.ip,
+                }],
+                $position: 0,
+              },
+            },
+          }
+        )
+
         // 创建 JWT，有效期为7天
         const token = app.jwt.sign(
           { id, permissions },
@@ -97,7 +114,7 @@ class AdminService extends Service {
 
   async getAdminInfo(_id) {
     return this.ctx.model.Admin
-      .findOne({ _id }, 'avatar_url nickname real_name email gender roles permissions created_at updated_at')
+      .findOne({ _id }, 'avatar_url nickname real_name email gender roles permissions sign_log created_at updated_at')
       .then(admin_info => {
         return { code: 2000, msg: '获取管理员信息', data: { admin_info } }
       })
