@@ -1,5 +1,6 @@
 'use strict'
 
+const querystring = require('querystring')
 const path = require('path')
 const Service = require('egg').Service
 
@@ -181,6 +182,27 @@ class AdminService extends Service {
       await app.fullQiniu.delete(path.basename(avatar_url))
       return { code: 5000, msg: err.message }
     }
+  }
+
+  async getSignLog(_id, { position = '113.657527,22.918521' }) {
+    const { ctx } = this
+    return ctx.model.Admin
+      .findOne({ _id }, 'sign_log')
+      .then(async sign_log => {
+        const params = querystring.stringify({
+          key: 'a2b8126ee9e28679dc5d7757c7a458bd',
+          position,
+        })
+        const url = `https://restapi.amap.com/v3/geocode/regeo？${params}`
+        console.log(url)
+        const res = await ctx.curl(url)
+        console.log(res)
+
+        return { code: 2000, msg: '获取管理员登录信息', data: { sign_log } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
   }
 }
 

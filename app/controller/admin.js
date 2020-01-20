@@ -133,6 +133,15 @@ class AdminController extends Controller {
       ctx.reply(err, 400)
     }
   }
+
+  /* GET
+   * 获取登录日志信息
+   */
+  async getSignLog() {
+    const { ctx, service } = this
+    const res = await service.admin.getSignLog(ctx.state.user.id, ctx.request.query)
+    ctx.reply(res)
+  }
 }
 
 module.exports = AdminController

@@ -163,6 +163,9 @@ module.exports = app => {
   put(
     '/api/admin/todo/update_type',
     todo.updateTodoType)
+  get(
+    '/api/admin/sign_log',
+    admin.getSignLog)
 
   // 用户模块
   get(
