@@ -55,6 +55,7 @@ module.exports = app => {
       required: true,
       default: ['admin'],
     },
+    lock_password: { type: String, minlength: 3, maxlength: 10 },
     sign_log: [new Schema({
       position: { type: Object, required: true },
       device: { type: String, required: true },
