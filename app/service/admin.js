@@ -1,6 +1,5 @@
 'use strict'
 
-const querystring = require('querystring')
 const path = require('path')
 const Service = require('egg').Service
 
@@ -184,21 +183,38 @@ class AdminService extends Service {
     }
   }
 
-  async getSignLog(_id, { position = '113.657527,22.918521' }) {
+  async getSignLog(_id) {
     const { ctx } = this
     return ctx.model.Admin
       .findOne({ _id }, 'sign_log')
-      .then(async sign_log => {
-        const params = querystring.stringify({
-          key: 'a2b8126ee9e28679dc5d7757c7a458bd',
-          position,
-        })
-        const url = `https://restapi.amap.com/v3/geocode/regeo？${params}`
-        console.log(url)
-        const res = await ctx.curl(url)
-        console.log(res)
+      .then(async ({ sign_log }) => {
+        const log = await Promise.all(
+          sign_log.map(async ({ position, device, created_at }) => {
+            if (position.code === 1) {
+              const url = `https://restapi.amap.com/v3/geocode/regeo?location=${position.longitude},${position.latitude}&key=a2b8126ee9e28679dc5d7757c7a458bd`
+              const { data } = await ctx.curl(url, { dataType: 'json' })
+              if (data.status === '1') {
+                Object.assign(position, data)
+                return {
+                  position,
+                  device,
+                  created_at,
+                }
+              }
+              return {
+                device,
+                created_at,
+              }
+            }
+            return {
+              position,
+              device,
+              created_at,
+            }
+          })
+        )
 
-        return { code: 2000, msg: '获取管理员登录信息', data: { sign_log } }
+        return { code: 2000, msg: '获取管理员登录信息', data: { log } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
