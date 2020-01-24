@@ -114,7 +114,7 @@ class AdminService extends Service {
 
   async getAdminInfo(_id) {
     return this.ctx.model.Admin
-      .findOne({ _id }, 'avatar_url nickname real_name email gender roles permissions sign_log created_at updated_at')
+      .findOne({ _id }, 'account avatar_url nickname real_name email gender roles permissions sign_log created_at updated_at')
       .then(admin_info => {
         return { code: 2000, msg: '获取管理员信息', data: { admin_info } }
       })

@@ -59,6 +59,7 @@ module.exports = app => {
     sign_log: [new Schema({
       position: { type: Object, required: true },
       device: { type: String, required: true },
+      ip: String,
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
