@@ -167,6 +167,17 @@ module.exports = app => {
     '/api/admin/sign_log',
     admin.getSignLog)
 
+  // 通知模块
+  get('/api/admin/notice/list', notice.getNoticeListByAdmin)
+  get(
+    '/api/admin/notice/unread',
+    notice.getUnreadNoticesByAdmin)
+  post('/api/admin/notice/add', notice.addNoticeByAdmin)
+  dele('/api/admin/notice/delete', notice.deleteNoticeByAdmin)
+  dele('/api/admin/notice/delete_many', notice.deleteManyNoticesByAdmin)
+  put('/api/admin/notice/set_read', notice.setNoticeReadByAdmin)
+  put('/api/admin/notice/set_all_read', notice.setAllNoticesReadByAdmin)
+
   // 用户模块
   get(
     '/api/user/list',

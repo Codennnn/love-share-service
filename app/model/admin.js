@@ -63,6 +63,14 @@ module.exports = app => {
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
+    notices: [new Schema({
+      title: { type: String, required: true, maxlength: 30 },
+      content: { type: String },
+      type: { type: Number, enum: [1, 2, 3, 4] },
+      is_read: { type: Boolean, default: false },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    })],
     permissions: [new Schema({
       module: {
         type: String,
