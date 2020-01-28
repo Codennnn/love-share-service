@@ -114,7 +114,7 @@ class AdminService extends Service {
 
   async getAdminInfo(_id) {
     return this.ctx.model.Admin
-      .findOne({ _id }, 'account avatar_url nickname real_name email gender roles permissions sign_log created_at updated_at')
+      .findOne({ _id }, 'account avatar_url nickname real_name email gender roles permissions lock_password created_at updated_at')
       .then(admin_info => {
         return { code: 2000, msg: '获取管理员信息', data: { admin_info } }
       })
@@ -189,7 +189,7 @@ class AdminService extends Service {
       .findOne({ _id }, 'sign_log')
       .then(async ({ sign_log }) => {
         const log = await Promise.all(
-          sign_log.map(async ({ position, device, created_at }) => {
+          sign_log.map(async ({ position = {}, device, created_at }) => {
             if (position.code === 1) {
               const url = `https://restapi.amap.com/v3/geocode/regeo?location=${position.longitude},${position.latitude}&key=a2b8126ee9e28679dc5d7757c7a458bd`
               const { data } = await ctx.curl(url, { dataType: 'json' })

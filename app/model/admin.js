@@ -71,6 +71,7 @@ module.exports = app => {
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
+    chats: Array,
     permissions: [new Schema({
       module: {
         type: String,

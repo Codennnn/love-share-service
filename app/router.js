@@ -4,13 +4,14 @@ module.exports = app => {
   const { router, controller, middleware, io } = app
   const {
     admin, user, goods, order, address, school, category,
-    notice, chat, cart, begging, guide, todo, common,
+    notice, chat, cart, begging, guide, billboard, todo, common,
   } = controller
   const { get, post, put, delete: dele } = router
   const { auth } = middleware
 
-  /*
-   * 客户端
+  /* ===========================
+   * ========== 客户端 ==========
+   * ===========================
    */
 
   // 用户模块
@@ -112,8 +113,9 @@ module.exports = app => {
   post('/api/common/verification_code', common.getVerificationCode)
   get('/api/category/list', category.getCategoryList)
 
-  /*
-   * 管理端
+  /* ===========================
+   * ========== 管理端 ==========
+   * ===========================
    */
 
   // 管理员模块
@@ -177,6 +179,13 @@ module.exports = app => {
   dele('/api/admin/notice/delete_many', notice.deleteManyNoticesByAdmin)
   put('/api/admin/notice/set_read', notice.setNoticeReadByAdmin)
   put('/api/admin/notice/set_all_read', notice.setAllNoticesReadByAdmin)
+
+  // 聊天模块
+  post('/api/admin/chat/contact/add', chat.addContactByAdmin)
+  dele('/api/admin/chat/contact/delete', chat.deleteContactByAdmin)
+  get('/api/admin/chat/contact/list', chat.getContactListByAdmin)
+  get('/api/admin/chat/contact_info', chat.getContactInfoByAdmin)
+  get('/api/admin/chat/chat_data', chat.getChatDataByAdmin)
 
   // 用户模块
   get(
@@ -273,6 +282,11 @@ module.exports = app => {
     begging.getBeggingList
   )
   post('/api/begging', begging.addBegging)
+
+  // 广告牌模块
+  get('/api/billboard/list', billboard.getBillboardList)
+  post('/api/billboard/upload', billboard.uploadBillboard)
+  dele('/api/billboard/delete', billboard.deleteBillboard)
 
   // 分类模块
   post(

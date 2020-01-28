@@ -50,6 +50,8 @@ class AdminController extends Controller {
       ctx.validate({
         account: 'string',
         password: 'string',
+        position: 'object',
+        device: 'string',
       })
       const res = await service.admin.signIn(ctx.request.body)
       ctx.reply(res)
