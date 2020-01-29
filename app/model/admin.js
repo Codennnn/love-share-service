@@ -47,6 +47,7 @@ module.exports = app => {
       is_starred: { type: Boolean, default: false },
       is_trashed: { type: Boolean, default: false },
       tags: { type: Array },
+      complete_time: { type: Array, required: true },
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],

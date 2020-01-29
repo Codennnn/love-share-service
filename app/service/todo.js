@@ -54,7 +54,7 @@ class TodoService extends Service {
       })
   }
 
-  updateTodo(_id, { _id: todo_id, title, content, is_done, is_important, is_starred, is_trashed, tags }) {
+  updateTodo(_id, { _id: todo_id, title, content, is_done, is_important, is_starred, is_trashed, tags, complete_time }) {
     return this.ctx.model.Admin
       .updateOne(
         { _id, 'todos._id': todo_id },
@@ -67,6 +67,7 @@ class TodoService extends Service {
             'todos.$.is_starred': is_starred,
             'todos.$.is_trashed': is_trashed,
             'todos.$.tags': tags,
+            'todos.$.complete_time': complete_time,
           },
         },
         { runValidators: true }
