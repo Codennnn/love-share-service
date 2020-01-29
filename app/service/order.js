@@ -74,7 +74,6 @@ class OrderService extends Service {
   }
 
   geteOrderDetail(_id) {
-    console.log(_id)
     return this.ctx.model.Order
       .findOne({ _id })
       .populate('buyer', 'nickname real_name phone')

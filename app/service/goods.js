@@ -268,20 +268,29 @@ class GoodsService extends Service {
     return { code: 5000, msg: '所有图片删除失败' }
   }
 
-  getGoodsSeller(_id) {
-    return this.ctx.model.Goods
+  async getGoodsSeller(_id) {
+    const { app, ctx } = this
+    const { seller } = await ctx.model.Goods
       .findOne({ _id }, 'seller')
       .populate({
         path: 'seller',
-        select: 'avatar_url nickname school gender credit_value fans published_goods',
+        select: 'avatar_url nickname school gender credit_value',
         populate: { path: 'school', select: '-_id name' },
       })
-      .then(({ seller }) => {
-        return { code: 2000, msg: '获取商品卖家信息', data: { seller } }
-      })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+    const [published_num, [{ fans_num }]] = await Promise.all([
+      ctx.model.Goods.countDocuments({ seller: seller._id }),
+      ctx.model.User.aggregate([
+        { $match: { _id: app.mongoose.Types.ObjectId(seller._id) } },
+        {
+          $project: {
+            _id: 0,
+            fans_num: { $size: '$fans' },
+          },
+        },
+      ]),
+    ])
+    Object.assign(seller._doc, { published_num, fans_num })
+    return { code: 2000, msg: '获取商品卖家信息', data: { seller } }
   }
 
   async getGoodsComments({ goods_id: _id, page, page_size }) {

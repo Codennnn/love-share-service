@@ -15,8 +15,8 @@ class BillboardService extends Service {
 
   async uploadBillboard(parts) {
     const { app } = this
-    console.log(parts)
     let part
+    let img_url
     while ((part = await parts()) != null) {
       if (part.length) {
         //
@@ -30,11 +30,13 @@ class BillboardService extends Service {
             part
           )
           if (ok) {
+            img_url = url
             const billboard = new this.ctx.model.Billboard({ url })
             await billboard.save()
           }
         } catch {
           // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+          await app.fullQiniu.delete(path.basename(img_url))
           await sendToWormhole(part)
         }
       }

@@ -188,30 +188,33 @@ class AdminService extends Service {
     return ctx.model.Admin
       .findOne({ _id }, 'sign_log')
       .then(async ({ sign_log }) => {
+
         const log = await Promise.all(
-          sign_log.map(async ({ position = {}, device, created_at }) => {
-            if (position.code === 1) {
-              const url = `https://restapi.amap.com/v3/geocode/regeo?location=${position.longitude},${position.latitude}&key=a2b8126ee9e28679dc5d7757c7a458bd`
-              const { data } = await ctx.curl(url, { dataType: 'json' })
-              if (data.status === '1') {
-                Object.assign(position, data)
+          sign_log
+            .slice(0, 5)
+            .map(async ({ position = {}, device, created_at }) => {
+              if (position.code === 1) {
+                const url = `https://restapi.amap.com/v3/geocode/regeo?location=${position.longitude},${position.latitude}&key=a2b8126ee9e28679dc5d7757c7a458bd`
+                const { data } = await ctx.curl(url, { dataType: 'json' })
+                if (data.status === '1') {
+                  Object.assign(position, data)
+                  return {
+                    position,
+                    device,
+                    created_at,
+                  }
+                }
                 return {
-                  position,
                   device,
                   created_at,
                 }
               }
               return {
+                position,
                 device,
                 created_at,
               }
-            }
-            return {
-              position,
-              device,
-              created_at,
-            }
-          })
+            })
         )
 
         return { code: 2000, msg: '获取管理员登录信息', data: { log } }
