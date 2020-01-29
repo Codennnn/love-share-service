@@ -15,6 +15,7 @@ class BillboardService extends Service {
 
   async uploadBillboard(parts) {
     const { app } = this
+    console.log(parts)
     let part
     while ((part = await parts()) != null) {
       if (part.length) {
