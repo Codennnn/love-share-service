@@ -167,6 +167,34 @@ class AdminController extends Controller {
     const res = await service.admin.unbindUser(ctx.state.user.id)
     ctx.reply(res)
   }
+
+  /* PUT
+   * 修改密码
+   */
+  async updatePassword() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ old_pwd: 'string', new_pwd: 'string' })
+      const res = await service.admin.updatePassword(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 修改锁屏密码
+   */
+  async updateLockPassword() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ password: 'string' })
+      const res = await service.admin.updateLockPassword(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
 }
 
 module.exports = AdminController

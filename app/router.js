@@ -159,6 +159,15 @@ module.exports = app => {
     auth('admin', ['write']),
     admin.replaceAvatar)
   get(
+    '/api/admin/sign_log',
+    admin.getSignLog)
+  put(
+    '/api/admin/update_password',
+    admin.updatePassword)
+  put(
+    '/api/admin/update_lock_password',
+    admin.updateLockPassword)
+  get(
     '/api/admin/todo/list',
     todo.getTodoList)
   post(
@@ -173,9 +182,6 @@ module.exports = app => {
   put(
     '/api/admin/todo/update_type',
     todo.updateTodoType)
-  get(
-    '/api/admin/sign_log',
-    admin.getSignLog)
 
   // 通知模块
   get('/api/admin/notice/list', notice.getNoticeListByAdmin)

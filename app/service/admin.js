@@ -246,7 +246,7 @@ class AdminService extends Service {
       })
   }
 
-  async unbindUser(_id) {
+  unbindUser(_id) {
     return this.ctx.model.Admin
       .updateOne(
         { _id },
@@ -255,6 +255,39 @@ class AdminService extends Service {
       .then(async ({ nModified }) => {
         if (nModified === 1) {
           return { code: 2000, msg: '取消绑定成功' }
+        }
+      })
+  }
+
+  async updatePassword(_id, { old_pwd, new_pwd }) {
+    const { ctx } = this
+    const { password: hashPassword } = await ctx.model.Admin.findOne({ _id }, 'password')
+    const isMatch = await ctx.compare(old_pwd, hashPassword)
+    if (isMatch) {
+      const hashPwd = await this.ctx.genHash(new_pwd)
+      return ctx.model.Admin
+        .updateOne(
+          { _id },
+          { password: hashPwd }
+        )
+        .then(async ({ nModified }) => {
+          if (nModified === 1) {
+            return { code: 2000, msg: '成功修改锁屏密码' }
+          }
+        })
+    }
+    return { code: 3000, msg: '原始密码错误' }
+  }
+
+  updateLockPassword(_id, { password }) {
+    return this.ctx.model.Admin
+      .updateOne(
+        { _id },
+        { lock_password: password }
+      )
+      .then(async ({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功修改锁屏密码' }
         }
       })
   }

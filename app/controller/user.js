@@ -19,9 +19,16 @@ class UserController extends Controller {
    */
   async signUp() {
     const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.user.createUser(data)
-    ctx.reply(res)
+    try {
+      ctx.validate({
+        phone: 'string',
+        password: { type: 'string', minlength: 6, maxlength: 16 },
+      })
+      const res = await service.user.createUser(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* DELETE
