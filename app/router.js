@@ -142,6 +142,14 @@ module.exports = app => {
     '/api/admin/list',
     auth('admin', ['read']),
     admin.getAdminList)
+  put(
+    '/api/admin/bind_user',
+    auth('admin', ['write']),
+    admin.bindUser)
+  put(
+    '/api/admin/unbind_user',
+    auth('admin', ['write']),
+    admin.unbindUser)
   post(
     '/api/admin/upload_avatar',
     auth('admin', ['write']),

@@ -144,6 +144,29 @@ class AdminController extends Controller {
     const res = await service.admin.getSignLog(ctx.state.user.id, ctx.request.query)
     ctx.reply(res)
   }
+
+  /* PUT
+   * 绑定用户
+   */
+  async bindUser() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ phone: 'string' })
+      const res = await service.admin.bindUser(ctx.state.user.id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
+   * 取消绑定用户
+   */
+  async unbindUser() {
+    const { ctx, service } = this
+    const res = await service.admin.unbindUser(ctx.state.user.id)
+    ctx.reply(res)
+  }
 }
 
 module.exports = AdminController

@@ -114,7 +114,8 @@ class AdminService extends Service {
 
   async getAdminInfo(_id) {
     return this.ctx.model.Admin
-      .findOne({ _id }, 'account avatar_url nickname real_name email gender roles permissions lock_password created_at updated_at')
+      .findOne({ _id }, 'account user avatar_url nickname real_name email gender roles permissions lock_password created_at updated_at')
+      .populate('user', 'nickname avatar_url')
       .then(admin_info => {
         return { code: 2000, msg: '获取管理员信息', data: { admin_info } }
       })
@@ -221,6 +222,40 @@ class AdminService extends Service {
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
+      })
+  }
+
+  async bindUser(_id, { phone }) {
+    const res = await this.ctx.model.User.findOne({ phone }, '_id')
+    if (!res) {
+      return { code: 5000, msg: '用户账号不存在' }
+    }
+    return this.ctx.model.Admin
+      .updateOne(
+        { _id },
+        { user: res._id }
+      )
+      .then(async ({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功绑定一位用户' }
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        return { code: 3000, msg: '没有绑定任何用户' }
+      })
+  }
+
+  async unbindUser(_id) {
+    return this.ctx.model.Admin
+      .updateOne(
+        { _id },
+        { $set: { user: null } }
+      )
+      .then(async ({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '取消绑定成功' }
+        }
       })
   }
 }
