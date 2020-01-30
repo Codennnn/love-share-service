@@ -188,13 +188,6 @@ module.exports = app => {
   put('/api/admin/notice/set_read', notice.setNoticeReadByAdmin)
   put('/api/admin/notice/set_all_read', notice.setAllNoticesReadByAdmin)
 
-  // 聊天模块
-  post('/api/admin/chat/contact/add', chat.addContactByAdmin)
-  dele('/api/admin/chat/contact/delete', chat.deleteContactByAdmin)
-  get('/api/admin/chat/contact/list', chat.getContactListByAdmin)
-  get('/api/admin/chat/contact_info', chat.getContactInfoByAdmin)
-  get('/api/admin/chat/chat_data', chat.getChatDataByAdmin)
-
   // 用户模块
   get(
     '/api/user/list',

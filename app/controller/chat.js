@@ -10,8 +10,8 @@ class ChatController extends Controller {
     const { ctx, service } = this
 
     try {
-      ctx.validate({ contact_id: 'string' })
-      const _id = ctx.state.user.id
+      ctx.validate({ user_id: 'string?', contact_id: 'string' })
+      const _id = ctx.request.body.user_id || ctx.state.user.id
       const contactId = ctx.request.body.contact_id
       const res = await service.chat.addContact(_id, contactId)
       ctx.reply(res)
@@ -42,7 +42,8 @@ class ChatController extends Controller {
    */
   async getContactList() {
     const { ctx, service } = this
-    const res = await service.chat.getContactList(ctx.state.user.id)
+    const id = ctx.request.query.user_id || ctx.state.user.id
+    const res = await service.chat.getContactList(id)
     ctx.reply(res)
   }
 
@@ -51,7 +52,6 @@ class ChatController extends Controller {
    */
   async getContactInfo() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ user_id: 'string' }, ctx.request.query)
       const res = await service.chat.getContactInfo(ctx.request.query.user_id)
@@ -66,76 +66,8 @@ class ChatController extends Controller {
    */
   async getChatData() {
     const { ctx, service } = this
-    const res = await service.chat.getChatData(ctx.state.user.id)
-    ctx.reply(res)
-  }
-
-  // ===========================================================
-
-  /* POST
-   * 添加新的联系人 [管理端]
-   */
-  async addContactByAdmin() {
-    const { ctx, service } = this
-
-    try {
-      ctx.validate({ contact_id: 'string' })
-      const _id = ctx.state.user.id
-      const contactId = ctx.request.body.contact_id
-      const res = await service.chat.addContactByAdmin(_id, contactId)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
-  }
-
-  /* DELETE
-   * 删除联系人 [管理端]
-   */
-  async deleteContactByAdmin() {
-    const { ctx, service } = this
-
-    try {
-      ctx.validate({ contact_id: 'string' })
-      const _id = ctx.state.user.id
-      const contactId = ctx.request.body.contact_id
-      const res = await service.chat.deleteContactByAdmin(_id, contactId)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
-  }
-
-  /* GET
-   * 获取联系人列表 [管理端]
-   */
-  async getContactListByAdmin() {
-    const { ctx, service } = this
-    const res = await service.chat.getContactListByAdmin(ctx.state.user.id)
-    ctx.reply(res)
-  }
-
-  /* GET
-   * 获取联系人信息 [管理端]
-   */
-  async getContactInfoByAdmin() {
-    const { ctx, service } = this
-
-    try {
-      ctx.validate({ user_id: 'string' }, ctx.request.query)
-      const res = await service.chat.getContactInfoByAdmin(ctx.request.query.user_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
-  }
-
-  /* GET
-   * 获取聊天记录 [管理端]
-   */
-  async getChatDataByAdmin() {
-    const { ctx, service } = this
-    const res = await service.chat.getChatDataByAdmin(ctx.state.user.id)
+    const id = ctx.request.query.user_id || ctx.state.user.id
+    const res = await service.chat.getChatData(id)
     ctx.reply(res)
   }
 }
