@@ -2,11 +2,11 @@
 
 module.exports = app => {
   const { router, controller } = app
+  const { get, post, put, delete: dele } = router
   const {
     user, goods, order, address, school, category,
     notice, chat, cart, begging, common,
   } = controller
-  const { get, post, put, delete: dele } = router
 
   // 用户模块
   post('/api/user/sign_in', user.signIn)

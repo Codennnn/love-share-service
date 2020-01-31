@@ -2,12 +2,12 @@
 
 module.exports = app => {
   const { router, controller, middleware } = app
+  const { get, post, put, delete: dele } = router
+  const { auth } = middleware
   const {
     admin, user, goods, order, school, category,
     notice, begging, guide, billboard, todo,
   } = controller
-  const { get, post, put, delete: dele } = router
-  const { auth } = middleware
 
   // 管理员模块
   post(
