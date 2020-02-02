@@ -195,6 +195,10 @@ module.exports = app => {
     '/api/category/add',
     auth('goods', ['create']),
     category.addCategory)
+  put(
+    '/api/category/update_activation',
+    auth('goods', ['delete']),
+    category.updateCategoryActivation)
   dele(
     '/api/category/delete',
     auth('goods', ['delete']),

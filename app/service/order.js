@@ -117,7 +117,6 @@ class OrderService extends Service {
   }
 
   async getOrderListByDateRange({ date_range, page, page_size: pageSize }) {
-    console.log(date_range)
     const [total, order_list] = await Promise.all([
       this.ctx.model.Order.countDocuments({
         created_at: {

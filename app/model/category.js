@@ -11,6 +11,10 @@ module.exports = app => {
       unique: true,
       trim: true,
     },
+    activation: {
+      type: Boolean,
+      default: false,
+    },
     hit: {
       type: Number,
       default: 0,
