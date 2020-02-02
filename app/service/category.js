@@ -24,14 +24,13 @@ class CategoryService extends Service {
     }
   }
 
-  deleteCategory(name) {
+  deleteCategory({ category_id_list }) {
     return this.ctx.model.Category
-      .deleteOne({ name })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 1) {
-          return { code: 2000, msg: '删除了一个分类' }
+      .deleteMany({ _id: { $in: category_id_list } })
+      .then(({ ok }) => {
+        if (ok) {
+          return { code: 2000, msg: '成功删除分类' }
         }
-        return { code: 3000, msg: '无任何分类被删除' }
       })
   }
 

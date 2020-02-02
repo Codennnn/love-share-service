@@ -34,8 +34,8 @@ class CategoryController extends Controller {
     const { ctx, service } = this
 
     try {
-      ctx.validate({ name: 'string' })
-      const res = await service.category.deleteCategory(ctx.request.body.name)
+      ctx.validate({ category_id_list: { type: 'array', itemType: 'string' } })
+      const res = await service.category.deleteCategory(ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

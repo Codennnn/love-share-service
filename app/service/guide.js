@@ -33,8 +33,8 @@ class GuideService extends Service {
   deleteGuide({ section_id: _id }) {
     return this.ctx.model.Guide
       .deleteOne({ _id })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 1) {
+      .then(({ ok }) => {
+        if (ok) {
           return { code: 2000, msg: '删除了一个栏目' }
         }
         return { code: 3000, msg: '无任何分类被删除' }

@@ -24,8 +24,8 @@ class GoodsService extends Service {
       if (img_list) {
         const { code } = await this.deleteImg(img_list)
         if (code === 2000) {
-          const { deletedCount } = await ctx.model.Goods.deleteOne({ _id })
-          if (deletedCount === 1) {
+          const { ok } = await ctx.model.Goods.deleteOne({ _id })
+          if (ok) {
             return { code: 2000, msg: '删除商品成功' }
           }
           return { code: 3000, msg: '无任何商品被删除' }

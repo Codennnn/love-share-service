@@ -59,8 +59,8 @@ class UserService extends Service {
   deleteUser(_id) {
     return this.ctx.model.User
       .deleteOne({ _id })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 1) {
+      .then(({ ok }) => {
+        if (ok) {
           return { code: 2000, msg: '删除用户成功' }
         }
         return { code: 3000, msg: '无任何用户被删除' }

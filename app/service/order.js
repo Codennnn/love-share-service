@@ -49,8 +49,8 @@ class OrderService extends Service {
   deleteOrder(_id) {
     return this.ctx.model.Order
       .deleteOne({ _id })
-      .then(({ deletedCount }) => {
-        if (deletedCount === 1) {
+      .then(({ ok }) => {
+        if (ok === 1) {
           return { code: 2000, msg: '删除了一个订单' }
         }
         return { code: 3000, msg: '无任何订单被删除' }

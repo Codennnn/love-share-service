@@ -27,8 +27,8 @@ class SchoolService extends Service {
   deleteSchool(name) {
     return this.ctx.model.School
       .deleteOne({ name })
-      .then(deletedCount => {
-        if (deletedCount === 1) {
+      .then(({ ok }) => {
+        if (ok === 1) {
           return { code: 2000, msg: '删除了一间学校' }
         }
         return { code: 3000, msg: '无任何学校被删除' }

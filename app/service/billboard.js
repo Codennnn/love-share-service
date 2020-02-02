@@ -50,8 +50,8 @@ class BillboardService extends Service {
     if (ok) {
       return ctx.model.Billboard
         .deleteOne({ url })
-        .then(({ deletedCount }) => {
-          if (deletedCount === 1) {
+        .then(({ ok }) => {
+          if (ok) {
             return { code: 2000, msg: '删除广告图片成功' }
           }
           return { code: 3000, msg: '无任何广告图片被删除' }
