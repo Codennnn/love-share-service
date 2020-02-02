@@ -56,8 +56,8 @@ class GuideController extends Controller {
       ctx.validate({
         section_id: 'string',
         article_id: 'string',
-      }, ctx.request.query)
-      const res = await service.guide.getArticle(ctx.request.query)
+      }, ctx.query)
+      const res = await service.guide.getArticle(ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

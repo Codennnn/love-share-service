@@ -99,8 +99,8 @@ class GoodsController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: 'int',
-      }, ctx.request.query)
-      const res = await service.goods.getRecommendGoodsList(ctx.state.user.id, ctx.request.query)
+      }, ctx.query)
+      const res = await service.goods.getRecommendGoodsList(ctx.state.user.id, ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -116,8 +116,8 @@ class GoodsController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.goods.getGoodsList(ctx.request.query)
+      }, ctx.query)
+      const res = await service.goods.getGoodsList(ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -134,8 +134,8 @@ class GoodsController extends Controller {
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
         category: 'string',
-      }, ctx.request.query)
-      const res = await service.goods.getGoodsListByCategory(ctx.request.query)
+      }, ctx.query)
+      const res = await service.goods.getGoodsListByCategory(ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -167,8 +167,8 @@ class GoodsController extends Controller {
   async getGoodsDetail() {
     const { ctx, service } = this
     try {
-      ctx.validate({ goods_id: 'string' }, ctx.request.query)
-      const res = await service.goods.getGoodsDetail(ctx.request.query.goods_id)
+      ctx.validate({ goods_id: 'string' }, ctx.query)
+      const res = await service.goods.getGoodsDetail(ctx.query.goods_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -206,8 +206,8 @@ class GoodsController extends Controller {
   async getGoodsSeller() {
     const { ctx, service } = this
     try {
-      ctx.validate({ goods_id: 'string' }, ctx.request.query)
-      const res = await service.goods.getGoodsSeller(ctx.request.query.goods_id)
+      ctx.validate({ goods_id: 'string' }, ctx.query)
+      const res = await service.goods.getGoodsSeller(ctx.query.goods_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -224,8 +224,8 @@ class GoodsController extends Controller {
         goods_id: 'string',
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.goods.getGoodsComments(ctx.request.query)
+      }, ctx.query)
+      const res = await service.goods.getGoodsComments(ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -297,8 +297,8 @@ class GoodsController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.goods.getGoodsListByStatus(1, ctx.request.query)
+      }, ctx.query)
+      const res = await service.goods.getGoodsListByStatus(1, ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -314,8 +314,8 @@ class GoodsController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.goods.getGoodsListByStatus(3, ctx.request.query)
+      }, ctx.query)
+      const res = await service.goods.getGoodsListByStatus(3, ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

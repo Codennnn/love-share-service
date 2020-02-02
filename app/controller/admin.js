@@ -96,8 +96,8 @@ class AdminController extends Controller {
   async getAdminDetail() {
     const { ctx, service } = this
     try {
-      ctx.validate({ admin_id: 'string' }, ctx.request.query)
-      const res = await service.admin.getAdminDetail(ctx.request.query.admin_id)
+      ctx.validate({ admin_id: 'string' }, ctx.query)
+      const res = await service.admin.getAdminDetail(ctx.query.admin_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -141,7 +141,7 @@ class AdminController extends Controller {
    */
   async getSignLog() {
     const { ctx, service } = this
-    const res = await service.admin.getSignLog(ctx.state.user.id, ctx.request.query)
+    const res = await service.admin.getSignLog(ctx.state.user.id, ctx.query)
     ctx.reply(res)
   }
 

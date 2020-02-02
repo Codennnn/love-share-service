@@ -8,7 +8,7 @@ class AddressController extends Controller {
    */
   async getAddressList() {
     const { ctx, service } = this
-    const id = ctx.request.query._id || ctx.state.user.id
+    const id = ctx.query._id || ctx.state.user.id
     const res = await service.address.getAddressList(id)
     ctx.reply(res)
   }

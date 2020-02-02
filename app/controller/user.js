@@ -45,8 +45,7 @@ class UserController extends Controller {
    */
   async getUserList() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.user.getUserList(data)
+    const res = await service.user.getUserList(ctx.query)
     ctx.reply(res)
   }
 
@@ -65,8 +64,8 @@ class UserController extends Controller {
   async getOtherUserInfo() {
     const { ctx, service } = this
     try {
-      ctx.validate({ user_id: 'string' }, ctx.request.query)
-      const res = await service.user.getOtherUserInfo(ctx.request.query.user_id)
+      ctx.validate({ user_id: 'string' }, ctx.query)
+      const res = await service.user.getOtherUserInfo(ctx.query.user_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -78,7 +77,7 @@ class UserController extends Controller {
    */
   async getUserInfoNum() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.user.getUserInfoNum(id)
     ctx.reply(res)
   }
@@ -88,7 +87,7 @@ class UserController extends Controller {
    */
   async getUserDetail() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.user.getUserDetail(id)
     ctx.reply(res)
   }
@@ -124,7 +123,7 @@ class UserController extends Controller {
    */
   async getUserDetailByAdmin() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id
+    const id = ctx.query.user_id
     const res = await service.user.getUserDetailByAdmin(id)
     ctx.reply(res)
   }
@@ -192,7 +191,7 @@ class UserController extends Controller {
    */
   async getPublishedGoods() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.user.getPublishedGoods(id)
     ctx.reply(res)
   }
@@ -229,7 +228,7 @@ class UserController extends Controller {
    */
   async getUserFollows() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.user.getUserFollows(id)
     ctx.reply(res)
   }
@@ -239,7 +238,7 @@ class UserController extends Controller {
    */
   async getUserFans() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.user.getUserFans(id)
     ctx.reply(res)
   }

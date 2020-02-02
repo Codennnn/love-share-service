@@ -68,10 +68,10 @@ class NoticeController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
+      }, ctx.query)
       const res = await service.notice.getNoticeList(
         ctx.state.user.id,
-        ctx.request.query
+        ctx.query
       )
       ctx.reply(res)
     } catch (err) {
@@ -175,10 +175,10 @@ class NoticeController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
+      }, ctx.query)
       const res = await service.notice.getNoticeListByAdmin(
         ctx.state.user.id,
-        ctx.request.query
+        ctx.query
       )
       ctx.reply(res)
     } catch (err) {

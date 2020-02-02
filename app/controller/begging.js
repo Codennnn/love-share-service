@@ -12,8 +12,8 @@ class BeggingController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.begging.getBeggingList(ctx.request.query)
+      }, ctx.query)
+      const res = await service.begging.getBeggingList(ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

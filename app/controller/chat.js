@@ -42,7 +42,7 @@ class ChatController extends Controller {
    */
   async getContactList() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.chat.getContactList(id)
     ctx.reply(res)
   }
@@ -53,8 +53,8 @@ class ChatController extends Controller {
   async getContactInfo() {
     const { ctx, service } = this
     try {
-      ctx.validate({ user_id: 'string' }, ctx.request.query)
-      const res = await service.chat.getContactInfo(ctx.request.query.user_id)
+      ctx.validate({ user_id: 'string' }, ctx.query)
+      const res = await service.chat.getContactInfo(ctx.query.user_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -66,7 +66,7 @@ class ChatController extends Controller {
    */
   async getChatData() {
     const { ctx, service } = this
-    const id = ctx.request.query.user_id || ctx.state.user.id
+    const id = ctx.query.user_id || ctx.state.user.id
     const res = await service.chat.getChatData(id)
     ctx.reply(res)
   }

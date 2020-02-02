@@ -131,6 +131,10 @@ module.exports = app => {
     auth('order', ['read']),
     order.getOrderList)
   get(
+    '/api/order/list_by_date_range',
+    auth('order', ['read']),
+    order.getOrderListByDateRange)
+  get(
     '/api/order/transaction',
     auth('order', ['read']),
     order.getOrderTransaction)

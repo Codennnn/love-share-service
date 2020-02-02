@@ -45,8 +45,8 @@ class OrderController extends Controller {
   async geteOrderDetail() {
     const { ctx, service } = this
     try {
-      ctx.validate({ order_id: 'string' }, ctx.request.query)
-      const res = await service.order.geteOrderDetail(ctx.request.query.order_id)
+      ctx.validate({ order_id: 'string' }, ctx.query)
+      const res = await service.order.geteOrderDetail(ctx.query.order_id)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -71,8 +71,28 @@ class OrderController extends Controller {
       ctx.validate({
         page: { type: 'int', min: 1 },
         page_size: { type: 'int', min: 1 },
-      }, ctx.request.query)
-      const res = await service.order.getOrderList(ctx.request.query)
+      }, ctx.query)
+      const res = await service.order.getOrderList(ctx.query)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* GET
+   * 根据日期范围获取订单列表
+   */
+  async getOrderListByDateRange() {
+    const { ctx, service } = this
+    try {
+      const { date_range, page, page_size } = ctx.queries
+      const queries = Object.assign({}, { date_range, page: page[0], page_size: page_size[0] })
+      ctx.validate({
+        date_range: 'array',
+        page: { type: 'int', min: 1 },
+        page_size: { type: 'int', min: 1 },
+      }, queries)
+      const res = await service.order.getOrderListByDateRange(queries)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

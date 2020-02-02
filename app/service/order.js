@@ -116,6 +116,43 @@ class OrderService extends Service {
     return { code: 2000, msg: '查询订单列表', data: { order_list, pagination } }
   }
 
+  async getOrderListByDateRange({ date_range, page, page_size: pageSize }) {
+    console.log(date_range)
+    const [total, order_list] = await Promise.all([
+      this.ctx.model.Order.countDocuments({
+        created_at: {
+          $gte: new Date(`${date_range[0]} 00:00:00`),
+          $lte: new Date(`${date_range[1]} 23:59:59`),
+        },
+      }),
+      this.ctx.model.Order
+        .find({
+          created_at: {
+            $gte: new Date(`${date_range[0]} 00:00:00`),
+            $lte: new Date(`${date_range[1]} 23:59:59`),
+          },
+        })
+        .populate({
+          path: 'goods_list.goods',
+          select: 'name price status created_at updated_at',
+          populate: { path: 'buyer', select: 'nickname' },
+        })
+        .populate({
+          path: 'goods_list.goods',
+          populate: { path: 'seller', select: 'nickname' },
+        })
+        .sort({ created_at: -1 })
+        .skip((page - 1) * pageSize)
+        .limit(pageSize),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total,
+    }
+    return { code: 2000, msg: '根据日期范围查询订单', data: { order_list, pagination } }
+  }
+
   getOrderTransaction() {
     return {
       code: 2000, msg: '查询订单详情', data: {
