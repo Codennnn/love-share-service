@@ -27,10 +27,11 @@ class CategoryService extends Service {
   deleteCategory({ category_id_list }) {
     return this.ctx.model.Category
       .deleteMany({ _id: { $in: category_id_list } })
-      .then(({ ok }) => {
-        if (ok) {
+      .then(({ deletedCount }) => {
+        if (deletedCount === category_id_list.length) {
           return { code: 2000, msg: '成功删除分类' }
         }
+        return { code: 3000, msg: '没有删除分类' }
       })
   }
 
@@ -40,8 +41,8 @@ class CategoryService extends Service {
         { _id: { $in: category_id_list } },
         { activation }
       )
-      .then(({ ok }) => {
-        if (ok) {
+      .then(({ nModified }) => {
+        if (nModified === category_id_list.length) {
           return { code: 2000, msg: '成功更新分类激活状态' }
         }
       })

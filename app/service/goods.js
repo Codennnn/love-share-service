@@ -33,8 +33,8 @@ class GoodsService extends Service {
       if (img_list) {
         const { code } = await this.deleteImg(img_list)
         if (code === 2000) {
-          const { ok } = await ctx.model.Goods.deleteOne({ _id })
-          if (ok) {
+          const { deletedCount } = await ctx.model.Goods.deleteOne({ _id })
+          if (deletedCount === 1) {
             return { code: 2000, msg: '删除商品成功' }
           }
           return { code: 3000, msg: '无任何商品被删除' }
@@ -81,9 +81,8 @@ class GoodsService extends Service {
     data.seller = _id
     return this.ctx.model.Goods
       .updateOne({ _id: data._id, status: { $in: [1, 3] } }, data)
-      .then(({ ok, nModified }) => {
-        console.log(nModified)
-        if (ok) {
+      .then(({ nModified }) => {
+        if (nModified === 1) {
           return { code: 2000, msg: '成功编辑商品信息' }
         }
         return { code: 3000, msg: '没有可以编辑的商品信息' }
