@@ -23,8 +23,8 @@ class ChatService extends Service {
         },
         { runValidators: true }
       )
-      .then(({ nModified }) => {
-        if (nModified === 1) {
+      .then(({ ok }) => {
+        if (ok) {
           return { code: 2000, msg: '成功添加一个联系人' }
         }
         return { code: 3000, msg: '没有添加任何联系人' }
@@ -45,8 +45,8 @@ class ChatService extends Service {
           },
         }
       )
-      .then(({ nModified }) => {
-        if (nModified === 1) {
+      .then(({ ok }) => {
+        if (ok) {
           return { code: 2000, msg: '成功删除一个联系人' }
         }
         return { code: 3000, msg: '没有删除任何联系人' }
