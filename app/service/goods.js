@@ -71,11 +71,13 @@ class GoodsService extends Service {
   async editGoods(_id, data) {
     data.seller = _id
     return this.ctx.model.Goods
-      .updateOne({ _id: data._id, status: 1 }, data)
-      .then(({ nModified }) => {
-        if (nModified === 1) {
+      .updateOne({ _id: data._id, status: { $in: [1, 3] } }, data)
+      .then(({ ok, nModified }) => {
+        console.log(nModified)
+        if (ok) {
           return { code: 2000, msg: '成功编辑商品信息' }
         }
+        return { code: 3000, msg: '没有可以编辑的商品信息' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
