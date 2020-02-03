@@ -94,6 +94,7 @@ module.exports = appInfo => {
         '/api/user/sign_up',
         '/api/user/reset_password',
 
+        '/api/billboard/list',
         '/api/school/list',
         '/api/category/list',
         '/api/common/check_nickname',
