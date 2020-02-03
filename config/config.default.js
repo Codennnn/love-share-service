@@ -10,8 +10,14 @@ module.exports = appInfo => {
 
   config.onerror = {
     all(err, ctx) {
+      // console.log('====', err)
+      const { message } = err
+      // 无 JWT
+      if (message === 'No authorization token was found') {
+        ctx.status = 401
+      }
       // JWT 过期
-      if (err.message === 'jwt expired') {
+      if (message === 'jwt expired') {
         ctx.status = 418
       }
     },
@@ -94,6 +100,15 @@ module.exports = appInfo => {
         '/api/user/sign_up',
         '/api/user/reset_password',
 
+        '/api/begging/list',
+        '/api/goods/list/recommend',
+        '/api/goods/list/by_category',
+        '/api/goods/detail',
+        '/api/goods/seller',
+        '/api/goods/comments',
+
+        '/api/guide/list',
+        '/api/guide/article',
         '/api/billboard/list',
         '/api/school/list',
         '/api/category/list',

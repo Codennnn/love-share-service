@@ -100,7 +100,8 @@ class GoodsController extends Controller {
         page: { type: 'int', min: 1 },
         page_size: 'int',
       }, ctx.query)
-      const res = await service.goods.getRecommendGoodsList(ctx.state.user.id, ctx.query)
+      const id = ctx.state.user ? ctx.state.user.id : ''
+      const res = await service.goods.getRecommendGoodsList(id, ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

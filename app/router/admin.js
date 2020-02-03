@@ -150,7 +150,6 @@ module.exports = app => {
   // 资讯模块
   get(
     '/api/guide/list',
-    auth('guide', ['read']),
     guide.getGuideList)
   post(
     '/api/guide/create',
@@ -166,7 +165,6 @@ module.exports = app => {
     guide.addArticle)
   get(
     '/api/guide/article',
-    auth('guide', ['read']),
     guide.getArticle)
   put(
     '/api/guide/article/update',

@@ -84,7 +84,7 @@ class GoodsService extends Service {
 
   async getRecommendGoodsList(_id, { page, page_size: pageSize }) {
     const [total, goods_list] = await Promise.all([
-      this.ctx.model.Goods.estimatedDocumentCount(),
+      this.ctx.model.Goods.countDocuments({}),
       this.ctx.model.Goods
         .find({ status: 1 }, 'img_list name price')
         .sort({ created_at: -1 })
