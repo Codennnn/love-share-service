@@ -34,7 +34,7 @@ module.exports = app => {
   dele('/api/user/unsubscribe', user.unsubscribe)
 
   get('/api/user/published_goods', user.getPublishedGoods)
-  get('/api/user/purchased_goods', user.getPurchasedGoods)
+  get('/api/user/bought_goods', user.getBoughtGoods)
 
   get('/api/user/check_in_list', user.getCheckInList)
   post('/api/user/check_in', user.checkIn)
@@ -95,6 +95,7 @@ module.exports = app => {
   // 订单模块
   post('/api/order/create', order.createOrder)
   dele('/api/order/delete', order.deleteOrder)
+  put('/api/order/cancel', order.cancelOrder)
   get('/api/order/detail', order.geteOrderDetail)
   get('/api/order/by_user', order.geteOrdersByUser)
 

@@ -351,10 +351,29 @@ class UserService extends Service {
   }
 
   getPublishedGoods(_id) {
-    return this.ctx.model.Goods
-      .find({ seller: _id }, 'img_list name price status created_at updated_at')
-      .then(published_goods => {
+    return this.ctx.model.User
+      .findOne({ _id }, 'published_goods')
+      .populate({
+        path: 'published_goods',
+        select: 'img_list name price status created_at updated_at',
+      })
+      .then(({ published_goods }) => {
         return { code: 2000, msg: '查询已发布的商品', data: { published_goods } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
+  getBoughtGoods(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, 'bought_goods')
+      .populate({
+        path: 'bought_goods',
+        select: 'img_list name price status created_at updated_at sell_time',
+      })
+      .then(({ bought_goods }) => {
+        return { code: 2000, msg: '查询已购买的商品', data: { bought_goods } }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }

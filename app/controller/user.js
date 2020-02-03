@@ -199,9 +199,9 @@ class UserController extends Controller {
   /* GET
    * 获取用户已购买的商品
    */
-  async getPurchasedGoods() {
+  async getBoughtGoods() {
     const { ctx, service } = this
-    const res = await service.user.getPurchasedGoods(ctx.state.user.id)
+    const res = await service.user.getBoughtGoods(ctx.state.user.id)
     ctx.reply(res)
   }
 

@@ -69,6 +69,21 @@ class OrderService extends Service {
       })
   }
 
+  async cancelOrder(_id, { goods_id }) {
+    const { ctx, service } = this
+    await Promise.all([
+      service.goods.updateManyGoods({
+        goods_id_list: [goods_id],
+        status: 1,
+      }),
+      ctx.model.User.updateOne(
+        { _id },
+        { $pull: { bought_goods: goods_id } }
+      ),
+    ])
+    return { code: 2000, msg: '成功取消订单' }
+  }
+
   geteOrdersByUser(_id) {
     return this.ctx.model.Order
       .find({ buyer: _id }, 'goods_list created_at')

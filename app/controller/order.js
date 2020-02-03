@@ -39,6 +39,21 @@ class OrderController extends Controller {
     }
   }
 
+  /* PUT
+   * 取消订单
+   */
+  async cancelOrder() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ goods_id: 'string' })
+      const id = ctx.state.user.id
+      const res = await service.order.cancelOrder(id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* GET
    * 获取订单详情
    */
