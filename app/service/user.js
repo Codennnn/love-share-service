@@ -371,6 +371,7 @@ class UserService extends Service {
       .populate({
         path: 'bought_goods',
         select: 'img_list name price status created_at updated_at sell_time',
+        populate: { path: 'seller', select: 'nickname' },
       })
       .then(({ bought_goods }) => {
         return { code: 2000, msg: '查询已购买的商品', data: { bought_goods } }
@@ -449,8 +450,12 @@ class UserService extends Service {
       })
   }
 
-  addCollection(_id, { goods_id }) {
+  async addCollection(_id, { goods_id }) {
     const { ctx } = this
+    // await this.service.goods.updateManyGoods({
+    //   goods_id_list: ['5e0a29ce26b6ad0628f9f79c'],
+    //   status: 1,
+    // })
     return ctx.model.User
       .updateOne(
         { _id },

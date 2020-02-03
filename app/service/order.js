@@ -19,14 +19,15 @@ class OrderService extends Service {
       })
 
       // 更新用户已购买的商品信息
-      await Promise.all(data.goods_list.map(el => {
+      await Promise.all(goodsIdList.map(goods_id => {
         return ctx.model.User.updateOne(
-          { buyer },
+          { _id: buyer },
           {
             $push: {
-              bought_goods: { $each: [el._id], $position: 0 },
+              bought_goods: { $each: [goods_id], $position: 0 },
             },
-          }
+          },
+          { runValidators: true }
         )
       }))
 

@@ -10,12 +10,12 @@ class GoodsService extends Service {
     data.seller = _id
     const goods = new ctx.model.Goods(data)
     try {
-      const { _id } = await goods.save()
+      const { _id: goods_id } = await goods.save()
       await ctx.model.User.updateOne(
         { _id },
         {
           $push: {
-            published_goods: { $each: [_id], $position: 0 },
+            published_goods: { $each: [goods_id], $position: 0 },
           },
         }
       )
