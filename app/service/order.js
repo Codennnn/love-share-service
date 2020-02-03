@@ -18,6 +18,18 @@ class OrderService extends Service {
         sell_time: Date.now(),
       })
 
+      // 更新用户已购买的商品信息
+      await Promise.all(data.goods_list.map(el => {
+        return ctx.model.User.updateOne(
+          { buyer },
+          {
+            $push: {
+              bought_goods: { $each: [el._id], $position: 0 },
+            },
+          }
+        )
+      }))
+
       // 通知卖家
       await Promise.all(data.goods_list.map(el => {
         const notice = {
@@ -62,7 +74,7 @@ class OrderService extends Service {
       .find({ buyer: _id }, 'goods_list created_at')
       .populate({
         path: 'goods_list.goods',
-        select: 'img_list name price',
+        select: 'img_list name price status',
         populate: { path: 'seller', select: 'nickname' },
       })
       .then(list => {

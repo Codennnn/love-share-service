@@ -97,7 +97,7 @@ module.exports = app => {
     },
     status: {
       type: Number,
-      enum: [1, 2, 3], // 1-待出售，2-已出售，3-已下架
+      enum: [1, 2, 3, 4], // 1-待出售，2-进行中，3-已下架, 4-已出售
       default: 1,
     },
     sell_time: Number,

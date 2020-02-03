@@ -133,7 +133,7 @@ module.exports = app => {
       })],
       default: [],
     },
-    // published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     bought_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
     check_in: Array,
   })

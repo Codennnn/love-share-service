@@ -6,10 +6,19 @@ const Service = require('egg').Service
 
 class GoodsService extends Service {
   async createGoods(_id, data) {
+    const { ctx } = this
     data.seller = _id
-    const goods = new this.ctx.model.Goods(data)
+    const goods = new ctx.model.Goods(data)
     try {
-      await goods.save()
+      const { _id } = await goods.save()
+      await ctx.model.User.updateOne(
+        { _id },
+        {
+          $push: {
+            published_goods: { $each: [_id], $position: 0 },
+          },
+        }
+      )
       return { code: 2000, msg: '成功创建商品' }
     } catch (err) {
       return { code: 5000, msg: err.message }
