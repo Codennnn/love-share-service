@@ -18,9 +18,17 @@ module.exports = app => {
       required: true,
       ref: 'User',
     },
+    sub_order: [new Schema({
+      goods_list: [new Schema({
+        amount: { type: Number, required: true },
+        goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
+      })],
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    })],
     status: {
       type: Number,
-      enum: [1, 2, 3], // 1-进行中， 2-已完成
+      enum: [1, 2, 3], // 1-进行中, 2-已完成, 3-派送中
       default: 1,
     },
     step: {
