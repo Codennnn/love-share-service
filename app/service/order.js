@@ -87,14 +87,19 @@ class OrderService extends Service {
 
   geteOrdersByUser(_id) {
     return this.ctx.model.Order
-      .find({ buyer: _id }, 'goods_list created_at')
+      .find({ buyer: _id }, 'address payment total_price status goods_list created_at')
       .populate({
         path: 'goods_list.goods',
         select: 'img_list name price status',
         populate: { path: 'seller', select: 'nickname' },
       })
-      .then(list => {
-        return { code: 2000, msg: '查询用户所有的订单', data: { list } }
+      .sort({ created_at: -1 })
+      .then(order_list => {
+        return {
+          code: 2000,
+          msg: '查询用户所有的订单',
+          data: { order_list },
+        }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
