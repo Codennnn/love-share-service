@@ -19,6 +19,8 @@ module.exports = app => {
         amount: { type: Number, required: true },
         goods: { type: Schema.Types.ObjectId, required: true, ref: 'Goods' },
       })],
+      total_price: { type: Number, required: true },
+      actual_price: { type: Number, required: true },
       status: {
         type: Number,
         enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消
@@ -32,6 +34,11 @@ module.exports = app => {
       enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消
       default: 1,
     },
+    split_info: new Schema({
+      is_split: { type: Boolean, default: false },
+    }, {
+      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    }),
     step: {
       type: Number,
       default: 1,

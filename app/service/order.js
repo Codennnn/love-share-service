@@ -10,10 +10,30 @@ class OrderService extends Service {
     const sellerIdList = [
       ...new Set(data.goods_list.map(el => el.seller)),
     ]
+    const goodsListFilter = sellerId => {
+      return data.goods_list.filter(li => li.seller === sellerId)
+    }
+    const totalPrice = sellerId => goodsListFilter(sellerId)
+      .reduce(
+        (acc, curr) => acc + curr.price * curr.amount,
+        0
+      )
     const sub_order = sellerIdList.map(el => ({
-      goods_list: data.goods_list.filter(li => li.seller === el),
+      goods_list: goodsListFilter(el),
+      total_price: totalPrice(el),
     }))
-    Object.assign(data, { sub_order })
+
+    if (sellerIdList.length === 1) {
+      Object.assign(data, { sub_order })
+    } else {
+      const split_info = {
+        is_split: Boolean(),
+        reason: '商品在不同的库房或属于不同商家，订单被拆分为多个子订单分开配送',
+      }
+      Object.assign(data, { sub_order, split_info })
+    }
+    console.log(data)
+
     try {
       // 更新商品信息
       await service.goods.updateManyGoods({
@@ -100,7 +120,6 @@ class OrderService extends Service {
   }
 
   async cancelOrder(_id, { order_id, sub_id, goods_id_list }) {
-    console.log(order_id, sub_id, goods_id_list)
     const { ctx, service } = this
     try {
       await Promise.all([
@@ -132,7 +151,7 @@ class OrderService extends Service {
 
   geteOrdersByUser(_id) {
     return this.ctx.model.Order
-      .find({ buyer: _id }, 'address payment total_price status sub_order created_at updated_at')
+      .find({ buyer: _id }, 'address payment total_price status sub_order split_info created_at updated_at')
       .populate({
         path: 'sub_order.goods_list.goods',
         select: 'img_list name price status',
