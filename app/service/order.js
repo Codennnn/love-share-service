@@ -7,9 +7,16 @@ class OrderService extends Service {
     data.buyer = buyer
     const { ctx, service } = this
     const goodsIdList = data.goods_list.map(el => el.goods)
+    const sellerIdList = [
+      ...new Set(data.goods_list.map(el => el.seller)),
+    ]
+    const sub_order = sellerIdList.map(el => ({
+      goods_list: data.goods_list.filter(li => li.seller === el),
+    }))
+    console.log(sub_order)
+    Object.assign(data, { sub_order })
+    console.log(data)
     try {
-      const order = new ctx.model.Order(data)
-      const { _id: order_id } = await order.save()
       // 更新商品信息
       await service.goods.updateManyGoods({
         goods_id_list: goodsIdList,
@@ -42,10 +49,12 @@ class OrderService extends Service {
       }))
 
       // 更新用户乐享信用值和乐享值
-      await Promise.all([
-        service.user.updateCreditValue(buyer, 10),
-        service.user.updateShareValue(buyer, 10),
-      ])
+      // await Promise.all([
+      //   service.user.updateCreditValue(buyer, 10),
+      //   service.user.updateShareValue(buyer, 10),
+      // ])
+      const order = new ctx.model.Order(data)
+      const { _id: order_id } = await order.save()
 
       return { code: 2000, msg: '成功创建订单', data: { order_id } }
     } catch (err) {
@@ -87,9 +96,9 @@ class OrderService extends Service {
 
   geteOrdersByUser(_id) {
     return this.ctx.model.Order
-      .find({ buyer: _id }, 'address payment total_price status goods_list created_at')
+      .find({ buyer: _id }, 'address payment total_price status sub_order created_at updated_at')
       .populate({
-        path: 'goods_list.goods',
+        path: 'sub_order.goods_list.goods',
         select: 'img_list name price status',
         populate: { path: 'seller', select: 'nickname' },
       })

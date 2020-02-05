@@ -5,10 +5,6 @@ module.exports = app => {
   const Schema = mongoose.Schema
 
   const OrderSchema = new Schema({
-    goods_list: [new Schema({
-      amount: { type: Number, required: true },
-      goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
-    })],
     payment: { type: String, required: true },
     address: { type: Object, required: true },
     total_price: { type: Number, required: true },
@@ -21,14 +17,19 @@ module.exports = app => {
     sub_order: [new Schema({
       goods_list: [new Schema({
         amount: { type: Number, required: true },
-        goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
+        goods: { type: Schema.Types.ObjectId, required: true, ref: 'Goods' },
       })],
+      status: {
+        type: Number,
+        enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消
+        default: 1,
+      },
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     })],
     status: {
       type: Number,
-      enum: [1, 2, 3], // 1-进行中, 2-已完成, 3-派送中
+      enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消
       default: 1,
     },
     step: {

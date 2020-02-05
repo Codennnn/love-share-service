@@ -12,7 +12,7 @@ class OrderController extends Controller {
     const data = ctx.request.body
     try {
       ctx.validate({
-        goods_list: 'array',
+        goods_list: { type: 'array', itemType: 'object' },
         payment: 'string',
         address: 'object',
         total_price: 'number',

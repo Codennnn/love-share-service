@@ -453,7 +453,7 @@ class UserService extends Service {
   async addCollection(_id, { goods_id }) {
     const { ctx } = this
     // await this.service.goods.updateManyGoods({
-    //   goods_id_list: ['5e0a29ce26b6ad0628f9f79c'],
+    //   goods_id_list: [goods_id],
     //   status: 1,
     // })
     return ctx.model.User
