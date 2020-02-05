@@ -13,9 +13,7 @@ class OrderService extends Service {
     const sub_order = sellerIdList.map(el => ({
       goods_list: data.goods_list.filter(li => li.seller === el),
     }))
-    console.log(sub_order)
     Object.assign(data, { sub_order })
-    console.log(data)
     try {
       // 更新商品信息
       await service.goods.updateManyGoods({
@@ -79,19 +77,35 @@ class OrderService extends Service {
       })
   }
 
-  async cancelOrder(_id, { goods_id }) {
+  async cancelOrder(_id, { order_id, sub_id, goods_id_list }) {
+    console.log(order_id, sub_id, goods_id_list)
     const { ctx, service } = this
-    await Promise.all([
-      service.goods.updateManyGoods({
-        goods_id_list: [goods_id],
-        status: 1,
-      }),
-      ctx.model.User.updateOne(
-        { _id },
-        { $pull: { bought_goods: goods_id } }
-      ),
-    ])
-    return { code: 2000, msg: '成功取消订单' }
+    try {
+      await Promise.all([
+        service.goods.updateManyGoods({
+          goods_id_list,
+          status: 1,
+        }),
+        ctx.model.Order.updateOne(
+          { _id: order_id, 'sub_order._id': sub_id },
+          {
+            $set: {
+              'sub_order.$.status': 4,
+            },
+          },
+          { runValidators: true }
+        ),
+        ctx.model.User.updateOne(
+          { _id },
+          {
+            $pull: { bought_goods: { $in: goods_id_list } },
+          }
+        ),
+      ])
+      return { code: 2000, msg: '成功取消订单' }
+    } catch (err) {
+      return { code: 5000, msg: '取消订单失败', err }
+    }
   }
 
   geteOrdersByUser(_id) {

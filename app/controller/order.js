@@ -45,8 +45,12 @@ class OrderController extends Controller {
   async cancelOrder() {
     const { ctx, service } = this
     try {
-      ctx.validate({ goods_id: 'string' })
-      const id = ctx.request.body.user_id || ctx.state.user.id
+      ctx.validate({
+        order_id: 'string',
+        sub_id: 'string',
+        goods_id_list: { type: 'array', itemType: 'string' },
+      })
+      const id = ctx.state.user.id
       const res = await service.order.cancelOrder(id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
