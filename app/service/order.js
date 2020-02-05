@@ -21,6 +21,7 @@ class OrderService extends Service {
     const sub_order = sellerIdList.map(el => ({
       goods_list: goodsListFilter(el),
       total_price: totalPrice(el),
+      actual_price: totalPrice(el),
     }))
 
     if (sellerIdList.length === 1) {
@@ -32,7 +33,6 @@ class OrderService extends Service {
       }
       Object.assign(data, { sub_order, split_info })
     }
-    console.log(data)
 
     try {
       // 更新商品信息

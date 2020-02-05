@@ -36,6 +36,7 @@ module.exports = app => {
     },
     split_info: new Schema({
       is_split: { type: Boolean, default: false },
+      reason: String,
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
     }),
