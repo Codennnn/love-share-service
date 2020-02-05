@@ -16,7 +16,7 @@ class ChatService extends Service {
       .updateOne(
         { _id },
         {
-          $addToSet: {
+          $push: {
             contacts: contact_id,
             chats: { contact_id, msg: [] },
           },
@@ -96,23 +96,24 @@ class ChatService extends Service {
   }
 
   async addChatData({ sender, receiver }) {
+    const { ctx, service } = this
     await Promise.all([
-      // 更新发送方
-      this.ctx.model.User
+      // 更新发送方的消息记录
+      ctx.model.User
         .updateOne(
           { _id: sender.client, 'chats.contact_id': sender.target },
           {
-            $addToSet: {
+            $push: {
               'chats.$.msg': sender,
             },
           }
         ),
-      // 更新接收方
-      this.ctx.model.User
+      // 更新接收方的消息记录
+      ctx.model.User
         .updateOne(
           { _id: receiver.client, 'chats.contact_id': receiver.target },
           {
-            $addToSet: {
+            $push: {
               'chats.$.msg': receiver,
             },
           }
@@ -121,9 +122,9 @@ class ChatService extends Service {
           // 如果是第一次聊天
           if (nModified === 0) {
             console.log('第一次聊天')
-            const { code } = await this.addContact(receiver.client, receiver.target)
+            const { code } = await service.User.addContact(receiver.client, receiver.target)
             if (code === 2000) {
-              await this.ctx.model.User
+              await ctx.model.User
                 .updateOne(
                   { _id: receiver.client, 'chats.contact_id': receiver.target },
                   {

@@ -11,9 +11,9 @@ class ChatController extends Controller {
 
     try {
       ctx.validate({ user_id: 'string?', contact_id: 'string' })
-      const _id = ctx.request.body.user_id || ctx.state.user.id
+      const id = ctx.request.body.user_id || ctx.state.user.id
       const contactId = ctx.request.body.contact_id
-      const res = await service.chat.addContact(_id, contactId)
+      const res = await service.chat.addContact(id, contactId)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
@@ -27,10 +27,10 @@ class ChatController extends Controller {
     const { ctx, service } = this
 
     try {
-      ctx.validate({ contact_id: 'string' })
-      const _id = ctx.state.user.id
+      ctx.validate({ user_id: 'string?', contact_id: 'string' })
+      const id = ctx.request.body.user_id || ctx.state.user.id
       const contactId = ctx.request.body.contact_id
-      const res = await service.chat.deleteContact(_id, contactId)
+      const res = await service.chat.deleteContact(id, contactId)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)
