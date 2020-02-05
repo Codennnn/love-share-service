@@ -95,6 +95,7 @@ module.exports = app => {
   // 订单模块
   post('/api/order/create', order.createOrder)
   dele('/api/order/delete', order.deleteOrder)
+  put('/api/order/completed', order.completedOrder)
   put('/api/order/cancel', order.cancelOrder)
   get('/api/order/detail', order.geteOrderDetail)
   get('/api/order/by_user', order.geteOrdersByUser)

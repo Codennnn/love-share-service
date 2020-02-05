@@ -40,6 +40,25 @@ class OrderController extends Controller {
   }
 
   /* PUT
+   * 完成订单
+   */
+  async completedOrder() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        order_id: 'string',
+        sub_id: 'string',
+        goods_id_list: { type: 'array', itemType: 'string' },
+      })
+      const id = ctx.state.user.id
+      const res = await service.order.completedOrder(id, ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* PUT
    * 取消订单
    */
   async cancelOrder() {
@@ -64,8 +83,8 @@ class OrderController extends Controller {
   async geteOrderDetail() {
     const { ctx, service } = this
     try {
-      ctx.validate({ order_id: 'string' }, ctx.query)
-      const res = await service.order.geteOrderDetail(ctx.query.order_id)
+      ctx.validate({ order_id: 'string', sub_id: 'string' }, ctx.query)
+      const res = await service.order.geteOrderDetail(ctx.query)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

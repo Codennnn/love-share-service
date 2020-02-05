@@ -46,11 +46,6 @@ class OrderService extends Service {
         return service.notice.addNotice(el.seller, notice)
       }))
 
-      // 更新用户乐享信用值和乐享值
-      // await Promise.all([
-      //   service.user.updateCreditValue(buyer, 10),
-      //   service.user.updateShareValue(buyer, 10),
-      // ])
       const order = new ctx.model.Order(data)
       const { _id: order_id } = await order.save()
 
@@ -75,6 +70,33 @@ class OrderService extends Service {
         }
         return { code: 3000, msg: '无任何订单被删除' }
       })
+  }
+
+  async completedOrder(_id, { order_id, sub_id, goods_id_list }) {
+    console.log(order_id, sub_id, goods_id_list)
+    const { ctx, service } = this
+    try {
+      await Promise.all([
+        service.goods.updateManyGoods({
+          goods_id_list,
+          status: 4,
+        }),
+        ctx.model.Order.updateOne(
+          { _id: order_id, 'sub_order._id': sub_id },
+          {
+            $set: {
+              'sub_order.$.status': 2,
+            },
+          },
+          { runValidators: true }
+        ),
+        service.user.updateCreditValue(_id, 10),
+        service.user.updateShareValue(_id, 10),
+      ])
+      return { code: 2000, msg: '成功取消订单' }
+    } catch (err) {
+      return { code: 5000, msg: '取消订单失败', err }
+    }
   }
 
   async cancelOrder(_id, { order_id, sub_id, goods_id_list }) {
@@ -129,16 +151,24 @@ class OrderService extends Service {
       })
   }
 
-  geteOrderDetail(_id) {
+  async geteOrderDetail({ order_id, sub_id }) {
     return this.ctx.model.Order
-      .findOne({ _id })
+      .findOne({ _id: order_id })
       .populate('buyer', 'nickname real_name phone')
       .populate({
-        path: 'goods_list.goods',
+        path: 'sub_order.goods_list.goods',
         select: 'img_list name price sell_time',
         populate: { path: 'seller', select: 'nickname' },
       })
-      .then(order_detail => {
+      .then(res => {
+        const [sub_order] = res.sub_order.filter(
+          el => String(el._id) === sub_id
+        )
+        const order_detail = Object.assign(
+          {},
+          { ...res._doc },
+          { sub_order }
+        )
         return { code: 2000, msg: '查询订单详情', data: { order_detail } }
       })
       .catch(err => {
