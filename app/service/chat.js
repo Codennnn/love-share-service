@@ -95,8 +95,9 @@ class ChatService extends Service {
       })
   }
 
-  addChatData({ sender, receiver }) {
-    Promise.all([
+  async addChatData({ sender, receiver }) {
+    await Promise.all([
+      // 更新发送方
       this.ctx.model.User
         .updateOne(
           { _id: sender.client, 'chats.contact_id': sender.target },
@@ -106,6 +107,7 @@ class ChatService extends Service {
             },
           }
         ),
+      // 更新接收方
       this.ctx.model.User
         .updateOne(
           { _id: receiver.client, 'chats.contact_id': receiver.target },
@@ -116,7 +118,9 @@ class ChatService extends Service {
           }
         )
         .then(async ({ nModified }) => {
+          // 如果是第一次聊天
           if (nModified === 0) {
+            console.log('第一次聊天')
             const { code } = await this.addContact(receiver.client, receiver.target)
             if (code === 2000) {
               await this.ctx.model.User
