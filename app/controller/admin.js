@@ -27,6 +27,29 @@ class AdminController extends Controller {
     }
   }
 
+  /* POST
+   * 通过邀请码创建管理员
+   */
+  async createAdminByInvitation() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({
+        account: 'string',
+        password: 'string',
+        nickname: 'string',
+        real_name: 'string',
+        permissions: { type: 'array', itemType: 'object' },
+        avatar_url: 'string',
+        gender: [0, 1],
+        email: 'email?',
+      })
+      const res = await service.admin.createAdmin(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
   /* PUT
    * 更新管理员
    */

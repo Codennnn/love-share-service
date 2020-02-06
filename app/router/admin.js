@@ -14,6 +14,9 @@ module.exports = app => {
     '/api/admin/create',
     auth('admin', ['write', 'create']),
     admin.createAdmin)
+  post(
+    '/api/admin/invitation',
+    admin.createAdminByInvitation)
   put(
     '/api/admin/update',
     auth('admin', ['write']),
