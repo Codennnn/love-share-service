@@ -8,8 +8,13 @@ class SchoolController extends Controller {
    */
   async addSchool() {
     const { ctx, service } = this
-    const res = await service.school.addSchool(ctx.request.body.name)
-    ctx.reply(res)
+    try {
+      ctx.validate({ school_list: 'array' })
+      const res = await service.school.addSchool(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
   }
 
   /* DELETE

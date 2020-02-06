@@ -11,6 +11,14 @@ module.exports = app => {
       unique: true,
       trim: true,
     },
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    location: String,
+    level: String,
   })
 
   SchoolSchema.set('timestamps', {

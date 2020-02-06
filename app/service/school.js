@@ -5,17 +5,16 @@ const Service = require('egg').Service
 class SchoolService extends Service {
   getSchoolList() {
     return this.ctx.model.School
-      .find({}, '_id name')
+      .find({})
       .then(school_list => {
         return { code: 2000, msg: '获取学校列表', data: { school_list } }
       })
   }
 
-  async addSchool(name) {
+  async addSchool({ school_list }) {
     try {
-      const school = new this.ctx.model.School({ name })
-      await school.save()
-      return { code: 2001, msg: '成功添加学校' }
+      await this.ctx.model.School.insertMany(school_list)
+      return { code: 2000, msg: '成功添加学校' }
     } catch (err) {
       if (err.message.includes('duplicate key')) {
         return { code: 4003, msg: '不能重复添加学校' }

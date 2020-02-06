@@ -208,7 +208,6 @@ module.exports = app => {
   // 学校模块
   post(
     '/api/school/add',
-    auth('order', ['read']),
     school.addSchool)
   dele(
     '/api/school/delete',
