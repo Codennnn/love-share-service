@@ -82,7 +82,7 @@ module.exports = app => {
       purview: {
         type: Array,
         required: true,
-        default: [],
+        default: [], // 格式： ['read', 'write', ...]
       },
     }, {
       timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
