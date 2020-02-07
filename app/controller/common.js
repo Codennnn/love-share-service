@@ -13,7 +13,7 @@ class CommonController extends Controller {
   }
 
   /* POST
-   * 检测手机号是否已被注册
+   * 检测用户昵称是否已被使用
    */
   async checkNickname() {
     const { ctx, service } = this

@@ -38,7 +38,7 @@ module.exports = app => {
     },
     delivery: {
       type: String,
-      enum: ['1', '2', '3'],
+      enum: ['1', '2', '3'], // 1-包邮, 2-自费, 3-自提
       default: '1',
     },
     delivery_charge: {

@@ -21,6 +21,7 @@ module.exports = app => {
       })],
       total_price: { type: Number, required: true },
       actual_price: { type: Number, required: true },
+      delivery_charge: { type: Number, required: true },
       status: {
         type: Number,
         enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消

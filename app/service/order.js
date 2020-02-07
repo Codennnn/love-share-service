@@ -18,10 +18,16 @@ class OrderService extends Service {
         (acc, curr) => acc + curr.price * curr.amount,
         0
       )
+    const deliveryCharge = sellerId => goodsListFilter(sellerId)
+      .reduce(
+        (acc, curr) => acc + curr.delivery_charge,
+        0
+      )
     const sub_order = sellerIdList.map(el => ({
       goods_list: goodsListFilter(el),
       total_price: totalPrice(el),
       actual_price: totalPrice(el),
+      delivery_charge: deliveryCharge(el),
     }))
 
     if (sellerIdList.length === 1) {
@@ -154,7 +160,7 @@ class OrderService extends Service {
       .find({ buyer: _id }, 'address payment total_price status sub_order split_info created_at updated_at')
       .populate({
         path: 'sub_order.goods_list.goods',
-        select: 'img_list name price status',
+        select: 'img_list name price delivery delivery_charge status',
         populate: { path: 'seller', select: 'nickname' },
       })
       .sort({ created_at: -1 })
@@ -176,7 +182,7 @@ class OrderService extends Service {
       .populate('buyer', 'nickname real_name phone')
       .populate({
         path: 'sub_order.goods_list.goods',
-        select: 'img_list name price sell_time',
+        select: 'img_list name price delivery delivery_charge sell_time',
         populate: { path: 'seller', select: 'nickname' },
       })
       .then(res => {

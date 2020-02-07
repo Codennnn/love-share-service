@@ -42,7 +42,7 @@ class UserService extends Service {
     })
     try {
       await user.save()
-      return { code: 2001, msg: '成功创建用户' }
+      return { code: 2000, msg: '成功创建用户' }
     } catch (err) {
       if (err.message.includes('duplicate key error')) {
         if (err.message.includes('phone')) {
