@@ -4,6 +4,11 @@ const Service = require('egg').Service
 
 class NoticeService extends Service {
   addNotice(_id, data) {
+    // data: {
+    //   title: '您有一件闲置被买走啦',
+    //   content: `您发布的闲置物品 <b>${el.name}</b> 被人拍走啦~`,
+    //   type: 2,
+    // }
     data.time = Date.now()
     const { app, ctx } = this
     return ctx.model.User

@@ -342,8 +342,9 @@ class GoodsService extends Service {
     }
   }
 
-  postComment(_id, { goods_id, content }) {
-    return this.ctx.model.Goods
+  postComment(_id, { owner, goods_id, content }) {
+    const { ctx, service } = this
+    return ctx.model.Goods
       .updateOne(
         { _id: goods_id },
         { $push: { comments: { $each: [{ content, sender: _id }], $position: 0 } } },
@@ -351,6 +352,13 @@ class GoodsService extends Service {
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
+          if (_id !== owner) {
+            service.notice.addNotice(owner, {
+              title: '收到商品留言',
+              content: `有人给您的商品留言了：<b>${content}</b>，快去看看吧~`,
+              type: 1,
+            })
+          }
           return { code: 2000, msg: '已成功发送一条留言' }
         }
         return { code: 3000, msg: '留言失败' }
@@ -361,7 +369,8 @@ class GoodsService extends Service {
   }
 
   replyComment(_id, { goods_id, comment_id, at, content }) {
-    return this.ctx.model.Goods
+    const { ctx, service } = this
+    return ctx.model.Goods
       .updateOne(
         { _id: goods_id, 'comments._id': comment_id },
         {
@@ -371,6 +380,13 @@ class GoodsService extends Service {
       )
       .then(({ nModified }) => {
         if (nModified === 1) {
+          if (_id !== at) {
+            service.notice.addNotice(at, {
+              title: '收到留言回复',
+              content: `有人回复了您的留言 [<b>${content}</b>] ，快去看看哦~`,
+              type: 1,
+            })
+          }
           return { code: 2000, msg: '已成功回复一条留言' }
         }
         return { code: 3000, msg: '回复留言失败' }

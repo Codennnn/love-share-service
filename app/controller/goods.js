@@ -239,7 +239,11 @@ class GoodsController extends Controller {
   async postComment() {
     const { ctx, service } = this
     try {
-      ctx.validate({ content: { type: 'string', max: 50 }, goods_id: 'string' })
+      ctx.validate({
+        owner: 'string',
+        content: { type: 'string', max: 50 },
+        goods_id: 'string',
+      })
       const res = await service.goods.postComment(ctx.state.user.id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {

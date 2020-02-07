@@ -103,7 +103,7 @@ module.exports = app => {
     notices: [new Schema({
       title: { type: String, required: true, maxlength: 30 },
       content: { type: String },
-      type: { type: Number, enum: [1, 2, 3, 4] },
+      type: { type: Number, enum: [1, 2, 3, 4] }, // 1-系统 2-成功 3-提示 4-重要
       is_read: { type: Boolean, default: false },
       time: Number,
     }, {

@@ -268,6 +268,13 @@ class UserService extends Service {
       const { ok, url: avatar_url } = await app.fullQiniu
         .uploadStream(name, stream)
       if (ok) {
+        if (originalAvatar.length > 0) {
+          const { ok } = await app.fullQiniu
+            .delete(path.basename(originalAvatar))
+          if (!ok) {
+            return { code: 4003, msg: '原头像删除失败' }
+          }
+        }
         return ctx.model.User
           .updateOne(
             { _id },
@@ -275,12 +282,7 @@ class UserService extends Service {
           )
           .then(async ({ nModified }) => {
             if (nModified === 1) {
-              const { ok } = await app.fullQiniu
-                .delete(path.basename(originalAvatar))
-              if (ok) {
-                return { code: 2000, msg: '头像更换成功', data: { avatar_url } }
-              }
-              return { code: 4003, msg: '原头像删除失败' }
+              return { code: 2000, msg: '头像更换成功', data: { avatar_url } }
             }
             return { code: 3000, msg: '没有更换到头像' }
           })
