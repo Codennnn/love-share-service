@@ -68,6 +68,7 @@ class OrderController extends Controller {
         order_id: 'string',
         sub_id: 'string',
         goods_id_list: { type: 'array', itemType: 'string' },
+        seller_id: 'string',
       })
       const id = ctx.state.user.id
       const res = await service.order.cancelOrder(id, ctx.request.body)

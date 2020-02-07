@@ -125,7 +125,7 @@ class OrderService extends Service {
     }
   }
 
-  async cancelOrder(_id, { order_id, sub_id, goods_id_list }) {
+  async cancelOrder(_id, { order_id, sub_id, goods_id_list, seller_id }) {
     const { ctx, service } = this
     try {
       await Promise.all([
@@ -149,6 +149,11 @@ class OrderService extends Service {
           }
         ),
       ])
+      service.notice.addNotice(seller_id, {
+        title: '订单取消',
+        content: `您有一个编号为：${order_id} 的订单被取消！`,
+        type: 4,
+      })
       return { code: 2000, msg: '成功取消订单' }
     } catch (err) {
       return { code: 5000, msg: '取消订单失败', err }
