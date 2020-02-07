@@ -167,7 +167,7 @@ module.exports = app => {
     auth('guide', ['create']),
     guide.addArticle)
   get(
-    '/api/guide/article',
+    '/api/guide/article/content',
     guide.getArticle)
   put(
     '/api/guide/article/update',

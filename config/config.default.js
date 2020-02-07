@@ -10,7 +10,6 @@ module.exports = appInfo => {
 
   config.onerror = {
     all(err, ctx) {
-      // console.log('====', err)
       const { message } = err
       // 无 JWT
       if (message === 'No authorization token was found') {
@@ -109,7 +108,7 @@ module.exports = appInfo => {
         '/api/goods/comments',
 
         '/api/guide/list',
-        '/api/guide/article',
+        '/api/guide/article/content',
         '/api/billboard/list',
         '/api/school/list',
         '/api/category/list',

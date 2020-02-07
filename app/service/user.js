@@ -404,7 +404,7 @@ class UserService extends Service {
           service.user.updateBean(_id, 10)
           return { code: 2000, msg: '签到成功' }
         }
-        return { code: 3000, msg: '签到成功' }
+        return { code: 3000, msg: '签到失败' }
       })
       .catch(err => {
         return { code: 5000, msg: err.message }
