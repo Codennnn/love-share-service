@@ -111,17 +111,20 @@ class GoodsService extends Service {
 
   async getGoodsListByCategory({ page, page_size: pageSize, category }) {
     const { ctx, app } = this
-    const goods_list = await ctx.model.Goods.aggregate([
-      {
-        $match: {
-          category: { $in: [app.mongoose.Types.ObjectId(category)] },
-          status: 1,
+    const [goods_list] = await Promise.all([
+      ctx.model.Goods.aggregate([
+        {
+          $match: {
+            category: { $in: [app.mongoose.Types.ObjectId(category)] },
+            status: 1,
+          },
         },
-      },
-      { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
-      { $sort: { created_at: -1 } },
-      { $skip: (page - 1) * pageSize },
-      { $limit: pageSize },
+        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+        { $sort: { created_at: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+      ]),
+      ctx.model.Category.updateOne({ _id: category }, { $inc: { hit: 1 } }),
     ])
     const pagination = {
       page,

@@ -212,12 +212,12 @@ class OrderService extends Service {
       this.ctx.model.Order
         .find({})
         .populate({
-          path: 'goods_list.goods',
-          select: 'name price status created_at updated_at',
+          path: 'sub_order.goods_list.goods',
           populate: { path: 'buyer', select: 'nickname' },
         })
         .populate({
-          path: 'goods_list.goods',
+          path: 'sub_order.goods_list.goods',
+          select: 'name price status created_at updated_at',
           populate: { path: 'seller', select: 'nickname' },
         })
         .sort({ created_at: -1 })
@@ -248,12 +248,12 @@ class OrderService extends Service {
           },
         })
         .populate({
-          path: 'goods_list.goods',
-          select: 'name price status created_at updated_at',
+          path: 'sub_order.goods_list.goods',
           populate: { path: 'buyer', select: 'nickname' },
         })
         .populate({
-          path: 'goods_list.goods',
+          path: 'sub_order.goods_list.goods',
+          select: 'name price status created_at updated_at',
           populate: { path: 'seller', select: 'nickname' },
         })
         .sort({ created_at: -1 })

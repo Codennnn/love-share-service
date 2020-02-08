@@ -57,7 +57,6 @@ class ChatService extends Service {
   }
 
   getContactList(_id) {
-    console.log(_id)
     return this.ctx.model.User
       .findOne({ _id }, 'contacts')
       .populate('contacts', 'nickname avatar_url')
@@ -121,8 +120,7 @@ class ChatService extends Service {
         .then(async ({ nModified }) => {
           // 如果是第一次聊天
           if (nModified === 0) {
-            console.log('第一次聊天')
-            const { code } = await service.User.addContact(receiver.client, receiver.target)
+            const { code } = await service.chat.addContact(receiver.client, receiver.target)
             if (code === 2000) {
               await ctx.model.User
                 .updateOne(

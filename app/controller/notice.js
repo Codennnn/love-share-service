@@ -55,7 +55,8 @@ class NoticeController extends Controller {
    */
   async getUnreadNotices() {
     const { ctx, service } = this
-    const res = await service.notice.getUnreadNotices(ctx.state.user.id)
+    const id = ctx.query.user_id || ctx.state.user.id
+    const res = await service.notice.getUnreadNotices(id)
     ctx.reply(res)
   }
 
