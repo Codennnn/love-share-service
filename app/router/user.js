@@ -75,6 +75,7 @@ module.exports = app => {
 
   get('/api/goods/detail', goods.getGoodsDetail)
   get('/api/goods/list/recommend', goods.getRecommendGoodsList)
+  get('/api/goods/list/by_search', goods.getGoodsListBySearch)
   get('/api/goods/list/by_category', goods.getGoodsListByCategory)
   post('/api/goods/list/same_school', goods.getGoodsListOfSameSchool)
   post('/api/goods/img/upload', goods.uploadImg)

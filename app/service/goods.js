@@ -109,6 +109,35 @@ class GoodsService extends Service {
     return { code: 2000, msg: '查询推荐商品列表', data: { goods_list, pagination } }
   }
 
+  async getGoodsListBySearch({ page, page_size: pageSize, search }) {
+    const { ctx } = this
+    const reg = new RegExp(search.toLowerCase().trim(), 'i')
+    const [goods_list] = await Promise.all([
+      ctx.model.Goods.aggregate([
+        {
+          $match: {
+            name: { $regex: reg },
+            status: 1,
+          },
+        },
+        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+        { $sort: { created_at: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+      ]),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total: goods_list.length,
+    }
+    return {
+      code: 2000,
+      msg: '获取搜索的商品列表',
+      data: { goods_list, pagination },
+    }
+  }
+
   async getGoodsListByCategory({ page, page_size: pageSize, category }) {
     const { ctx, app } = this
     const [goods_list] = await Promise.all([

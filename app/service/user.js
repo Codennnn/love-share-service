@@ -6,14 +6,17 @@ const Service = require('egg').Service
 class UserService extends Service {
   async signIn({ account, password }) {
     const { ctx, app } = this
-    let res = await ctx.model.User.findOne({ phone: account })
-
+    const res = await ctx.model.User.findOne({
+      $or: [
+        { phone: account },
+        { email: account },
+      ],
+    }, 'password'
+    )
     if (!res) {
-      res = await ctx.model.User.findOne({ email: account })
-      if (!res) {
-        return { code: 4001, msg: '手机号或邮箱尚未注册' }
-      }
+      return { code: 4001, msg: '手机号或邮箱尚未注册' }
     }
+
     // 对比 hash 加密后的密码是否相等
     const isMatch = await ctx.compare(password, res.password)
 
