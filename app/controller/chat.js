@@ -25,12 +25,10 @@ class ChatController extends Controller {
    */
   async deleteContact() {
     const { ctx, service } = this
-
     try {
       ctx.validate({ user_id: 'string?', contact_id: 'string' })
       const id = ctx.request.body.user_id || ctx.state.user.id
-      const contactId = ctx.request.body.contact_id
-      const res = await service.chat.deleteContact(id, contactId)
+      const res = await service.chat.deleteContact(id, ctx.request.body)
       ctx.reply(res)
     } catch (err) {
       ctx.reply(err, 400)

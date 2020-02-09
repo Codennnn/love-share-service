@@ -4,6 +4,10 @@ const Service = require('egg').Service
 
 class ChatService extends Service {
   async addContact(_id, contact_id) {
+    if (_id === contact_id) {
+      return { code: 4003, msg: '不能添加自己为联系人！' }
+    }
+
     const count = await this.ctx.model.User.countDocuments({
       _id, contacts: { $in: [contact_id] },
     })
@@ -34,14 +38,15 @@ class ChatService extends Service {
       })
   }
 
-  deleteContact(_id, contact_id) {
+  deleteContact(_id, { contact_id }) {
+    console.log(contact_id)
     return this.ctx.model.User
       .updateOne(
         { _id },
         {
           $pull: {
-            contacts: contact_id,
-            chats: { contact_id },
+            contacts: { $in: [contact_id] },
+            chats: { contact_id: { $in: [contact_id] } },
           },
         }
       )
