@@ -60,7 +60,7 @@ class TodoController extends Controller {
       ctx.validate({
         _id: 'string',
         title: 'string',
-        content: 'string',
+        content: 'string?',
         is_done: 'boolean',
         is_important: 'boolean',
         is_starred: 'boolean',

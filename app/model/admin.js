@@ -42,7 +42,7 @@ module.exports = app => {
     },
     todos: [new Schema({
       title: { type: String, required: true },
-      content: { type: String, maxlength: 300 },
+      content: { type: String, maxlength: 300, default: '' },
       is_done: { type: Boolean, default: false },
       is_important: { type: Boolean, default: false },
       is_starred: { type: Boolean, default: false },

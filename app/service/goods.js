@@ -111,7 +111,8 @@ class GoodsService extends Service {
 
   async getGoodsListBySearch({ page, page_size: pageSize, search }) {
     const { ctx } = this
-    const reg = new RegExp(search.toLowerCase().trim(), 'i')
+    const str = search.replace(/([()[\]{}\\/^$|?*+.])/g, '\\$1')
+    const reg = new RegExp(str.toLowerCase().trim(), 'i')
     const [goods_list] = await Promise.all([
       ctx.model.Goods.aggregate([
         {
