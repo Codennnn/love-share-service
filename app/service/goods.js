@@ -375,6 +375,22 @@ class GoodsService extends Service {
     }
   }
 
+  async postReview({ reviews }) {
+    const res = await Promise.all(
+      reviews.map(
+        ({ _id, star, content }) => this.ctx.model.Goods.updateOne(
+          { _id },
+          { review: { star, content } }
+        )
+      )
+    )
+    console.log(res)
+    if (res.every(el => el.nModified === 1)) {
+      return { code: 2000, msg: '成功评价商品' }
+    }
+    return { code: 5000, msg: '评价商品失败' }
+  }
+
   postComment(_id, { owner, goods_id, content }) {
     const { ctx, service } = this
     return ctx.model.Goods

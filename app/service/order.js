@@ -187,7 +187,7 @@ class OrderService extends Service {
       .populate('buyer', 'nickname real_name phone')
       .populate({
         path: 'sub_order.goods_list.goods',
-        select: 'img_list name price delivery delivery_charge sell_time',
+        select: 'img_list name price delivery delivery_charge sell_time review',
         populate: { path: 'seller', select: 'nickname' },
       })
       .then(res => {

@@ -86,6 +86,7 @@ module.exports = app => {
   get('/api/goods/comments', goods.getGoodsComments)
   post('/api/goods/comment/post', goods.postComment)
   post('/api/goods/comment/reply', goods.replyComment)
+  post('/api/goods/review/post', goods.postReview)
 
   post('/api/goods/is_collected', goods.isGoodsCollected)
 

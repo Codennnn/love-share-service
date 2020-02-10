@@ -270,6 +270,20 @@ class GoodsController extends Controller {
   }
 
   /* POST
+   * 发表商品评价
+   */
+  async postReview() {
+    const { ctx, service } = this
+    try {
+      ctx.validate({ reviews: 'array' })
+      const res = await service.goods.postReview(ctx.request.body)
+      ctx.reply(res)
+    } catch (err) {
+      ctx.reply(err, 400)
+    }
+  }
+
+  /* POST
    * 回复别人
    */
   async replyComment() {

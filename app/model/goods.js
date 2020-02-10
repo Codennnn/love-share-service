@@ -95,6 +95,22 @@ module.exports = app => {
       })],
       default: [],
     },
+    review: {
+      type: new Schema({
+        content: {
+          type: String,
+          minlength: 1,
+          maxlength: 200,
+          required: true,
+        },
+        star: {
+          type: Number,
+          required: true,
+        },
+      }, {
+        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+      }),
+    },
     status: {
       type: Number,
       // 1-待出售，2-进行中，3-已下架, 4-已出售, 5-派送中
