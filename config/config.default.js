@@ -29,8 +29,10 @@ module.exports = appInfo => {
   }
 
   config.cors = {
-    origin: '*',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    // origin: '*',
+    // allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    credentials: true,
+    origin: ctx => ctx.get('origin'),
   }
 
   // use for cookie sign key, should change to your own and keep security
