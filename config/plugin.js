@@ -4,6 +4,10 @@ module.exports = {
   // static: {
   //   enable: true,
   // }
+  cors: {
+    enable: true,
+    package: 'egg-cors',
+  },
 
   // 参数校验
   validate: {
