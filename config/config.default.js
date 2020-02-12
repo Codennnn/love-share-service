@@ -8,20 +8,6 @@ module.exports = appInfo => {
 
   config.proxy = true
 
-  config.onerror = {
-    all(err, ctx) {
-      const { message } = err
-      // 无 JWT
-      if (message === 'No authorization token was found') {
-        ctx.status = 401
-      }
-      // JWT 过期
-      if (message === 'jwt expired') {
-        ctx.status = 418
-      }
-    },
-  }
-
   config.httpclient = {
     request: {
       timeout: 10000,
@@ -38,7 +24,7 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1561624248329_9612'
 
-  config.middleware = []
+  config.middleware = ['errorHandler']
 
   config.security = {
     csrf: {
