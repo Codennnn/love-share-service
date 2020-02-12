@@ -27,13 +27,9 @@ class BillboardController extends Controller {
    */
   async deleteBillboard() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ url: 'string' })
-      const res = await service.billboard.deleteBillboard(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ url: 'string' })
+    const res = await service.billboard.deleteBillboard(ctx.request.body)
+    ctx.reply(res)
   }
 }
 

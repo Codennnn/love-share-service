@@ -17,14 +17,9 @@ class CategoryController extends Controller {
    */
   async addCategory() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ category_name: 'string' })
-      const res = await service.category.addCategory(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ category_name: 'string' })
+    const res = await service.category.addCategory(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -32,14 +27,9 @@ class CategoryController extends Controller {
    */
   async deleteCategory() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ category_id_list: { type: 'array', itemType: 'string' } })
-      const res = await service.category.deleteCategory(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ category_id_list: { type: 'array', itemType: 'string' } })
+    const res = await service.category.deleteCategory(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -47,14 +37,9 @@ class CategoryController extends Controller {
    */
   async updateCategoryActivation() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ category_id_list: { type: 'array', itemType: 'string' } })
-      const res = await service.category.updateCategoryActivation(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ category_id_list: { type: 'array', itemType: 'string' } })
+    const res = await service.category.updateCategoryActivation(ctx.request.body)
+    ctx.reply(res)
   }
 }
 

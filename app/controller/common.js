@@ -26,13 +26,9 @@ class CommonController extends Controller {
    */
   async getVerificationCode() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ phone: 'string' })
-      const res = await service.common.getVerificationCode(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ phone: 'string' })
+    const res = await service.common.getVerificationCode(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 }
 

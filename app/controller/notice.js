@@ -8,18 +8,14 @@ class NoticeController extends Controller {
    */
   async addNotice() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        title: 'string',
-        content: 'string',
-        // type: [1, 2, 3, 4],
-        type: 'int',
-      })
-      const res = await service.notice.addNotice(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      title: 'string',
+      content: 'string',
+      // type: [1, 2, 3, 4],
+      type: 'int',
+    })
+    const res = await service.notice.addNotice(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -27,13 +23,9 @@ class NoticeController extends Controller {
    */
   async deleteNotice() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id: 'string' })
-      const res = await service.notice.deleteNotice(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id: 'string' })
+    const res = await service.notice.deleteNotice(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -41,13 +33,9 @@ class NoticeController extends Controller {
    */
   async deleteManyNotices() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id_list: 'array' })
-      const res = await service.notice.deleteManyNotices(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id_list: 'array' })
+    const res = await service.notice.deleteManyNotices(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -65,19 +53,15 @@ class NoticeController extends Controller {
    */
   async getNoticeList() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-      }, ctx.query)
-      const res = await service.notice.getNoticeList(
-        ctx.state.user.id,
-        ctx.query
-      )
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+    }, ctx.query)
+    const res = await service.notice.getNoticeList(
+      ctx.state.user.id,
+      ctx.query
+    )
+    ctx.reply(res)
   }
 
   /* PUT
@@ -85,14 +69,10 @@ class NoticeController extends Controller {
    */
   async setNoticeRead() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id: 'string' })
-      const { notice_id } = ctx.request.body
-      const res = await service.notice.setNoticeRead(ctx.state.user.id, notice_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id: 'string' })
+    const { notice_id } = ctx.request.body
+    const res = await service.notice.setNoticeRead(ctx.state.user.id, notice_id)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -100,13 +80,9 @@ class NoticeController extends Controller {
    */
   async setAllNoticesRead() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id_list: 'array' })
-      const res = await service.notice.setAllNoticesRead(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id_list: 'array' })
+    const res = await service.notice.setAllNoticesRead(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   // ===========================================================
@@ -116,18 +92,14 @@ class NoticeController extends Controller {
    */
   async addNoticeByAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        title: 'string',
-        content: 'string',
-        // type: [1, 2, 3, 4],
-        type: 'int',
-      })
-      const res = await service.notice.addNoticeByAdmin(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      title: 'string',
+      content: 'string',
+      // type: [1, 2, 3, 4],
+      type: 'int',
+    })
+    const res = await service.notice.addNoticeByAdmin(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -135,13 +107,9 @@ class NoticeController extends Controller {
    */
   async deleteNoticeByAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id: 'string' })
-      const res = await service.notice.deleteNoticeByAdmin(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id: 'string' })
+    const res = await service.notice.deleteNoticeByAdmin(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -149,13 +117,9 @@ class NoticeController extends Controller {
    */
   async deleteManyNoticesByAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id_list: 'array' })
-      const res = await service.notice.deleteManyNoticesByAdmin(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id_list: 'array' })
+    const res = await service.notice.deleteManyNoticesByAdmin(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -172,19 +136,15 @@ class NoticeController extends Controller {
    */
   async getNoticeListByAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-      }, ctx.query)
-      const res = await service.notice.getNoticeListByAdmin(
-        ctx.state.user.id,
-        ctx.query
-      )
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+    }, ctx.query)
+    const res = await service.notice.getNoticeListByAdmin(
+      ctx.state.user.id,
+      ctx.query
+    )
+    ctx.reply(res)
   }
 
   /* PUT
@@ -192,14 +152,10 @@ class NoticeController extends Controller {
    */
   async setNoticeReadByAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id: 'string' })
-      const { notice_id } = ctx.request.body
-      const res = await service.notice.setNoticeReadByAdmin(ctx.state.user.id, notice_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id: 'string' })
+    const { notice_id } = ctx.request.body
+    const res = await service.notice.setNoticeReadByAdmin(ctx.state.user.id, notice_id)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -207,13 +163,9 @@ class NoticeController extends Controller {
    */
   async setAllNoticesReadByAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ notice_id_list: 'array' })
-      const res = await service.notice.setAllNoticesReadByAdmin(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ notice_id_list: 'array' })
+    const res = await service.notice.setAllNoticesReadByAdmin(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 }
 

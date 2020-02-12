@@ -8,16 +8,11 @@ class ChatController extends Controller {
    */
   async addContact() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ user_id: 'string?', contact_id: 'string' })
-      const id = ctx.request.body.user_id || ctx.state.user.id
-      const contactId = ctx.request.body.contact_id
-      const res = await service.chat.addContact(id, contactId)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string?', contact_id: 'string' })
+    const id = ctx.request.body.user_id || ctx.state.user.id
+    const contactId = ctx.request.body.contact_id
+    const res = await service.chat.addContact(id, contactId)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -25,14 +20,10 @@ class ChatController extends Controller {
    */
   async deleteContact() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ user_id: 'string?', contact_id: 'string' })
-      const id = ctx.request.body.user_id || ctx.state.user.id
-      const res = await service.chat.deleteContact(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string?', contact_id: 'string' })
+    const id = ctx.request.body.user_id || ctx.state.user.id
+    const res = await service.chat.deleteContact(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -50,13 +41,9 @@ class ChatController extends Controller {
    */
   async getContactInfo() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ user_id: 'string' }, ctx.query)
-      const res = await service.chat.getContactInfo(ctx.query.user_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string' }, ctx.query)
+    const res = await service.chat.getContactInfo(ctx.query.user_id)
+    ctx.reply(res)
   }
 
   /* GET

@@ -8,23 +8,18 @@ class GoodsController extends Controller {
    */
   async createGoods() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({
-        img_list: { type: 'array', itemType: 'string' },
-        price: 'number',
-        original_price: 'number',
-        quantity: 'number',
-        delivery: 'string',
-        description: { type: 'string', max: 400, required: false },
-        can_bargain: 'boolean',
-        can_return: 'boolean',
-      })
-      const res = await service.goods.createGoods(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      img_list: { type: 'array', itemType: 'string' },
+      price: 'number',
+      original_price: 'number',
+      quantity: 'number',
+      delivery: 'string',
+      description: { type: 'string', max: 400, required: false },
+      can_bargain: 'boolean',
+      can_return: 'boolean',
+    })
+    const res = await service.goods.createGoods(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -32,14 +27,9 @@ class GoodsController extends Controller {
    */
   async deleteGoods() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ goods_id: 'string' })
-      const res = await service.goods.deleteGoods(ctx.request.body.goods_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ goods_id: 'string' })
+    const res = await service.goods.deleteGoods(ctx.request.body.goods_id)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -56,15 +46,11 @@ class GoodsController extends Controller {
    */
   async updateManyGoods() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        goods_id_list: { type: 'array', itemType: 'string' },
-      })
-      const res = await service.goods.updateManyGoods(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      goods_id_list: { type: 'array', itemType: 'string' },
+    })
+    const res = await service.goods.updateManyGoods(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -72,22 +58,18 @@ class GoodsController extends Controller {
    */
   async editGoods() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        img_list: { type: 'array', itemType: 'string' },
-        price: 'number',
-        original_price: 'number',
-        quantity: 'number',
-        delivery: 'string',
-        description: { type: 'string', max: 400, required: false },
-        can_bargain: 'boolean',
-        can_return: 'boolean',
-      })
-      const res = await service.goods.editGoods(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      img_list: { type: 'array', itemType: 'string' },
+      price: 'number',
+      original_price: 'number',
+      quantity: 'number',
+      delivery: 'string',
+      description: { type: 'string', max: 400, required: false },
+      can_bargain: 'boolean',
+      can_return: 'boolean',
+    })
+    const res = await service.goods.editGoods(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -95,17 +77,13 @@ class GoodsController extends Controller {
    */
   async getRecommendGoodsList() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: 'int',
-      }, ctx.query)
-      const id = ctx.state.user ? ctx.state.user.id : ''
-      const res = await service.goods.getRecommendGoodsList(id, ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: 'int',
+    }, ctx.query)
+    const id = ctx.state.user ? ctx.state.user.id : ''
+    const res = await service.goods.getRecommendGoodsList(id, ctx.query)
+    ctx.reply(res)
   }
 
   /* GET
@@ -113,16 +91,12 @@ class GoodsController extends Controller {
    */
   async getGoodsList() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-      }, ctx.query)
-      const res = await service.goods.getGoodsList(ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+    }, ctx.query)
+    const res = await service.goods.getGoodsList(ctx.query)
+    ctx.reply(res)
   }
 
   /* GET
@@ -130,17 +104,13 @@ class GoodsController extends Controller {
    */
   async getGoodsListBySearch() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-        search: 'string',
-      }, ctx.query)
-      const res = await service.goods.getGoodsListBySearch(ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      search: 'string',
+    }, ctx.query)
+    const res = await service.goods.getGoodsListBySearch(ctx.query)
+    ctx.reply(res)
   }
 
   /* GET
@@ -148,17 +118,13 @@ class GoodsController extends Controller {
    */
   async getGoodsListByCategory() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-        category: 'string',
-      }, ctx.query)
-      const res = await service.goods.getGoodsListByCategory(ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      category: 'string',
+    }, ctx.query)
+    const res = await service.goods.getGoodsListByCategory(ctx.query)
+    ctx.reply(res)
   }
 
   /* GET
@@ -166,18 +132,14 @@ class GoodsController extends Controller {
    */
   async getGoodsListOfSameSchool() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        school_id: 'string',
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-        category: 'array?',
-      })
-      const res = await service.goods.getGoodsListOfSameSchool(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      school_id: 'string',
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      category: 'array?',
+    })
+    const res = await service.goods.getGoodsListOfSameSchool(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -185,13 +147,9 @@ class GoodsController extends Controller {
    */
   async getGoodsDetail() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ goods_id: 'string' }, ctx.query)
-      const res = await service.goods.getGoodsDetail(ctx.query.goods_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ goods_id: 'string' }, ctx.query)
+    const res = await service.goods.getGoodsDetail(ctx.query.goods_id)
+    ctx.reply(res)
   }
 
   /* POST
@@ -210,13 +168,9 @@ class GoodsController extends Controller {
    */
   async deleteImg() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ img_list: 'array' })
-      const res = await service.goods.deleteImg(ctx.request.body.img_list)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ img_list: 'array' })
+    const res = await service.goods.deleteImg(ctx.request.body.img_list)
+    ctx.reply(res)
   }
 
   /* GET
@@ -224,13 +178,9 @@ class GoodsController extends Controller {
    */
   async getGoodsSeller() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ goods_id: 'string' }, ctx.query)
-      const res = await service.goods.getGoodsSeller(ctx.query.goods_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ goods_id: 'string' }, ctx.query)
+    const res = await service.goods.getGoodsSeller(ctx.query.goods_id)
+    ctx.reply(res)
   }
 
   /* GET
@@ -238,17 +188,13 @@ class GoodsController extends Controller {
    */
   async getGoodsComments() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        goods_id: 'string',
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-      }, ctx.query)
-      const res = await service.goods.getGoodsComments(ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      goods_id: 'string',
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+    }, ctx.query)
+    const res = await service.goods.getGoodsComments(ctx.query)
+    ctx.reply(res)
   }
 
   /* POST
@@ -256,17 +202,13 @@ class GoodsController extends Controller {
    */
   async postComment() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        owner: 'string',
-        content: { type: 'string', max: 50 },
-        goods_id: 'string',
-      })
-      const res = await service.goods.postComment(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      owner: 'string',
+      content: { type: 'string', max: 50 },
+      goods_id: 'string',
+    })
+    const res = await service.goods.postComment(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* POST
@@ -274,13 +216,9 @@ class GoodsController extends Controller {
    */
   async postReview() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ reviews: 'array' })
-      const res = await service.goods.postReview(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ reviews: 'array' })
+    const res = await service.goods.postReview(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* POST
@@ -288,18 +226,14 @@ class GoodsController extends Controller {
    */
   async replyComment() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        goods_id: 'string',
-        comment_id: 'string',
-        at: 'string',
-        content: { type: 'string', min: 1, max: 50 },
-      })
-      const res = await service.goods.replyComment(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      goods_id: 'string',
+      comment_id: 'string',
+      at: 'string',
+      content: { type: 'string', min: 1, max: 50 },
+    })
+    const res = await service.goods.replyComment(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -307,13 +241,9 @@ class GoodsController extends Controller {
    */
   async isGoodsCollected() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ goods_id: 'string' })
-      const res = await service.goods.isGoodsCollected(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ goods_id: 'string' })
+    const res = await service.goods.isGoodsCollected(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -330,16 +260,12 @@ class GoodsController extends Controller {
    */
   async getGoodsListOnSell() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-      }, ctx.query)
-      const res = await service.goods.getGoodsListByStatus(1, ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+    }, ctx.query)
+    const res = await service.goods.getGoodsListByStatus(1, ctx.query)
+    ctx.reply(res)
   }
 
   /* GET
@@ -347,16 +273,12 @@ class GoodsController extends Controller {
    */
   async getGoodsListOffSell() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        page: { type: 'int', min: 1 },
-        page_size: { type: 'int', min: 1 },
-      }, ctx.query)
-      const res = await service.goods.getGoodsListByStatus(3, ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+    }, ctx.query)
+    const res = await service.goods.getGoodsListByStatus(3, ctx.query)
+    ctx.reply(res)
   }
 }
 

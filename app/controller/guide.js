@@ -8,12 +8,8 @@ class GuideController extends Controller {
    */
   async getGuideList() {
     const { ctx, service } = this
-    try {
-      const res = await service.guide.getGuideList()
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    const res = await service.guide.getGuideList()
+    ctx.reply(res)
   }
 
   /* POST
@@ -21,16 +17,12 @@ class GuideController extends Controller {
    */
   async createGuide() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        section: 'string',
-        articles: 'array?',
-      })
-      const res = await service.guide.createGuide(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      section: 'string',
+      articles: 'array?',
+    })
+    const res = await service.guide.createGuide(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -38,13 +30,9 @@ class GuideController extends Controller {
    */
   async deleteGuide() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ section_id: 'string' })
-      const res = await service.guide.deleteGuide(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ section_id: 'string' })
+    const res = await service.guide.deleteGuide(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -52,16 +40,12 @@ class GuideController extends Controller {
    */
   async getArticle() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        section_id: 'string',
-        article_id: 'string',
-      }, ctx.query)
-      const res = await service.guide.getArticle(ctx.query)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      section_id: 'string',
+      article_id: 'string',
+    }, ctx.query)
+    const res = await service.guide.getArticle(ctx.query)
+    ctx.reply(res)
   }
 
   /* POST
@@ -69,17 +53,13 @@ class GuideController extends Controller {
    */
   async addArticle() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        section_id: 'string',
-        title: { type: 'string', maxlength: 15 },
-        content: 'string?',
-      })
-      const res = await service.guide.addArticle(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      section_id: 'string',
+      title: { type: 'string', maxlength: 15 },
+      content: 'string?',
+    })
+    const res = await service.guide.addArticle(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -87,17 +67,13 @@ class GuideController extends Controller {
    */
   async updateArticle() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        _id: 'string',
-        title: { type: 'string', maxlength: 15 },
-        content: 'string',
-      })
-      const res = await service.guide.updateArticle(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      _id: 'string',
+      title: { type: 'string', maxlength: 15 },
+      content: 'string',
+    })
+    const res = await service.guide.updateArticle(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -105,13 +81,9 @@ class GuideController extends Controller {
    */
   async deleteArticle() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ article_id: 'string' })
-      const res = await service.guide.deleteArticle(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ article_id: 'string' })
+    const res = await service.guide.deleteArticle(ctx.request.body)
+    ctx.reply(res)
   }
 }
 

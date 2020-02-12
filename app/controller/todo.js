@@ -18,22 +18,18 @@ class TodoController extends Controller {
    */
   async addTodo() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        title: 'string',
-        content: 'string?',
-        is_done: 'boolean',
-        is_important: 'boolean',
-        is_starred: 'boolean',
-        is_trashed: 'boolean',
-        tags: 'array',
-      })
-      const id = ctx.state.user.id
-      const res = await service.todo.addTodo(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      title: 'string',
+      content: 'string?',
+      is_done: 'boolean',
+      is_important: 'boolean',
+      is_starred: 'boolean',
+      is_trashed: 'boolean',
+      tags: 'array',
+    })
+    const id = ctx.state.user.id
+    const res = await service.todo.addTodo(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -41,14 +37,10 @@ class TodoController extends Controller {
    */
   async deleteTodo() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ todo_id: 'string' })
-      const id = ctx.state.user.id
-      const res = await service.todo.deleteTodo(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ todo_id: 'string' })
+    const id = ctx.state.user.id
+    const res = await service.todo.deleteTodo(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -56,23 +48,19 @@ class TodoController extends Controller {
    */
   async updateTodo() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        _id: 'string',
-        title: 'string',
-        content: 'string?',
-        is_done: 'boolean',
-        is_important: 'boolean',
-        is_starred: 'boolean',
-        is_trashed: 'boolean',
-        tags: 'array',
-      })
-      const id = ctx.state.user.id
-      const res = await service.todo.updateTodo(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      _id: 'string',
+      title: 'string',
+      content: 'string?',
+      is_done: 'boolean',
+      is_important: 'boolean',
+      is_starred: 'boolean',
+      is_trashed: 'boolean',
+      tags: 'array',
+    })
+    const id = ctx.state.user.id
+    const res = await service.todo.updateTodo(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -80,18 +68,14 @@ class TodoController extends Controller {
    */
   async updateTodoType() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        todo_id: 'string',
-        type: 'string',
-        flag: 'boolean',
-      })
-      const id = ctx.state.user.id
-      const res = await service.todo.updateTodoType(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      todo_id: 'string',
+      type: 'string',
+      flag: 'boolean',
+    })
+    const id = ctx.state.user.id
+    const res = await service.todo.updateTodoType(id, ctx.request.body)
+    ctx.reply(res)
   }
 }
 

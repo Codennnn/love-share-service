@@ -18,13 +18,9 @@ class CartController extends Controller {
    */
   async removeCartItem() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ cart_id: 'string' })
-      const res = await service.cart.removeCartItem(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ cart_id: 'string' })
+    const res = await service.cart.removeCartItem(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -32,16 +28,11 @@ class CartController extends Controller {
    */
   async clearCartList() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ cart_id_list: 'array' })
-      const id = ctx.state.user.id
-      const { cart_id_list } = ctx.request.body
-      const res = await service.cart.clearCartList(id, cart_id_list)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ cart_id_list: 'array' })
+    const id = ctx.state.user.id
+    const { cart_id_list } = ctx.request.body
+    const res = await service.cart.clearCartList(id, cart_id_list)
+    ctx.reply(res)
   }
 
   /* GET

@@ -19,16 +19,12 @@ class UserController extends Controller {
    */
   async signUp() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        phone: 'string',
-        password: { type: 'string', minlength: 6, maxlength: 16 },
-      })
-      const res = await service.user.createUser(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      phone: 'string',
+      password: { type: 'string', minlength: 6, maxlength: 16 },
+    })
+    const res = await service.user.createUser(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -63,13 +59,9 @@ class UserController extends Controller {
    */
   async getOtherUserInfo() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ user_id: 'string' }, ctx.query)
-      const res = await service.user.getOtherUserInfo(ctx.query.user_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string' }, ctx.query)
+    const res = await service.user.getOtherUserInfo(ctx.query.user_id)
+    ctx.reply(res)
   }
 
   /* GET
@@ -109,13 +101,9 @@ class UserController extends Controller {
    */
   async updateUser() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ user_id: 'string' })
-      const res = await service.user.updateUser(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string' })
+    const res = await service.user.updateUser(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -139,7 +127,6 @@ class UserController extends Controller {
       ctx.reply(res)
     } catch (err) {
       await sendToWormhole(stream)
-      ctx.reply(err, 400)
     }
   }
 
@@ -148,16 +135,11 @@ class UserController extends Controller {
    */
   async subscribe() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ user_id: 'string' })
-      const id = ctx.state.user.id
-      const data = ctx.request.body
-      const res = await service.user.subscribe(id, data)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string' })
+    const id = ctx.state.user.id
+    const data = ctx.request.body
+    const res = await service.user.subscribe(id, data)
+    ctx.reply(res)
   }
 
   /* POST
@@ -176,14 +158,9 @@ class UserController extends Controller {
    */
   async resetPassword() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ phone: 'string', password: 'string' })
-      const res = await service.user.resetPassword(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ phone: 'string', password: 'string' })
+    const res = await service.user.resetPassword(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -257,14 +234,10 @@ class UserController extends Controller {
    */
   async addCollection() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ goods_id: 'string' })
-      const id = ctx.state.user.id
-      const res = await service.user.addCollection(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ goods_id: 'string' })
+    const id = ctx.state.user.id
+    const res = await service.user.addCollection(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
@@ -272,14 +245,10 @@ class UserController extends Controller {
    */
   async deleteCollection() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ goods_id: 'string' })
-      const id = ctx.state.user.id
-      const res = await service.user.deleteCollection(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ goods_id: 'string' })
+    const id = ctx.state.user.id
+    const res = await service.user.deleteCollection(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -287,14 +256,10 @@ class UserController extends Controller {
    */
   async isUserFollowed() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ user_id: 'string' })
-      const id = ctx.state.user.id
-      const res = await service.user.isUserFollowed(id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ user_id: 'string' })
+    const id = ctx.state.user.id
+    const res = await service.user.isUserFollowed(id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -302,16 +267,12 @@ class UserController extends Controller {
    */
   async updateCreditValue() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ value: 'number' })
-      const res = await service.user.updateCreditValue(
-        ctx.state.user.id,
-        ctx.request.body.value
-      )
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ value: 'number' })
+    const res = await service.user.updateCreditValue(
+      ctx.state.user.id,
+      ctx.request.body.value
+    )
+    ctx.reply(res)
   }
 
   /* PUT
@@ -319,16 +280,12 @@ class UserController extends Controller {
    */
   async updateShareValue() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ value: 'number' })
-      const res = await service.user.updateShareValue(
-        ctx.state.user.id,
-        ctx.request.body.value
-      )
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ value: 'number' })
+    const res = await service.user.updateShareValue(
+      ctx.state.user.id,
+      ctx.request.body.value
+    )
+    ctx.reply(res)
   }
 
   /* PUT
@@ -336,16 +293,12 @@ class UserController extends Controller {
    */
   async updateBean() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ value: 'number' })
-      const res = await service.user.updateBean(
-        ctx.state.user.id,
-        ctx.request.body.value
-      )
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ value: 'number' })
+    const res = await service.user.updateBean(
+      ctx.state.user.id,
+      ctx.request.body.value
+    )
+    ctx.reply(res)
   }
 
   /* GET
@@ -353,12 +306,8 @@ class UserController extends Controller {
    */
   async getUserDailyStatistics() {
     const { ctx, service } = this
-    try {
-      const res = await service.user.getUserDailyStatistics(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    const res = await service.user.getUserDailyStatistics(ctx.request.body)
+    ctx.reply(res)
   }
 }
 

@@ -9,22 +9,18 @@ class AdminController extends Controller {
    */
   async createAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        account: 'string',
-        password: 'string',
-        nickname: 'string',
-        real_name: 'string',
-        permissions: { type: 'array', itemType: 'object' },
-        avatar_url: 'string',
-        gender: [0, 1],
-        email: 'email?',
-      })
-      const res = await service.admin.createAdmin(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      account: 'string',
+      password: 'string',
+      nickname: 'string',
+      real_name: 'string',
+      permissions: { type: 'array', itemType: 'object' },
+      avatar_url: 'string',
+      gender: [0, 1],
+      email: 'email?',
+    })
+    const res = await service.admin.createAdmin(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* POST
@@ -32,22 +28,18 @@ class AdminController extends Controller {
    */
   async createAdminByInvitation() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        account: 'string',
-        password: 'string',
-        nickname: 'string',
-        real_name: 'string',
-        permissions: { type: 'array', itemType: 'object' },
-        avatar_url: 'string',
-        gender: [0, 1],
-        email: 'email?',
-      })
-      const res = await service.admin.createAdmin(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      account: 'string',
+      password: 'string',
+      nickname: 'string',
+      real_name: 'string',
+      permissions: { type: 'array', itemType: 'object' },
+      avatar_url: 'string',
+      gender: [0, 1],
+      email: 'email?',
+    })
+    const res = await service.admin.createAdmin(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -55,13 +47,9 @@ class AdminController extends Controller {
    */
   async updateAdmin() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ admin_id: 'string' })
-      const res = await service.admin.updateAdmin(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ admin_id: 'string' })
+    const res = await service.admin.updateAdmin(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* POST
@@ -69,18 +57,14 @@ class AdminController extends Controller {
    */
   async signIn() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        account: 'string',
-        password: 'string',
-        position: 'object',
-        device: 'string',
-      })
-      const res = await service.admin.signIn(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      account: 'string',
+      password: 'string',
+      position: 'object',
+      device: 'string',
+    })
+    const res = await service.admin.signIn(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -118,13 +102,9 @@ class AdminController extends Controller {
    */
   async getAdminDetail() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ admin_id: 'string' }, ctx.query)
-      const res = await service.admin.getAdminDetail(ctx.query.admin_id)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ admin_id: 'string' }, ctx.query)
+    const res = await service.admin.getAdminDetail(ctx.query.admin_id)
+    ctx.reply(res)
   }
 
   /* POST
@@ -138,7 +118,6 @@ class AdminController extends Controller {
       ctx.reply(res)
     } catch (err) {
       await sendToWormhole(stream)
-      ctx.reply(err, 400)
     }
   }
 
@@ -147,16 +126,12 @@ class AdminController extends Controller {
    */
   async replaceAvatar() {
     const { ctx, service } = this
-    try {
-      ctx.validate({
-        admin_id: 'string',
-        avatar_url: 'string',
-      })
-      const res = await service.admin.replaceAvatar(ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({
+      admin_id: 'string',
+      avatar_url: 'string',
+    })
+    const res = await service.admin.replaceAvatar(ctx.request.body)
+    ctx.reply(res)
   }
 
   /* GET
@@ -173,13 +148,9 @@ class AdminController extends Controller {
    */
   async bindUser() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ phone: 'string' })
-      const res = await service.admin.bindUser(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ phone: 'string' })
+    const res = await service.admin.bindUser(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -196,13 +167,9 @@ class AdminController extends Controller {
    */
   async updatePassword() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ old_pwd: 'string', new_pwd: 'string' })
-      const res = await service.admin.updatePassword(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ old_pwd: 'string', new_pwd: 'string' })
+    const res = await service.admin.updatePassword(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* PUT
@@ -210,13 +177,9 @@ class AdminController extends Controller {
    */
   async updateLockPassword() {
     const { ctx, service } = this
-    try {
-      ctx.validate({ password: 'string' })
-      const res = await service.admin.updateLockPassword(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ password: 'string' })
+    const res = await service.admin.updateLockPassword(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 }
 
