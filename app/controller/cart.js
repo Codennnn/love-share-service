@@ -8,14 +8,9 @@ class CartController extends Controller {
    */
   async addCartItem() {
     const { ctx, service } = this
-
-    try {
-      ctx.validate({ amount: 'int', goods_id: 'string' })
-      const res = await service.cart.addCartItem(ctx.state.user.id, ctx.request.body)
-      ctx.reply(res)
-    } catch (err) {
-      ctx.reply(err, 400)
-    }
+    ctx.validate({ amount: 'int', goods_id: 'string' })
+    const res = await service.cart.addCartItem(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
   }
 
   /* DELETE
