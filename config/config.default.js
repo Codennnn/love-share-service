@@ -99,6 +99,8 @@ module.exports = appInfo => {
         '/api/goods/detail',
         '/api/goods/seller',
         '/api/goods/comments',
+        '/api/log/list',
+        '/api/log/add',
 
         '/api/guide/list',
         '/api/guide/article/content',

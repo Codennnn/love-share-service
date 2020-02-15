@@ -6,7 +6,7 @@ module.exports = app => {
   const { auth } = middleware
   const {
     admin, user, goods, order, school, category,
-    notice, begging, guide, billboard, todo,
+    notice, begging, guide, billboard, todo, log,
   } = controller
 
   // 管理员模块
@@ -217,4 +217,9 @@ module.exports = app => {
     '/api/school/update',
     auth('order', ['write']),
     school.updateSchool)
+
+  // 日志模块
+  post('/api/log/add', log.addLog)
+  dele('/api/log/delete', log.deleteLog)
+  get('/api/log/list', log.getLogList)
 }
