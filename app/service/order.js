@@ -35,7 +35,7 @@ class OrderService extends Service {
     } else {
       const split_info = {
         is_split: Boolean(),
-        reason: '商品在不同的库房或属于不同商家，订单被拆分为多个子订单分开配送',
+        reason: '商品属于不同卖家，订单被拆分为多个子订单分开配送',
       }
       Object.assign(data, { sub_order, split_info })
     }
@@ -72,6 +72,7 @@ class OrderService extends Service {
         return service.notice.addNotice(el.seller, notice)
       }))
 
+      // 创建订单
       const order = new ctx.model.Order(data)
       const { _id: order_id } = await order.save()
 

@@ -6,6 +6,7 @@ class LogService extends Service {
   getLogList() {
     return this.ctx.model.Log
       .find({})
+      .sort({ created_at: -1 })
       .then(log_list => {
         return {
           code: 2000,
@@ -24,10 +25,14 @@ class LogService extends Service {
     return { code: 2000, msg: '日志已上报' }
   }
 
-  async deleteLog({ log_id_list }) {
-    await this.ctx.model.Log
+  deleteLog({ log_id_list }) {
+    return this.ctx.model.Log
       .deleteMany({ _id: { $in: log_id_list } })
-    return { code: 2000, msg: '日志已清除' }
+      .then(({ deletedCount }) => {
+        if (deletedCount === log_id_list.length) {
+          return { code: 2000, msg: '日志已清除' }
+        }
+      })
   }
 }
 

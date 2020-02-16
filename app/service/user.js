@@ -11,8 +11,7 @@ class UserService extends Service {
         { phone: account },
         { email: account },
       ],
-    }, 'password'
-    )
+    }, 'password')
     if (!res) {
       return { code: 4001, msg: '手机号或邮箱尚未注册' }
     }

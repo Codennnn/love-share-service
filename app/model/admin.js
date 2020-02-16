@@ -16,7 +16,7 @@ module.exports = app => {
       required: true,
       trim: true,
     },
-    user: { type: Schema.Types.ObjectId, unique: true, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     gender: {
       type: Number,
       default: 0,

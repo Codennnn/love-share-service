@@ -17,6 +17,7 @@ module.exports = app => {
     sub_order: [new Schema({
       goods_list: [new Schema({
         amount: { type: Number, required: true },
+        note: { type: String, maxlength: 100 },
         goods: { type: Schema.Types.ObjectId, required: true, ref: 'Goods' },
       })],
       total_price: { type: Number, required: true },

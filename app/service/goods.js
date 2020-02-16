@@ -26,12 +26,12 @@ class GoodsService extends Service {
   }
 
   async deleteGoods(_id) {
-    const { ctx } = this
+    const { ctx, service } = this
     try {
       const { img_list } = await ctx.model.Goods.findOne({ _id })
 
       if (img_list) {
-        const { code } = await this.deleteImg(img_list)
+        const { code } = await service.goods.deleteImg(img_list) // 首先删除商品的图片
         if (code === 2000) {
           const { deletedCount } = await ctx.model.Goods.deleteOne({ _id })
           if (deletedCount === 1) {
@@ -96,7 +96,7 @@ class GoodsService extends Service {
     const [total, goods_list] = await Promise.all([
       this.ctx.model.Goods.countDocuments({}),
       this.ctx.model.Goods
-        .find({ status: 1 }, 'img_list name price')
+        .find({ status: 1 }, 'img_list name price seller')
         .sort({ created_at: -1 })
         .skip((page - 1) * pageSize)
         .limit(pageSize),

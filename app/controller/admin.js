@@ -148,7 +148,7 @@ class AdminController extends Controller {
    */
   async bindUser() {
     const { ctx, service } = this
-    ctx.validate({ phone: 'string' })
+    ctx.validate({ account: 'string' })
     const res = await service.admin.bindUser(ctx.state.user.id, ctx.request.body)
     ctx.reply(res)
   }
@@ -177,7 +177,7 @@ class AdminController extends Controller {
    */
   async updateLockPassword() {
     const { ctx, service } = this
-    ctx.validate({ password: 'string' })
+    ctx.validate({ password: 'string', lock_password: 'string' })
     const res = await service.admin.updateLockPassword(ctx.state.user.id, ctx.request.body)
     ctx.reply(res)
   }

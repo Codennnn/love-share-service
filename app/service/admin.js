@@ -225,11 +225,22 @@ class AdminService extends Service {
       })
   }
 
-  async bindUser(_id, { phone }) {
-    const res = await this.ctx.model.User.findOne({ phone }, '_id')
+  async bindUser(_id, { account }) {
+    const res = await this.ctx.model.User.findOne({
+      $or: [
+        { phone: account },
+        { email: account },
+      ],
+    }, '_id')
     if (!res) {
-      return { code: 5000, msg: '用户账号不存在' }
+      return { code: 4002, msg: '用户账号不存在' }
     }
+
+    const count = await this.ctx.model.Admin.countDocuments({ user: res._id })
+    if (count >= 1) {
+      return { code: 4003, msg: '用户账号已被绑定' }
+    }
+
     return this.ctx.model.Admin
       .updateOne(
         { _id },
@@ -272,24 +283,33 @@ class AdminService extends Service {
         )
         .then(async ({ nModified }) => {
           if (nModified === 1) {
-            return { code: 2000, msg: '成功修改锁屏密码' }
+            return { code: 2000, msg: '成功修改账号密码' }
           }
         })
     }
     return { code: 3000, msg: '原始密码错误' }
   }
 
-  updateLockPassword(_id, { password }) {
-    return this.ctx.model.Admin
-      .updateOne(
-        { _id },
-        { lock_password: password }
-      )
-      .then(async ({ nModified }) => {
-        if (nModified === 1) {
-          return { code: 2000, msg: '成功修改锁屏密码' }
-        }
-      })
+  async updateLockPassword(_id, { password, lock_password }) {
+    const { ctx } = this
+    const res = await ctx.model.Admin.findOne({ _id }, 'password')
+
+    // 对比 hash 加密后的密码是否相等
+    const isMatch = await ctx.compare(password, res.password)
+
+    if (isMatch) {
+      return ctx.model.Admin
+        .updateOne(
+          { _id },
+          { lock_password }
+        )
+        .then(async ({ nModified }) => {
+          if (nModified === 1) {
+            return { code: 2000, msg: '成功修改锁屏密码' }
+          }
+        })
+    }
+    return { code: 4003, msg: '登录密码有误' }
   }
 }
 
