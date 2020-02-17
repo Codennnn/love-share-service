@@ -101,6 +101,7 @@ module.exports = app => {
   put('/api/order/cancel', order.cancelOrder)
   get('/api/order/detail', order.geteOrderDetail)
   get('/api/order/by_user', order.geteOrdersByUser)
+  get('/api/order/id', order.getOrderId)
 
   // 学校模块
   get('/api/school/list', school.getSchoolList)

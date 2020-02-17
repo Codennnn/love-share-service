@@ -207,6 +207,32 @@ class OrderService extends Service {
       })
   }
 
+  getOrderId({ buyer, goods_id }) {
+    return this.ctx.model.Order
+      .find({ buyer })
+      .then(res => {
+        let order_id
+        let sub_id
+        const bool = res.some(or =>
+          or.sub_order.some(sub =>
+            sub.goods_list.some(li => {
+              if (sub.status !== 4 && String(li.goods) === goods_id) {
+                order_id = or._id
+                sub_id = sub._id
+                return true
+              }
+              return false
+            })
+          )
+        )
+        console.log(bool)
+        if (bool) {
+          return { code: 2000, msg: '查询订单ID', data: { order_id, sub_id } }
+        }
+        return { code: 5000, msg: '查询订单ID失败' }
+      })
+  }
+
   async getOrderList({ page, page_size: pageSize }) {
     const [total, order_list] = await Promise.all([
       this.ctx.model.Order.estimatedDocumentCount(),

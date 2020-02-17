@@ -359,7 +359,7 @@ class UserService extends Service {
       .findOne({ _id }, 'published_goods')
       .populate({
         path: 'published_goods',
-        select: 'img_list name price status created_at updated_at',
+        select: 'img_list name price status buyer created_at updated_at',
       })
       .then(({ published_goods }) => {
         return { code: 2000, msg: '查询已发布的商品', data: { published_goods } }

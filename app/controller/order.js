@@ -75,6 +75,16 @@ class OrderController extends Controller {
   /* GET
    * 获取订单详情
    */
+  async getOrderId() {
+    const { ctx, service } = this
+    ctx.validate({ buyer: 'string', goods_id: 'string' }, ctx.query)
+    const res = await service.order.getOrderId(ctx.query)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 获取订单详情
+   */
   async geteOrdersByUser() {
     const { ctx, service } = this
     const res = await service.order.geteOrdersByUser(ctx.state.user.id)
