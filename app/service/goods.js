@@ -164,7 +164,7 @@ class GoodsService extends Service {
     return { code: 2000, msg: '获取某分类的商品列表', data: { goods_list, pagination } }
   }
 
-  async getGoodsListOfSameSchool({ school_id, page, page_size: pageSize, category = null }) {
+  async getGoodsListBySchoolOrCategory({ school_id, page, page_size: pageSize, category = null }) {
     const { ctx, app } = this
     let goods_list
     let pagination
@@ -226,6 +226,145 @@ class GoodsService extends Service {
       total: goods_list.length,
     }
     return { code: 2000, msg: '根据分类查询同校商品列表', data: { goods_list, pagination } }
+  }
+
+  async getGoodsListByStatus(status, { page, page_size: pageSize }) {
+    const [total, goods_list] = await Promise.all([
+      this.ctx.model.Goods.estimatedDocumentCount(),
+      this.ctx.model.Goods
+        .find({ status }, 'name category seller price collect_num created_at')
+        .populate('seller', 'avatar_url real_name nickname')
+        .populate('category', 'name')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total,
+    }
+    return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
+  }
+
+  /* 管理员 */
+  async getGoodsListBySearchAdmin({ page, page_size: pageSize, search }) {
+    const { ctx } = this
+    const str = search.replace(/([()[\]{}\\/^$|?*+.])/g, '\\$1')
+    const reg = new RegExp(str.toLowerCase().trim(), 'i')
+    return ctx.model.Goods.find({
+      name: { $regex: reg },
+    }, 'name category seller price collect_num created_at')
+      .populate('seller', 'avatar_url real_name nickname')
+      .populate('category', 'name')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .then(goods_list => {
+        const pagination = {
+          page,
+          pageSize,
+          total: goods_list.length,
+        }
+        return {
+          code: 2000,
+          msg: '获取搜索的商品列表',
+          data: { goods_list, pagination },
+        }
+      })
+  }
+
+  /* 管理员 */
+  async getGoodsListByDateRange({ date_range, page, page_size: pageSize }) {
+    const [total, goods_list] = await Promise.all([
+      this.ctx.model.Goods.countDocuments({
+        created_at: {
+          $gte: new Date(`${date_range[0]} 00:00:00`),
+          $lte: new Date(`${date_range[1]} 23:59:59`),
+        },
+      }),
+      this.ctx.model.Goods
+        .find({
+          status: 1,
+          created_at: {
+            $gte: new Date(`${date_range[0]} 00:00:00`),
+            $lte: new Date(`${date_range[1]} 23:59:59`),
+          },
+        }, 'name category seller price collect_num created_at')
+        .populate('seller', 'avatar_url real_name nickname')
+        .populate('category', 'name')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total,
+    }
+    return { code: 2000, msg: '根据日期范围查询商品', data: { goods_list, pagination } }
+  }
+
+  /* 管理员 */
+  async getGoodsListBySchoolOrCategoryAdmin({ school_id, page, page_size: pageSize, category = null }) {
+    const { ctx, app } = this
+    let goods_list
+    let pagination
+
+    if (!category) {
+      goods_list = await ctx.model.Goods.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'seller',
+            foreignField: '_id',
+            as: 'seller',
+          },
+        },
+        {
+          $match: {
+            'seller.school': app.mongoose.Types.ObjectId(school_id),
+            status: 1,
+          },
+        },
+        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+        { $sort: { created_at: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+      ])
+      pagination = {
+        page,
+        pageSize,
+        total: goods_list.length,
+      }
+      return { code: 2000, msg: '根据学校或分类获取商品列表', data: { goods_list, pagination } }
+    }
+
+    const categories = category.map(el => app.mongoose.Types.ObjectId(el))
+    goods_list = await ctx.model.Goods.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'seller',
+          foreignField: '_id',
+          as: 'seller',
+        },
+      },
+      {
+        $match: {
+          category: { $in: categories },
+          'seller.school': app.mongoose.Types.ObjectId(school_id),
+          status: 1,
+        },
+      },
+      { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+      { $sort: { created_at: -1 } },
+      { $skip: (page - 1) * pageSize },
+      { $limit: pageSize },
+    ])
+    pagination = {
+      page,
+      pageSize,
+      total: goods_list.length,
+    }
+    return { code: 2000, msg: '根据学校或分类获取商品列表', data: { goods_list, pagination } }
   }
 
   async getGoodsList({ page, page_size: pageSize }) {
@@ -460,24 +599,6 @@ class GoodsService extends Service {
       this.ctx.model.Goods.countDocuments({ status: 3 }),
     ])
     return { code: 2000, data: { on_sell_count, off_sell_count } }
-  }
-
-  async getGoodsListByStatus(status, { page, page_size: pageSize }) {
-    const [total, goods_list] = await Promise.all([
-      this.ctx.model.Goods.estimatedDocumentCount(),
-      this.ctx.model.Goods
-        .find({ status }, 'name category seller price collect_num created_at')
-        .populate('seller', 'avatar_url real_name nickname')
-        .populate('category', 'name')
-        .skip((page - 1) * pageSize)
-        .limit(pageSize),
-    ])
-    const pagination = {
-      page,
-      pageSize,
-      total,
-    }
-    return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
   }
 }
 

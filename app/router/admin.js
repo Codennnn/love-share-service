@@ -117,16 +117,24 @@ module.exports = app => {
     goods.getGoodsList)
   get(
     '/api/goods/list/info',
-    auth('user', ['read']),
+    auth('goods', ['read']),
     goods.getGoodsListInfo)
   get(
     '/api/goods/list/on_sell',
-    auth('user', ['read']),
+    auth('goods', ['read']),
     goods.getGoodsListOnSell)
   get(
     '/api/goods/list/off_sell',
-    auth('user', ['read']),
+    auth('goods', ['read']),
     goods.getGoodsListOffSell)
+  post(
+    '/api/goods/list/by_date_range',
+    auth('goods', ['read']),
+    goods.getGoodsListByDateRange)
+  get(
+    '/api/goods/list/by_search_admin',
+    auth('goods', ['read']),
+    goods.getGoodsListBySearchAdmin)
 
   // 订单模块
   get(

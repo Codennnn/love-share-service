@@ -130,7 +130,7 @@ class GoodsController extends Controller {
   /* GET
    * 获取同校商品列表
    */
-  async getGoodsListOfSameSchool() {
+  async getGoodsListBySchoolOrCategory() {
     const { ctx, service } = this
     ctx.validate({
       school_id: 'string',
@@ -138,7 +138,7 @@ class GoodsController extends Controller {
       page_size: { type: 'int', min: 1 },
       category: 'array?',
     })
-    const res = await service.goods.getGoodsListOfSameSchool(ctx.request.body)
+    const res = await service.goods.getGoodsListBySchoolOrCategory(ctx.request.body)
     ctx.reply(res)
   }
 
@@ -247,7 +247,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取商品列表信息
+   * 获取商品列表信息 [管理员]
    */
   async getGoodsListInfo() {
     const { ctx, service } = this
@@ -256,7 +256,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取已上架的商品列表
+   * 获取已上架的商品列表 [管理员]
    */
   async getGoodsListOnSell() {
     const { ctx, service } = this
@@ -269,7 +269,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取已下架的商品列表
+   * 获取已下架的商品列表 [管理员]
    */
   async getGoodsListOffSell() {
     const { ctx, service } = this
@@ -278,6 +278,49 @@ class GoodsController extends Controller {
       page_size: { type: 'int', min: 1 },
     }, ctx.query)
     const res = await service.goods.getGoodsListByStatus(3, ctx.query)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 根据日期范围搜索商品列表 [管理员]
+   */
+  async getGoodsListByDateRange() {
+    const { ctx, service } = this
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      date_range: 'array',
+    })
+    const res = await service.goods.getGoodsListByDateRange(ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 根据商品名称搜索商品列表 [管理员]
+   */
+  async getGoodsListBySearchAdmin() {
+    const { ctx, service } = this
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      search: 'string',
+    }, ctx.query)
+    const res = await service.goods.getGoodsListBySearchAdmin(ctx.query)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 根据学校或分类获取商品列表 [管理员]
+   */
+  async getGoodsListBySchoolOrCategoryAdmin() {
+    const { ctx, service } = this
+    ctx.validate({
+      school_id: 'string?',
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      category: 'array?',
+    })
+    const res = await service.goods.getGoodsListBySchoolOrCategoryAdmin(ctx.request.body)
     ctx.reply(res)
   }
 }
