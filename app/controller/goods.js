@@ -134,9 +134,9 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     ctx.validate({
       school_id: 'string',
+      category: 'array?',
       page: { type: 'int', min: 1 },
       page_size: { type: 'int', min: 1 },
-      category: 'array?',
     })
     const res = await service.goods.getGoodsListBySchoolOrCategory(ctx.request.body)
     ctx.reply(res)
@@ -316,11 +316,11 @@ class GoodsController extends Controller {
     const { ctx, service } = this
     ctx.validate({
       school_id: 'string?',
+      category: 'string?',
       page: { type: 'int', min: 1 },
       page_size: { type: 'int', min: 1 },
-      category: 'array?',
-    })
-    const res = await service.goods.getGoodsListBySchoolOrCategoryAdmin(ctx.request.body)
+    }, ctx.query)
+    const res = await service.goods.getGoodsListBySchoolOrCategoryAdmin(ctx.query)
     ctx.reply(res)
   }
 }

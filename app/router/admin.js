@@ -135,6 +135,10 @@ module.exports = app => {
     '/api/goods/list/by_search_admin',
     auth('goods', ['read']),
     goods.getGoodsListBySearchAdmin)
+  get(
+    '/api/goods/list/by_school_or_category_admin',
+    auth('goods', ['read']),
+    goods.getGoodsListBySchoolOrCategoryAdmin)
 
   // 订单模块
   get(

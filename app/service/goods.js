@@ -164,42 +164,25 @@ class GoodsService extends Service {
     return { code: 2000, msg: '获取某分类的商品列表', data: { goods_list, pagination } }
   }
 
-  async getGoodsListBySchoolOrCategory({ school_id, page, page_size: pageSize, category = null }) {
+  async getGoodsListBySchoolOrCategory({ school_id, category = null, page, page_size: pageSize }) {
     const { ctx, app } = this
-    let goods_list
-    let pagination
+    let match
 
-    if (!category) {
-      goods_list = await ctx.model.Goods.aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'seller',
-            foreignField: '_id',
-            as: 'seller',
-          },
-        },
-        {
-          $match: {
-            'seller.school': app.mongoose.Types.ObjectId(school_id),
-            status: 1,
-          },
-        },
-        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
-        { $sort: { created_at: -1 } },
-        { $skip: (page - 1) * pageSize },
-        { $limit: pageSize },
-      ])
-      pagination = {
-        page,
-        pageSize,
-        total: goods_list.length,
+    if (category) {
+      const categories = category.map(el => app.mongoose.Types.ObjectId(el))
+      match = {
+        status: 1,
+        category: { $in: categories },
+        'seller.school': app.mongoose.Types.ObjectId(school_id),
       }
-      return { code: 2000, msg: '查询同校商品列表', data: { goods_list, pagination } }
+    } else {
+      match = {
+        status: 1,
+        'seller.school': app.mongoose.Types.ObjectId(school_id),
+      }
     }
 
-    const categories = category.map(el => app.mongoose.Types.ObjectId(el))
-    goods_list = await ctx.model.Goods.aggregate([
+    const goods_list = await ctx.model.Goods.aggregate([
       {
         $lookup: {
           from: 'users',
@@ -208,19 +191,13 @@ class GoodsService extends Service {
           as: 'seller',
         },
       },
-      {
-        $match: {
-          category: { $in: categories },
-          'seller.school': app.mongoose.Types.ObjectId(school_id),
-          status: 1,
-        },
-      },
+      { $match: match },
       { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
       { $sort: { created_at: -1 } },
       { $skip: (page - 1) * pageSize },
       { $limit: pageSize },
     ])
-    pagination = {
+    const pagination = {
       page,
       pageSize,
       total: goods_list.length,
@@ -303,42 +280,23 @@ class GoodsService extends Service {
   }
 
   /* 管理员 */
-  async getGoodsListBySchoolOrCategoryAdmin({ school_id, page, page_size: pageSize, category = null }) {
-    const { ctx, app } = this
-    let goods_list
-    let pagination
+  async getGoodsListBySchoolOrCategoryAdmin({ category = null, school_id = null, page, page_size: pageSize }) {
+    const { app, ctx } = this
+    let match = { status: 1 }
 
-    if (!category) {
-      goods_list = await ctx.model.Goods.aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'seller',
-            foreignField: '_id',
-            as: 'seller',
-          },
-        },
-        {
-          $match: {
-            'seller.school': app.mongoose.Types.ObjectId(school_id),
-            status: 1,
-          },
-        },
-        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
-        { $sort: { created_at: -1 } },
-        { $skip: (page - 1) * pageSize },
-        { $limit: pageSize },
-      ])
-      pagination = {
-        page,
-        pageSize,
-        total: goods_list.length,
+    if (category && school_id) {
+      match = {
+        status: 1,
+        category: app.mongoose.Types.ObjectId(category),
+        'seller.school': app.mongoose.Types.ObjectId(school_id),
       }
-      return { code: 2000, msg: '根据学校或分类获取商品列表', data: { goods_list, pagination } }
+    } else if (category && !school_id) {
+      match = { status: 1, category: app.mongoose.Types.ObjectId(category) }
+    } else if (!category && school_id) {
+      match = { status: 1, 'seller.school': app.mongoose.Types.ObjectId(school_id) }
     }
 
-    const categories = category.map(el => app.mongoose.Types.ObjectId(el))
-    goods_list = await ctx.model.Goods.aggregate([
+    const goods_list = await ctx.model.Goods.aggregate([
       {
         $lookup: {
           from: 'users',
@@ -348,18 +306,38 @@ class GoodsService extends Service {
         },
       },
       {
-        $match: {
-          category: { $in: categories },
-          'seller.school': app.mongoose.Types.ObjectId(school_id),
-          status: 1,
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'categories',
         },
       },
-      { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+      { $unwind: '$seller' },
+      {
+        $match: match,
+      },
+      {
+        $project: {
+          name: 1,
+          price: 1,
+          img_list: 1,
+          collect_num: 1,
+          status: 1,
+          created_at: 1,
+          'categories.name': 1,
+          'seller.avatar_url': 1,
+          'seller.school': 1,
+          'seller.real_name': 1,
+          'seller.nickname': 1,
+          'seller.share_value': 1,
+        },
+      },
       { $sort: { created_at: -1 } },
       { $skip: (page - 1) * pageSize },
       { $limit: pageSize },
     ])
-    pagination = {
+    const pagination = {
       page,
       pageSize,
       total: goods_list.length,
