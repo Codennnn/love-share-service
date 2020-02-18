@@ -118,6 +118,7 @@ class AdminController extends Controller {
       ctx.reply(res)
     } catch (err) {
       await sendToWormhole(stream)
+      throw err
     }
   }
 

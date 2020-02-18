@@ -93,10 +93,21 @@ class GoodsService extends Service {
   }
 
   async getRecommendGoodsList(_id, { page, page_size: pageSize }) {
+    const { ctx } = this
+    const fields = 'img_list name price seller'
+    // if (_id) {
+    //   const { collections } = await ctx.model.User.findOne({ _id }, 'collections')
+    //   if (collections.length > 0) {
+    //     const category_ids = [...new Set(collections.map(el => String(el._id)))]
+    //     const res = await ctx.model.Goods.find({ category: { $in: category_ids } }, fields)
+    //     console.log(res)
+    //   }
+    // }
+
     const [total, goods_list] = await Promise.all([
-      this.ctx.model.Goods.countDocuments({}),
-      this.ctx.model.Goods
-        .find({ status: 1 }, 'img_list name price seller')
+      ctx.model.Goods.countDocuments({}),
+      ctx.model.Goods
+        .find({ status: 1 }, fields)
         .sort({ created_at: -1 })
         .skip((page - 1) * pageSize)
         .limit(pageSize),
@@ -207,7 +218,7 @@ class GoodsService extends Service {
 
   async getGoodsListByStatus(status, { page, page_size: pageSize }) {
     const [total, goods_list] = await Promise.all([
-      this.ctx.model.Goods.estimatedDocumentCount(),
+      this.ctx.model.Goods.countDocuments({ status }),
       this.ctx.model.Goods
         .find({ status }, 'name category seller price collect_num created_at')
         .populate('seller', 'avatar_url real_name nickname')
@@ -220,7 +231,7 @@ class GoodsService extends Service {
       pageSize,
       total,
     }
-    return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
+    return { code: 2000, msg: '根据商品状态查询商品列表', data: { goods_list, pagination } }
   }
 
   /* 管理员 */
@@ -406,17 +417,21 @@ class GoodsService extends Service {
 
     if (result.every(Boolean)) {
       return { code: 2000, data: { img_list: imgList }, msg: '所有图片上传成功' }
-    } else if (result.some(Boolean)) {
-      return { code: 5000, msg: '部分图片上传失败' }
     }
-    return { code: 5000, msg: '图片上传失败' }
+
+    let msg
+    if (result.some(Boolean)) {
+      msg = '部分图片上传失败'
+    } else {
+      msg = '图片上传失败'
+    }
+    await app.fullQiniu.batchDelete(imgList.map(el => path.basename(el)))
+    return { code: 5000, msg }
   }
 
   async deleteImg(imgList) {
     const { app } = this
-    const files = imgList.map(el => {
-      return path.basename(el)
-    })
+    const files = imgList.map(el => path.basename(el))
     const { ok, list } = await app.fullQiniu.batchDelete(files)
 
     if (ok) {

@@ -24,28 +24,48 @@ class CategoryService extends Service {
     }
   }
 
-  deleteCategory({ category_id_list }) {
-    return this.ctx.model.Category
-      .deleteMany({ _id: { $in: category_id_list } })
-      .then(({ deletedCount }) => {
-        if (deletedCount === category_id_list.length) {
-          return { code: 2000, msg: '成功删除分类' }
-        }
-        return { code: 3000, msg: '没有删除分类' }
-      })
+  async deleteCategory({ category_id_list }) {
+    const { ctx, service } = this
+    const res = await service.category.checkCategory(category_id_list)
+
+    if (res.code === 2000) {
+      return ctx.model.Category
+        .deleteMany({ _id: { $in: category_id_list } })
+        .then(({ deletedCount }) => {
+          if (deletedCount === category_id_list.length) {
+            return { code: 2000, msg: '成功删除分类' }
+          }
+          return { code: 3000, msg: '没有删除分类' }
+        })
+    }
+    return res
   }
 
-  updateCategoryActivation({ category_id_list, activation }) {
-    return this.ctx.model.Category
-      .updateMany(
-        { _id: { $in: category_id_list } },
-        { activation }
-      )
-      .then(({ nModified }) => {
-        if (nModified === category_id_list.length) {
-          return { code: 2000, msg: '成功更新分类激活状态' }
-        }
-      })
+  async updateCategoryActivation({ category_id_list, activation }) {
+    const { ctx, service } = this
+    const res = await service.category.checkCategory(category_id_list)
+
+    if (res.code === 2000) {
+      return ctx.model.Category
+        .updateMany(
+          { _id: { $in: category_id_list } },
+          { activation }
+        )
+        .then(({ nModified }) => {
+          if (nModified === category_id_list.length) {
+            return { code: 2000, msg: '成功更新分类激活状态' }
+          }
+        })
+    }
+    return res
+  }
+
+  async checkCategory(category_id_list) {
+    const res = await this.ctx.model.Goods.findOne({ category: { $in: category_id_list } })
+    if (res) {
+      return { code: 4003, msg: '无法操作，该分类下存在相应商品' }
+    }
+    return { code: 2000 }
   }
 }
 

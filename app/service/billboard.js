@@ -34,10 +34,11 @@ class BillboardService extends Service {
             const billboard = new this.ctx.model.Billboard({ url })
             await billboard.save()
           }
-        } catch {
+        } catch (err) {
           // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
           await app.fullQiniu.delete(path.basename(img_url))
           await sendToWormhole(part)
+          throw err
         }
       }
     }
