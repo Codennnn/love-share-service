@@ -3,13 +3,19 @@
 const Controller = require('egg').Controller
 
 class TodoController extends Controller {
+  constructor(ctx) {
+    super(ctx)
+    if (ctx.state && ctx.state.user) {
+      this._id = ctx.state.user.id
+    }
+  }
+
   /* GET
    * 获取任务列表
    */
   async getTodoList() {
-    const { ctx, service } = this
-    const id = ctx.state.user.id
-    const res = await service.todo.getTodoList(id)
+    const { ctx, service, _id } = this
+    const res = await service.todo.getTodoList(_id)
     ctx.reply(res)
   }
 
@@ -17,7 +23,7 @@ class TodoController extends Controller {
    * 添加任务
    */
   async addTodo() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({
       title: 'string',
       content: 'string?',
@@ -27,8 +33,7 @@ class TodoController extends Controller {
       is_trashed: 'boolean',
       tags: 'array',
     })
-    const id = ctx.state.user.id
-    const res = await service.todo.addTodo(id, ctx.request.body)
+    const res = await service.todo.addTodo(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -36,10 +41,9 @@ class TodoController extends Controller {
    * 移除任务
    */
   async deleteTodo() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ todo_id: 'string' })
-    const id = ctx.state.user.id
-    const res = await service.todo.deleteTodo(id, ctx.request.body)
+    const res = await service.todo.deleteTodo(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -47,7 +51,7 @@ class TodoController extends Controller {
    * 更新任务
    */
   async updateTodo() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({
       _id: 'string',
       title: 'string',
@@ -58,8 +62,7 @@ class TodoController extends Controller {
       is_trashed: 'boolean',
       tags: 'array',
     })
-    const id = ctx.state.user.id
-    const res = await service.todo.updateTodo(id, ctx.request.body)
+    const res = await service.todo.updateTodo(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -67,14 +70,13 @@ class TodoController extends Controller {
    * 更新任务类型
    */
   async updateTodoType() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({
       todo_id: 'string',
       type: 'string',
       flag: 'boolean',
     })
-    const id = ctx.state.user.id
-    const res = await service.todo.updateTodoType(id, ctx.request.body)
+    const res = await service.todo.updateTodoType(_id, ctx.request.body)
     ctx.reply(res)
   }
 }

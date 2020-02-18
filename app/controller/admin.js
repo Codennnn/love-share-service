@@ -4,6 +4,13 @@ const sendToWormhole = require('stream-wormhole')
 const Controller = require('egg').Controller
 
 class AdminController extends Controller {
+  constructor(ctx) {
+    super(ctx)
+    if (ctx.state && ctx.state.user) {
+      this._id = ctx.state.user.id
+    }
+  }
+
   /* POST
    * 创建管理员
    */
@@ -80,11 +87,8 @@ class AdminController extends Controller {
    * 重置管理员密码
    */
   async resetPassword() {
-    const { ctx, service } = this
-    const res = await service.admin.resetPassword(
-      ctx.state.user.id,
-      ctx.request.body
-    )
+    const { ctx, service, _id } = this
+    const res = await service.admin.resetPassword(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -92,8 +96,8 @@ class AdminController extends Controller {
    * 获取管理员信息
    */
   async getAdminInfo() {
-    const { ctx, service } = this
-    const res = await service.admin.getAdminInfo(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.admin.getAdminInfo(_id)
     ctx.reply(res)
   }
 
@@ -139,8 +143,8 @@ class AdminController extends Controller {
    * 获取登录日志信息
    */
   async getSignLog() {
-    const { ctx, service } = this
-    const res = await service.admin.getSignLog(ctx.state.user.id, ctx.query)
+    const { ctx, service, _id } = this
+    const res = await service.admin.getSignLog(_id, ctx.query)
     ctx.reply(res)
   }
 
@@ -148,9 +152,9 @@ class AdminController extends Controller {
    * 绑定用户
    */
   async bindUser() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ account: 'string' })
-    const res = await service.admin.bindUser(ctx.state.user.id, ctx.request.body)
+    const res = await service.admin.bindUser(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -158,8 +162,8 @@ class AdminController extends Controller {
    * 取消绑定用户
    */
   async unbindUser() {
-    const { ctx, service } = this
-    const res = await service.admin.unbindUser(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.admin.unbindUser(_id)
     ctx.reply(res)
   }
 
@@ -167,9 +171,9 @@ class AdminController extends Controller {
    * 修改密码
    */
   async updatePassword() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ old_pwd: 'string', new_pwd: 'string' })
-    const res = await service.admin.updatePassword(ctx.state.user.id, ctx.request.body)
+    const res = await service.admin.updatePassword(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -177,9 +181,9 @@ class AdminController extends Controller {
    * 修改锁屏密码
    */
   async updateLockPassword() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ password: 'string', lock_password: 'string' })
-    const res = await service.admin.updateLockPassword(ctx.state.user.id, ctx.request.body)
+    const res = await service.admin.updateLockPassword(_id, ctx.request.body)
     ctx.reply(res)
   }
 }

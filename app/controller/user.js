@@ -4,10 +4,11 @@ const sendToWormhole = require('stream-wormhole')
 const Controller = require('egg').Controller
 
 class UserController extends Controller {
-
   constructor(ctx) {
     super(ctx)
-    this._id = ctx.state.user.id
+    if (ctx.state && ctx.state.user) {
+      this._id = ctx.state.user.id
+    }
   }
 
   /* POST
@@ -55,8 +56,8 @@ class UserController extends Controller {
    * 获取用户自身信息
    */
   async getUserInfo() {
-    const { ctx, service } = this
-    const res = await service.user.getUserInfo(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.user.getUserInfo(_id)
     ctx.reply(res)
   }
 
@@ -74,8 +75,8 @@ class UserController extends Controller {
    * 获取用户的数量信息
    */
   async getUserInfoNum() {
-    const { ctx, service } = this
-    const id = ctx.query.user_id || ctx.state.user.id
+    const { ctx, service, _id } = this
+    const id = ctx.query.user_id || _id
     const res = await service.user.getUserInfoNum(id)
     ctx.reply(res)
   }
@@ -84,8 +85,8 @@ class UserController extends Controller {
    * 获取用户详细信息
    */
   async getUserDetail() {
-    const { ctx, service } = this
-    const id = ctx.query.user_id || ctx.state.user.id
+    const { ctx, service, _id } = this
+    const id = ctx.query.user_id || _id
     const res = await service.user.getUserDetail(id)
     ctx.reply(res)
   }
@@ -94,11 +95,8 @@ class UserController extends Controller {
    * 更新用户[客户端]
    */
   async modifyUser() {
-    const { ctx, service } = this
-    const res = await service.user.modifyUser(
-      ctx.state.user.id,
-      ctx.request.body
-    )
+    const { ctx, service, _id } = this
+    const res = await service.user.modifyUser(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -126,10 +124,10 @@ class UserController extends Controller {
    * 更换头像
    */
   async replaceAvatar() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     const stream = await ctx.getFileStream()
     try {
-      const res = await service.user.replaceAvatar(ctx.state.user.id, stream)
+      const res = await service.user.replaceAvatar(_id, stream)
       ctx.reply(res)
     } catch (err) {
       await sendToWormhole(stream)
@@ -141,11 +139,10 @@ class UserController extends Controller {
    * 关注用户
    */
   async subscribe() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ user_id: 'string' })
-    const id = ctx.state.user.id
     const data = ctx.request.body
-    const res = await service.user.subscribe(id, data)
+    const res = await service.user.subscribe(_id, data)
     ctx.reply(res)
   }
 
@@ -153,10 +150,9 @@ class UserController extends Controller {
    * 取消关注用户
    */
   async unsubscribe() {
-    const { ctx, service } = this
-    const id = ctx.state.user.id
+    const { ctx, service, _id } = this
     const data = ctx.request.body
-    const res = await service.user.unsubscribe(id, data)
+    const res = await service.user.unsubscribe(_id, data)
     ctx.reply(res)
   }
 
@@ -174,8 +170,8 @@ class UserController extends Controller {
    * 获取用户已发布的商品
    */
   async getPublishedGoods() {
-    const { ctx, service } = this
-    const id = ctx.query.user_id || ctx.state.user.id
+    const { ctx, service, _id } = this
+    const id = ctx.query.user_id || _id
     const res = await service.user.getPublishedGoods(id)
     ctx.reply(res)
   }
@@ -184,8 +180,8 @@ class UserController extends Controller {
    * 获取用户已购买的商品
    */
   async getBoughtGoods() {
-    const { ctx, service } = this
-    const res = await service.user.getBoughtGoods(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.user.getBoughtGoods(_id)
     ctx.reply(res)
   }
 
@@ -193,8 +189,8 @@ class UserController extends Controller {
    * 获取签到列表
    */
   async getCheckInList() {
-    const { ctx, service } = this
-    const res = await service.user.getCheckInList(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.user.getCheckInList(_id)
     ctx.reply(res)
   }
 
@@ -202,8 +198,8 @@ class UserController extends Controller {
    * 签到
    */
   async checkIn() {
-    const { ctx, service } = this
-    const res = await service.user.checkIn(ctx.state.user.id, ctx.request.body.check_in)
+    const { ctx, service, _id } = this
+    const res = await service.user.checkIn(_id, ctx.request.body.check_in)
     ctx.reply(res)
   }
 
@@ -211,8 +207,8 @@ class UserController extends Controller {
    * 获取用户关注的人
    */
   async getUserFollows() {
-    const { ctx, service } = this
-    const id = ctx.query.user_id || ctx.state.user.id
+    const { ctx, service, _id } = this
+    const id = ctx.query.user_id || _id
     const res = await service.user.getUserFollows(id)
     ctx.reply(res)
   }
@@ -221,8 +217,8 @@ class UserController extends Controller {
    * 获取用户的粉丝
    */
   async getUserFans() {
-    const { ctx, service } = this
-    const id = ctx.query.user_id || ctx.state.user.id
+    const { ctx, service, _id } = this
+    const id = ctx.query.user_id || _id
     const res = await service.user.getUserFans(id)
     ctx.reply(res)
   }
@@ -231,8 +227,8 @@ class UserController extends Controller {
    * 获取用户收藏的商品
    */
   async getCollectionList() {
-    const { ctx, service } = this
-    const res = await service.user.getCollectionList(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.user.getCollectionList(_id)
     ctx.reply(res)
   }
 
@@ -240,10 +236,9 @@ class UserController extends Controller {
    * 添加用户收藏的商品
    */
   async addCollection() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ goods_id: 'string' })
-    const id = ctx.state.user.id
-    const res = await service.user.addCollection(id, ctx.request.body)
+    const res = await service.user.addCollection(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -251,10 +246,9 @@ class UserController extends Controller {
    * 移除用户收藏的商品
    */
   async deleteCollection() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ goods_id: 'string' })
-    const id = ctx.state.user.id
-    const res = await service.user.deleteCollection(id, ctx.request.body)
+    const res = await service.user.deleteCollection(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -262,10 +256,9 @@ class UserController extends Controller {
    * 移除用户收藏的商品
    */
   async isUserFollowed() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ user_id: 'string' })
-    const id = ctx.state.user.id
-    const res = await service.user.isUserFollowed(id, ctx.request.body)
+    const res = await service.user.isUserFollowed(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -273,12 +266,9 @@ class UserController extends Controller {
    * 更新用户乐享信用值
    */
   async updateCreditValue() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ value: 'number' })
-    const res = await service.user.updateCreditValue(
-      ctx.state.user.id,
-      ctx.request.body.value
-    )
+    const res = await service.user.updateCreditValue(_id, ctx.request.body.value)
     ctx.reply(res)
   }
 
@@ -286,12 +276,9 @@ class UserController extends Controller {
    * 更新用户乐享值
    */
   async updateShareValue() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ value: 'number' })
-    const res = await service.user.updateShareValue(
-      ctx.state.user.id,
-      ctx.request.body.value
-    )
+    const res = await service.user.updateShareValue(_id, ctx.request.body.value)
     ctx.reply(res)
   }
 
@@ -299,12 +286,9 @@ class UserController extends Controller {
    * 更新用户乐豆数量
    */
   async updateBean() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({ value: 'number' })
-    const res = await service.user.updateBean(
-      ctx.state.user.id,
-      ctx.request.body.value
-    )
+    const res = await service.user.updateBean(_id, ctx.request.body.value)
     ctx.reply(res)
   }
 

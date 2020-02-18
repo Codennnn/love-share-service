@@ -3,12 +3,18 @@
 const Controller = require('egg').Controller
 
 class OrderController extends Controller {
+  constructor(ctx) {
+    super(ctx)
+    if (ctx.state && ctx.state.user) {
+      this._id = ctx.state.user.id
+    }
+  }
+
   /* POST
    * 创建订单
    */
   async createOrder() {
-    const { ctx, service } = this
-    const id = ctx.state.user.id
+    const { ctx, service, _id } = this
     const data = ctx.request.body
     ctx.validate({
       goods_list: { type: 'array', itemType: 'object' },
@@ -17,7 +23,7 @@ class OrderController extends Controller {
       total_price: 'number',
       actual_price: 'number',
     })
-    const res = await service.order.createOrder(id, data)
+    const res = await service.order.createOrder(_id, data)
     ctx.reply(res)
   }
 
@@ -35,14 +41,13 @@ class OrderController extends Controller {
    * 完成订单
    */
   async completedOrder() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({
       order_id: 'string',
       sub_id: 'string',
       goods_id_list: { type: 'array', itemType: 'string' },
     })
-    const id = ctx.state.user.id
-    const res = await service.order.completedOrder(id, ctx.request.body)
+    const res = await service.order.completedOrder(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -50,15 +55,14 @@ class OrderController extends Controller {
    * 取消订单
    */
   async cancelOrder() {
-    const { ctx, service } = this
+    const { ctx, service, _id } = this
     ctx.validate({
       order_id: 'string',
       sub_id: 'string',
       goods_id_list: { type: 'array', itemType: 'string' },
       seller_id: 'string',
     })
-    const id = ctx.state.user.id
-    const res = await service.order.cancelOrder(id, ctx.request.body)
+    const res = await service.order.cancelOrder(_id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -86,8 +90,8 @@ class OrderController extends Controller {
    * 获取订单详情
    */
   async geteOrdersByUser() {
-    const { ctx, service } = this
-    const res = await service.order.geteOrdersByUser(ctx.state.user.id)
+    const { ctx, service, _id } = this
+    const res = await service.order.geteOrdersByUser(_id)
     ctx.reply(res)
   }
 
