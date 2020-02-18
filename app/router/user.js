@@ -46,6 +46,9 @@ module.exports = app => {
   post('/api/user/collection/add', user.addCollection)
   dele('/api/user/collection/delete', user.deleteCollection)
 
+  post('/api/user/balance/recharge', user.rechargeBalance)
+  get('/api/user/bill/list', user.getBillList)
+
   // 聊天模块
   post('/api/chat/contact/add', chat.addContact)
   dele('/api/chat/contact/delete', chat.deleteContact)

@@ -61,8 +61,11 @@ module.exports = ({ mongoose, timestamps }) => {
     balance: {
       type: Number,
       default: 0,
-      min: 0,
     },
+    bill: [new Schema({
+      balance: { type: Number, required: true },
+      payment: { type: String, required: true },
+    }, { timestamps })],
     credit_value: {
       type: Number,
       default: 500,

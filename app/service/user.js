@@ -583,6 +583,43 @@ class UserService extends Service {
       },
     }
   }
+
+  async rechargeBalance(_id, { balance, payment }) {
+    try {
+      const [res] = await Promise.all([
+        this.ctx.model.User
+          .updateOne(
+            { _id },
+            { $inc: { balance } },
+            { runValidators: true }
+          ),
+        this.ctx.model.User
+          .updateOne(
+            { _id },
+            { $push: { bill: { $each: [{ balance, payment }], $position: 0 } } },
+            { runValidators: true }
+          ),
+      ])
+
+      if (res.nModified === 1) {
+        return { code: 2000, msg: `余额充值成功，已充值 ￥${Number(balance).toFixed(2)}`, data: { balance } }
+      }
+      return { code: 3000, msg: '用户余额充值失败' }
+    } catch (err) {
+      return { code: 5000, msg: err.message }
+    }
+  }
+
+  getBillList(_id) {
+    return this.ctx.model.User
+      .findOne({ _id }, 'bill')
+      .then(({ bill: bill_list }) => {
+        return { code: 2000, msg: '获取账单列表', data: { bill_list } }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
 }
 
 module.exports = UserService

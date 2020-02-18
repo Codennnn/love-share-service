@@ -247,7 +247,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取商品列表信息 [管理员]
+   * 获取商品列表信息 [管理端]
    */
   async getGoodsListInfo() {
     const { ctx, service } = this
@@ -256,7 +256,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取已上架的商品列表 [管理员]
+   * 获取已上架的商品列表 [管理端]
    */
   async getGoodsListOnSell() {
     const { ctx, service } = this
@@ -269,7 +269,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取已下架的商品列表 [管理员]
+   * 获取已下架的商品列表 [管理端]
    */
   async getGoodsListOffSell() {
     const { ctx, service } = this
@@ -282,7 +282,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 根据日期范围搜索商品列表 [管理员]
+   * 根据日期范围搜索商品列表 [管理端]
    */
   async getGoodsListByDateRange() {
     const { ctx, service } = this
@@ -296,7 +296,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 根据商品名称搜索商品列表 [管理员]
+   * 根据商品名称搜索商品列表 [管理端]
    */
   async getGoodsListBySearchAdmin() {
     const { ctx, service } = this
@@ -310,7 +310,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 根据学校或分类获取商品列表 [管理员]
+   * 根据学校或分类获取商品列表 [管理端]
    */
   async getGoodsListBySchoolOrCategoryAdmin() {
     const { ctx, service } = this

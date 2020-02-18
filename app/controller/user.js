@@ -4,6 +4,12 @@ const sendToWormhole = require('stream-wormhole')
 const Controller = require('egg').Controller
 
 class UserController extends Controller {
+
+  constructor(ctx) {
+    super(ctx)
+    this._id = ctx.state.user.id
+  }
+
   /* POST
    * 用户登录
    */
@@ -97,7 +103,7 @@ class UserController extends Controller {
   }
 
   /* PUT
-   * 更新用户[管理端]
+   * 更新用户 [管理端]
    */
   async updateUser() {
     const { ctx, service } = this
@@ -107,7 +113,7 @@ class UserController extends Controller {
   }
 
   /* GET
-   * 获取用户详情[管理端]
+   * 获取用户详情 [管理端]
    */
   async getUserDetailByAdmin() {
     const { ctx, service } = this
@@ -303,11 +309,30 @@ class UserController extends Controller {
   }
 
   /* GET
-   * 获取每日新增用户的统计数据
+   * 获取每日新增用户的统计数据 [管理端]
    */
   async getUserDailyStatistics() {
     const { ctx, service } = this
     const res = await service.user.getUserDailyStatistics(ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* POST
+   * 用户充值余额
+   */
+  async rechargeBalance() {
+    const { ctx, service, _id } = this
+    ctx.validate({ balance: 'number', payment: 'string' })
+    const res = await service.user.rechargeBalance(_id, ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 用户充值余额
+   */
+  async getBillList() {
+    const { ctx, service, _id } = this
+    const res = await service.user.getBillList(_id, ctx.request.body)
     ctx.reply(res)
   }
 }
