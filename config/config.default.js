@@ -107,6 +107,7 @@ module.exports = appInfo => {
         '/api/billboard/list',
         '/api/school/list',
         '/api/category/list',
+        '/api/test',
         '/api/common/check_nickname',
         '/api/common/check_phone_number',
       ],

@@ -3,6 +3,13 @@
 const Controller = require('egg').Controller
 
 class CommonController extends Controller {
+  /* GET
+   * 测试 API 服务
+   */
+  async serviceTest() {
+    this.ctx.reply('您正在使用乐享校园 API 服务！ ୧(๑•̀⌄•́๑)૭✧')
+  }
+
   /* POST
    * 检测手机号是否已被注册
    */

@@ -110,6 +110,7 @@ module.exports = app => {
   get('/api/school/list', school.getSchoolList)
 
   // 公共模块
+  get('/api/test', common.serviceTest)
   post('/api/common/check_nickname', common.checkNickname)
   post('/api/common/check_phone_number', common.checkPhoneNumber)
   post('/api/common/verification_code', common.getVerificationCode)
