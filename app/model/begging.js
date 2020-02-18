@@ -1,7 +1,6 @@
 'use strict'
 
-module.exports = app => {
-  const mongoose = app.mongoose
+module.exports = ({ mongoose, timestamps }) => {
   const Schema = mongoose.Schema
 
   const BeggingSchema = new Schema({
@@ -18,12 +17,7 @@ module.exports = app => {
     max_price: { type: Number, required: true, min: 0 },
     category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     announcer: { type: Schema.Types.ObjectId, ref: 'User' },
-  })
-
-  BeggingSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+  }, { timestamps })
 
   return mongoose.model('Begging', BeggingSchema)
 }

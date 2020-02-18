@@ -3,6 +3,7 @@
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
+  const { timestamps } = app
 
   const AdminSchema = new Schema({
     account: {
@@ -49,9 +50,7 @@ module.exports = app => {
       is_trashed: { type: Boolean, default: false },
       tags: { type: Array },
       complete_time: { type: Array, required: true },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+    }, { timestamps })],
     roles: {
       type: Array,
       required: true,
@@ -62,17 +61,13 @@ module.exports = app => {
       position: { type: Object, required: true },
       device: { type: String, required: true },
       ip: String,
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+    }, { timestamps })],
     notices: [new Schema({
       title: { type: String, required: true, maxlength: 30 },
       content: { type: String },
       type: { type: Number, enum: [1, 2, 3, 4] },
       is_read: { type: Boolean, default: false },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+    }, { timestamps })],
     chats: Array,
     permissions: [new Schema({
       module: {
@@ -84,15 +79,8 @@ module.exports = app => {
         required: true,
         default: [], // 格式： ['read', 'write', ...]
       },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
-  })
-
-  AdminSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+    }, { timestamps })],
+  }, { timestamps })
 
   return mongoose.model('Admin', AdminSchema)
 }

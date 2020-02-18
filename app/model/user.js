@@ -1,8 +1,9 @@
 'use strict'
 
-module.exports = app => {
-  const mongoose = app.mongoose
+module.exports = ({ mongoose, timestamps }) => {
   const Schema = mongoose.Schema
+  const refUser = { type: Schema.Types.ObjectId, ref: 'User' }
+  const refGoods = { type: Schema.Types.ObjectId, ref: 'Goods' }
 
   const UserSchema = new Schema({
     phone: {
@@ -92,56 +93,35 @@ module.exports = app => {
       type: String,
       match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
     },
-    contacts: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    contacts: [refUser],
     chats: Array,
     carts: [new Schema({
       amount: { type: Number, required: true },
-      goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+      goods: refGoods,
+    }, { timestamps })],
     notices: [new Schema({
       title: { type: String, required: true, maxlength: 30 },
       content: { type: String },
       type: { type: Number, enum: [1, 2, 3, 4] }, // 1-系统 2-成功 3-提示 4-重要
       is_read: { type: Boolean, default: false },
       time: Number,
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+    }, { timestamps })],
     fans: {
-      type: [new Schema({
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
-      }, {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-      })],
+      type: [new Schema({ user: refUser }, { timestamps })],
       default: [],
     },
     follows: {
-      type: [new Schema({
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
-      }, {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-      })],
+      type: [new Schema({ user: refUser }, { timestamps })],
       default: [],
     },
     collections: {
-      type: [new Schema({
-        goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
-      }, {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-      })],
+      type: [new Schema({ goods: refGoods }, { timestamps })],
       default: [],
     },
-    published_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
-    bought_goods: [{ type: Schema.Types.ObjectId, ref: 'Goods' }],
+    published_goods: [refGoods],
+    bought_goods: [refGoods],
     check_in: Array,
-  })
-
-  UserSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+  }, { timestamps })
 
   return mongoose.model('User', UserSchema)
 }

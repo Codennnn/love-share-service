@@ -1,7 +1,6 @@
 'use strict'
 
-module.exports = app => {
-  const mongoose = app.mongoose
+module.exports = ({ mongoose, timestamps }) => {
   const Schema = mongoose.Schema
 
   const LogSchema = new Schema({
@@ -17,12 +16,7 @@ module.exports = app => {
       type: String,
       required: true,
     },
-  })
-
-  LogSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+  }, { timestamps })
 
   return mongoose.model('Log', LogSchema)
 }

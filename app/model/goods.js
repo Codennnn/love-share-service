@@ -3,6 +3,8 @@
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
+  const { timestamps } = app
+  const refUser = { type: Schema.Types.ObjectId, required: true, ref: 'User' }
 
   const GoodsSchema = new Schema({
     name: {
@@ -57,11 +59,7 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
-    seller: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'User',
-    },
+    seller: refUser,
     buyer: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -69,30 +67,14 @@ module.exports = app => {
     comments: {
       type: [new Schema({
         content: { type: String, minlength: 1, maxlength: 50 },
-        sender: {
-          type: Schema.Types.ObjectId,
-          required: true,
-          ref: 'User',
-        },
+        sender: refUser,
         replies: [new Schema({
-          sender: {
-            type: Schema.Types.ObjectId,
-            required: true,
-            ref: 'User',
-          },
-          at: {
-            type: Schema.Types.ObjectId,
-            required: true,
-            ref: 'User',
-          },
+          sender: refUser,
+          at: refUser,
           content: { type: String, minlength: 1, maxlength: 50 },
-        }, {
-          timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-        })],
+        }, { timestamps })],
         time: Number,
-      }, {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-      })],
+      }, { timestamps })],
       default: [],
     },
     review: {
@@ -107,23 +89,15 @@ module.exports = app => {
           type: Number,
           required: true,
         },
-      }, {
-        timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-      }),
+      }, { timestamps }),
     },
     status: {
       type: Number,
-      // 1-待出售，2-进行中，3-已下架, 4-已出售, 5-派送中
-      enum: [1, 2, 3, 4, 5],
+      enum: [1, 2, 3, 4, 5], // 1-待出售，2-进行中，3-已下架, 4-已出售, 5-派送中
       default: 1,
     },
     sell_time: Number,
-  })
-
-  GoodsSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+  }, { timestamps })
 
   return mongoose.model('Goods', GoodsSchema)
 }

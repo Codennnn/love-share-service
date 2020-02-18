@@ -1,7 +1,6 @@
 'use strict'
 
-module.exports = app => {
-  const mongoose = app.mongoose
+module.exports = ({ mongoose, timestamps }) => {
   const Schema = mongoose.Schema
 
   const SchoolSchema = new Schema({
@@ -19,12 +18,7 @@ module.exports = app => {
     },
     location: String,
     level: String,
-  })
-
-  SchoolSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+  }, { timestamps })
 
   return mongoose.model('School', SchoolSchema)
 }

@@ -1,7 +1,6 @@
 'use strict'
 
-module.exports = app => {
-  const mongoose = app.mongoose
+module.exports = ({ mongoose, timestamps }) => {
   const Schema = mongoose.Schema
 
   const OrderSchema = new Schema({
@@ -28,9 +27,7 @@ module.exports = app => {
         enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消, 5-未付款
         default: 1,
       },
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    })],
+    }, { timestamps })],
     status: {
       type: Number,
       enum: [1, 2, 3, 4], // 1-进行中, 2-已完成, 3-派送中, 4-已取消
@@ -39,19 +36,12 @@ module.exports = app => {
     split_info: new Schema({
       is_split: { type: Boolean, default: false },
       reason: String,
-    }, {
-      timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    }),
+    }, { timestamps }),
     step: {
       type: Number,
       default: 1,
     },
-  })
-
-  OrderSchema.set('timestamps', {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  })
+  }, { timestamps })
 
   return mongoose.model('Order', OrderSchema)
 }
