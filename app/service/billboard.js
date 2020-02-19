@@ -30,8 +30,8 @@ class BillboardService extends Service {
             part
           )
           if (ok) {
-            img_url = url
-            const billboard = new this.ctx.model.Billboard({ url })
+            img_url = decodeURI(url)
+            const billboard = new this.ctx.model.Billboard({ url: decodeURI(url) })
             await billboard.save()
           }
         } catch (err) {
@@ -45,20 +45,32 @@ class BillboardService extends Service {
     return { code: 2000, msg: '图片上传成功' }
   }
 
-  async deleteBillboard({ url }) {
+  async deleteBillboard({ _id, url }) {
     const { app, ctx } = this
     const { ok } = await app.fullQiniu.delete(path.basename(url))
     if (ok) {
       return ctx.model.Billboard
-        .deleteOne({ url })
+        .deleteOne({ _id })
         .then(({ deletedCount }) => {
           if (deletedCount === 1) {
-            return { code: 2000, msg: '删除广告图片成功' }
+            return { code: 2000, msg: '删除广告牌成功' }
           }
-          return { code: 3000, msg: '无任何广告图片被删除' }
+          return { code: 3000, msg: '无任何广告牌被删除' }
         })
     }
     return { code: 5000, msg: '七牛云图片删除失败' }
+  }
+
+  async updateBillboard({ _id, type, link }) {
+    return this.ctx.model.Billboard
+      .updateOne({ _id }, { type, link })
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '更新广告牌成功' }
+        }
+        return { code: 3000, msg: '无任何广告牌被更新' }
+      })
+      .catch(err => ({ code: 5000, msg: err.message }))
   }
 }
 

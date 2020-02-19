@@ -202,6 +202,7 @@ module.exports = app => {
   get('/api/billboard/list', billboard.getBillboardList)
   post('/api/billboard/upload', billboard.uploadBillboard)
   dele('/api/billboard/delete', billboard.deleteBillboard)
+  put('/api/billboard/update', billboard.updateBillboard)
 
   // 分类模块
   post(

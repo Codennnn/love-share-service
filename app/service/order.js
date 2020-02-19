@@ -100,9 +100,11 @@ class OrderService extends Service {
   }
 
   async completedOrder(_id, { order_id, sub_id, goods_id_list }) {
-    console.log(order_id, sub_id, goods_id_list)
     const { ctx, service } = this
     try {
+      const res = await ctx.model.Order.find({ _id: order_id, 'sub_order._id': sub_id }, 'sub_order')
+      const totalPrice = res.reduce((total, el) => total + el.sub_order[0].total_price, 0)
+
       await Promise.all([
         service.goods.updateManyGoods({
           goods_id_list,
@@ -111,18 +113,22 @@ class OrderService extends Service {
         ctx.model.Order.updateOne(
           { _id: order_id, 'sub_order._id': sub_id },
           {
-            $set: {
-              'sub_order.$.status': 2,
-            },
+            $set: { 'sub_order.$.status': 2 },
           },
           { runValidators: true }
         ),
+        ctx.model.User
+          .updateOne(
+            { _id },
+            { $inc: { balance: totalPrice } },
+            { runValidators: true }
+          ),
         service.user.updateCreditValue(_id, 10),
         service.user.updateShareValue(_id, 10),
       ])
-      return { code: 2000, msg: '成功取消订单' }
+      return { code: 2000, msg: '成功完成订单' }
     } catch (err) {
-      return { code: 5000, msg: '取消订单失败', err }
+      return { code: 5000, msg: '完成订单失败', err }
     }
   }
 

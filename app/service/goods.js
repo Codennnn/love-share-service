@@ -402,7 +402,7 @@ class GoodsService extends Service {
             part
           )
           if (res.ok) {
-            imgList.push(res.url)
+            imgList.push(decodeURI(res.url))
             result.push(true)
           } else {
             result.push(false)

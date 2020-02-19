@@ -139,10 +139,10 @@ class AdminService extends Service {
     const name = `avatar-${path.basename(stream.filename)}`
 
     try {
-      const { ok, url: avatar_url } = await this.app.fullQiniu
+      const { ok, url } = await this.app.fullQiniu
         .uploadStream(name, stream)
       if (ok) {
-        return { code: 2000, msg: '头像上传成功', data: { avatar_url } }
+        return { code: 2000, msg: '头像上传成功', data: { avatar_url: decodeURI(url) } }
       }
       return { code: 5000, msg: '头像上传失败' }
     } catch (err) {

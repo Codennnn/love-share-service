@@ -23,12 +23,22 @@ class BillboardController extends Controller {
   }
 
   /* DELETE
-   * 删除广告图片
+   * 删除广告牌
    */
   async deleteBillboard() {
     const { ctx, service } = this
-    ctx.validate({ url: 'string' })
+    ctx.validate({ _id: 'string', url: 'string' })
     const res = await service.billboard.deleteBillboard(ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* PUT
+   * 更新广告牌
+   */
+  async updateBillboard() {
+    const { ctx, service } = this
+    ctx.validate({ type: [1, 2, 3], link: 'string?' })
+    const res = await service.billboard.updateBillboard(ctx.request.body)
     ctx.reply(res)
   }
 }

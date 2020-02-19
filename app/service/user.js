@@ -267,7 +267,7 @@ class UserService extends Service {
     try {
       const { avatar_url: originalAvatar } = await ctx.model.User
         .findOne({ _id }, 'avatar_url')
-      const { ok, url: avatar_url } = await app.fullQiniu
+      const { ok, url } = await app.fullQiniu
         .uploadStream(name, stream)
       if (ok) {
         if (originalAvatar.length > 0) {
@@ -280,11 +280,11 @@ class UserService extends Service {
         return ctx.model.User
           .updateOne(
             { _id },
-            { avatar_url }
+            { avatar_url: decodeURI(url) }
           )
           .then(async ({ nModified }) => {
             if (nModified === 1) {
-              return { code: 2000, msg: '头像更换成功', data: { avatar_url } }
+              return { code: 2000, msg: '头像更换成功', data: { avatar_url: decodeURI(url) } }
             }
             return { code: 3000, msg: '没有更换到头像' }
           })

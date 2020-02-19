@@ -10,6 +10,12 @@ module.exports = ({ mongoose, timestamps }) => {
       unique: true,
       trim: true,
     },
+    type: {
+      type: Number,
+      enum: [1, 2, 3, 4, 5],
+      default: 1,
+    },
+    link: String,
   }, { timestamps })
 
   return mongoose.model('Billboard', BillboardSchema)
