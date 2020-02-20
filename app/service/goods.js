@@ -105,7 +105,7 @@ class GoodsService extends Service {
     // }
 
     const [total, goods_list] = await Promise.all([
-      ctx.model.Goods.countDocuments({}),
+      ctx.model.Goods.countDocuments({ status: 1 }),
       ctx.model.Goods
         .find({ status: 1 }, fields)
         .sort({ created_at: -1 })
@@ -152,7 +152,11 @@ class GoodsService extends Service {
 
   async getGoodsListByCategory({ page, page_size: pageSize, category }) {
     const { ctx, app } = this
-    const [goods_list] = await Promise.all([
+    const [total, goods_list] = await Promise.all([
+      ctx.model.Goods.countDocuments({
+        status: 1,
+        category: { $in: [app.mongoose.Types.ObjectId(category)] },
+      }),
       ctx.model.Goods.aggregate([
         {
           $match: {
@@ -170,7 +174,7 @@ class GoodsService extends Service {
     const pagination = {
       page,
       pageSize,
-      total: goods_list.length,
+      total,
     }
     return { code: 2000, msg: '获取某分类的商品列表', data: { goods_list, pagination } }
   }
