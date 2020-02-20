@@ -39,7 +39,6 @@ class ChatService extends Service {
   }
 
   deleteContact(_id, { contact_id }) {
-    console.log(contact_id)
     return this.ctx.model.User
       .updateOne(
         { _id },

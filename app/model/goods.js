@@ -7,6 +7,10 @@ module.exports = app => {
   const refUser = { type: Schema.Types.ObjectId, required: true, ref: 'User' }
 
   const GoodsSchema = new Schema({
+    views: {
+      type: Number,
+      default: 0,
+    },
     name: {
       type: String,
       required: true,

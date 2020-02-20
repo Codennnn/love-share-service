@@ -372,16 +372,17 @@ class GoodsService extends Service {
     return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
   }
 
-  getGoodsDetail(_id) {
+  getGoodsDetail({ goods_id: _id, viewed = false }) {
     return this.ctx.model.Goods
       .findOne({ _id }, '-comments')
       .populate('category', '-_id name')
-      .then(goods_detail => {
+      .then(async goods_detail => {
+        if (!viewed) {
+          await this.ctx.model.Goods.updateOne({ _id }, { $inc: { views: 1 } })
+        }
         return { code: 2000, msg: '查询商品详情', data: { goods_detail } }
       })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
-      })
+      .catch(err => ({ code: 5000, msg: err.message }))
   }
 
   async uploadImg(id, parts) {
@@ -516,7 +517,6 @@ class GoodsService extends Service {
         )
       )
     )
-    console.log(res)
     if (res.every(el => el.nModified === 1)) {
       return { code: 2000, msg: '成功评价商品' }
     }

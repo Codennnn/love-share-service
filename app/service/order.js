@@ -231,7 +231,6 @@ class OrderService extends Service {
             })
           )
         )
-        console.log(bool)
         if (bool) {
           return { code: 2000, msg: '查询订单ID', data: { order_id, sub_id } }
         }

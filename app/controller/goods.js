@@ -153,8 +153,8 @@ class GoodsController extends Controller {
    */
   async getGoodsDetail() {
     const { ctx, service } = this
-    ctx.validate({ goods_id: 'string' }, ctx.query)
-    const res = await service.goods.getGoodsDetail(ctx.query.goods_id)
+    ctx.validate({ goods_id: 'string', viewed: 'number?' }, ctx.query)
+    const res = await service.goods.getGoodsDetail(ctx.query)
     ctx.reply(res)
   }
 

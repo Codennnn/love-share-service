@@ -250,11 +250,9 @@ class AdminService extends Service {
         if (nModified === 1) {
           return { code: 2000, msg: '成功绑定一位用户' }
         }
-      })
-      .catch(err => {
-        console.log(err)
         return { code: 3000, msg: '没有绑定任何用户' }
       })
+      .catch(err => ({ code: 3000, msg: err.message }))
   }
 
   unbindUser(_id) {
