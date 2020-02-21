@@ -115,8 +115,8 @@ class UserController extends Controller {
    */
   async getUserDetailByAdmin() {
     const { ctx, service } = this
-    const id = ctx.query.user_id
-    const res = await service.user.getUserDetailByAdmin(id)
+    ctx.validate({ user_id: 'string' }, ctx.query)
+    const res = await service.user.getUserDetailByAdmin(ctx.query.user_id)
     ctx.reply(res)
   }
 

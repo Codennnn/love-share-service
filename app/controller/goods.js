@@ -93,20 +93,7 @@ class GoodsController extends Controller {
   }
 
   /* GET
-   * 获取商品列表
-   */
-  async getGoodsList() {
-    const { ctx, service } = this
-    ctx.validate({
-      page: { type: 'int', min: 1 },
-      page_size: { type: 'int', min: 1 },
-    }, ctx.query)
-    const res = await service.goods.getGoodsList(ctx.query)
-    ctx.reply(res)
-  }
-
-  /* GET
-   * 获取商品搜索列表
+   * 通过商品名搜索获取商品列表
    */
   async getGoodsListBySearch() {
     const { ctx, service } = this

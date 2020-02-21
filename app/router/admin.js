@@ -112,10 +112,6 @@ module.exports = app => {
 
   // 商品模块
   get(
-    '/api/goods/list',
-    auth('goods', ['read']),
-    goods.getGoodsList)
-  get(
     '/api/goods/list/info',
     auth('goods', ['read']),
     goods.getGoodsListInfo)

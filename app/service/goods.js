@@ -3,6 +3,8 @@
 const path = require('path')
 const sendToWormhole = require('stream-wormhole')
 const Service = require('egg').Service
+const goodsField = 'name img_list category seller price collect_num views created_at'
+const goodsSellerField = 'avatar_url real_name nickname credit_value share_value'
 
 class GoodsService extends Service {
   async createGoods(_id, data) {
@@ -197,35 +199,50 @@ class GoodsService extends Service {
       }
     }
 
-    const goods_list = await ctx.model.Goods.aggregate([
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'seller',
-          foreignField: '_id',
-          as: 'seller',
+    const [total, goods_list] = await Promise.all([
+      ctx.model.Goods.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'seller',
+            foreignField: '_id',
+            as: 'seller',
+          },
         },
-      },
-      { $match: match },
-      { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
-      { $sort: { created_at: -1 } },
-      { $skip: (page - 1) * pageSize },
-      { $limit: pageSize },
+        { $match: match },
+        { $project: { _id: 1 } },
+      ]),
+      ctx.model.Goods.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'seller',
+            foreignField: '_id',
+            as: 'seller',
+          },
+        },
+        { $match: match },
+        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+        { $sort: { created_at: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+      ]),
     ])
     const pagination = {
       page,
       pageSize,
-      total: goods_list.length,
+      total: total.length,
     }
     return { code: 2000, msg: '根据分类查询同校商品列表', data: { goods_list, pagination } }
   }
 
+  /* 管理员 */
   async getGoodsListByStatus(status, { page, page_size: pageSize }) {
     const [total, goods_list] = await Promise.all([
       this.ctx.model.Goods.countDocuments({ status }),
       this.ctx.model.Goods
-        .find({ status }, 'name category seller price collect_num created_at')
-        .populate('seller', 'avatar_url real_name nickname')
+        .find({ status }, goodsField)
+        .populate('seller', goodsSellerField)
         .populate('category', 'name')
         .skip((page - 1) * pageSize)
         .limit(pageSize),
@@ -243,10 +260,8 @@ class GoodsService extends Service {
     const { ctx } = this
     const str = search.replace(/([()[\]{}\\/^$|?*+.])/g, '\\$1')
     const reg = new RegExp(str.toLowerCase().trim(), 'i')
-    return ctx.model.Goods.find({
-      name: { $regex: reg },
-    }, 'name category seller price collect_num created_at')
-      .populate('seller', 'avatar_url real_name nickname')
+    return ctx.model.Goods.find({ name: { $regex: reg } }, goodsField)
+      .populate('seller', goodsSellerField)
       .populate('category', 'name')
       .skip((page - 1) * pageSize)
       .limit(pageSize)
@@ -280,8 +295,8 @@ class GoodsService extends Service {
             $gte: new Date(`${date_range[0]} 00:00:00`),
             $lte: new Date(`${date_range[1]} 23:59:59`),
           },
-        }, 'name category seller price collect_num created_at')
-        .populate('seller', 'avatar_url real_name nickname')
+        }, goodsField)
+        .populate('seller', goodsSellerField)
         .populate('category', 'name')
         .skip((page - 1) * pageSize)
         .limit(pageSize),
@@ -320,18 +335,16 @@ class GoodsService extends Service {
           as: 'seller',
         },
       },
+      { $match: match },
       {
         $lookup: {
           from: 'categories',
           localField: 'category',
           foreignField: '_id',
-          as: 'categories',
+          as: 'category',
         },
       },
       { $unwind: '$seller' },
-      {
-        $match: match,
-      },
       {
         $project: {
           name: 1,
@@ -340,11 +353,13 @@ class GoodsService extends Service {
           collect_num: 1,
           status: 1,
           created_at: 1,
-          'categories.name': 1,
+          category: 1,
+          views: 1,
           'seller.avatar_url': 1,
           'seller.school': 1,
           'seller.real_name': 1,
           'seller.nickname': 1,
+          'seller.credit_value': 1,
           'seller.share_value': 1,
         },
       },
@@ -358,22 +373,6 @@ class GoodsService extends Service {
       total: goods_list.length,
     }
     return { code: 2000, msg: '根据学校或分类获取商品列表', data: { goods_list, pagination } }
-  }
-
-  async getGoodsList({ page, page_size: pageSize }) {
-    const [total, goods_list] = await Promise.all([
-      this.ctx.model.Goods.estimatedDocumentCount(),
-      this.ctx.model.Goods
-        .find({}, 'name category created_at')
-        .skip((page - 1) * pageSize)
-        .limit(pageSize),
-    ])
-    const pagination = {
-      page,
-      pageSize,
-      total,
-    }
-    return { code: 2000, msg: '查询商品列表', data: { goods_list, pagination } }
   }
 
   getGoodsDetail({ goods_id: _id, viewed = false }) {
