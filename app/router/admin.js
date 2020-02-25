@@ -109,6 +109,14 @@ module.exports = app => {
     '/api/user/delete',
     auth('user', ['delete']),
     user.deleteUser)
+  put(
+    '/api/user/account/update',
+    auth('user', ['write']),
+    user.updateUserAccountInfo)
+  get(
+    '/api/user/block_list',
+    auth('user', ['read']),
+    user.getBlockUserList)
 
   // 商品模块
   get(

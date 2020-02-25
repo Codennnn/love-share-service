@@ -20,7 +20,7 @@ module.exports = app => {
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     gender: {
       type: Number,
-      default: 0,
+      default: 0, // 0-男，1-女
     },
     email: {
       type: String,

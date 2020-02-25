@@ -319,6 +319,26 @@ class UserController extends Controller {
     const res = await service.user.getBillList(_id, ctx.request.body)
     ctx.reply(res)
   }
+
+  /* PUT
+   * 禁用用户
+   */
+  async updateUserAccountInfo() {
+    const { ctx, service } = this
+    ctx.validate({ user_id: 'string', is_blocked: 'boolean?' })
+    const res = await service.user.updateUserAccountInfo(ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* GET
+   * 获取禁用用户列表
+   */
+  async getBlockUserList() {
+    const { ctx, service } = this
+    // ctx.validate({ user_id: 'string' })
+    const res = await service.user.getBlockUserList(ctx.query)
+    ctx.reply(res)
+  }
 }
 
 module.exports = UserController

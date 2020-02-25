@@ -46,7 +46,7 @@ module.exports = ({ mongoose, timestamps }) => {
     },
     gender: {
       type: String,
-      default: '0',
+      default: '0', // '1'-男，'2'-女
     },
     introduction: {
       type: String,
@@ -124,6 +124,11 @@ module.exports = ({ mongoose, timestamps }) => {
     published_goods: [refGoods],
     bought_goods: [refGoods],
     check_in: Array,
+    account_info: {
+      is_blocked: { type: Boolean, default: false },
+      expire_time: { type: Number },
+      info: String,
+    },
   }, { timestamps })
 
   return mongoose.model('User', UserSchema)

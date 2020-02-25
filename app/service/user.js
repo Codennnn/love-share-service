@@ -616,9 +616,31 @@ class UserService extends Service {
       .then(({ bill: bill_list }) => {
         return { code: 2000, msg: '获取账单列表', data: { bill_list } }
       })
-      .catch(err => {
-        return { code: 5000, msg: err.message }
+      .catch(err => ({ code: 5000, msg: err.message }))
+  }
+
+  updateUserAccountInfo(data) {
+    console.log(data)
+    return this.ctx.model.User
+      .updateOne(
+        { _id: data.user_id },
+        { account_info: data },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '成功修改用户账号信息' }
+        }
+        return { code: 3000, msg: '无用户被修改' }
       })
+      .catch(err => ({ code: 5000, msg: err.message }))
+  }
+
+  getBlockUserList() {
+    return this.ctx.model.User
+      .find({ 'account_info.is_blocked': true }, '_id avatar_url credit_value share_value nickname account_info created_at')
+      .then(user_list => ({ code: 2000, msg: '获取黑名单用户', data: { user_list } }))
+      .catch(err => ({ code: 5000, msg: err.message }))
   }
 }
 
