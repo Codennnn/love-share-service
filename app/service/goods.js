@@ -552,6 +552,24 @@ class GoodsService extends Service {
       })
   }
 
+  changeComment(_id, { goods_id, comment_id, content }) {
+    const { ctx } = this
+    return ctx.model.Goods
+      .updateOne(
+        { _id: goods_id, 'comments._id': comment_id },
+        { 'comments.$.content': content },
+        { runValidators: true }
+      )
+      .then(({ nModified }) => {
+        if (nModified === 1) {
+          return { code: 2000, msg: '已成功修改一条留言' }
+        }
+      })
+      .catch(err => {
+        return { code: 5000, msg: err.message }
+      })
+  }
+
   replyComment(_id, { goods_id, comment_id, at, content }) {
     const { ctx, service } = this
     return ctx.model.Goods

@@ -203,13 +203,17 @@ class GoodsController extends Controller {
     ctx.reply(res)
   }
 
-  /* POST
-   * 发表商品评价
+  /* PUT
+   * 修改评论
    */
-  async postReview() {
+  async changeComment() {
     const { ctx, service } = this
-    ctx.validate({ reviews: 'array' })
-    const res = await service.goods.postReview(ctx.request.body)
+    ctx.validate({
+      goods_id: 'string',
+      comment_id: 'string',
+      content: { type: 'string', max: 50 },
+    })
+    const res = await service.goods.changeComment(ctx.state.user.id, ctx.request.body)
     ctx.reply(res)
   }
 
@@ -225,6 +229,16 @@ class GoodsController extends Controller {
       content: { type: 'string', min: 1, max: 50 },
     })
     const res = await service.goods.replyComment(ctx.state.user.id, ctx.request.body)
+    ctx.reply(res)
+  }
+
+  /* POST
+   * 发表商品评价
+   */
+  async postReview() {
+    const { ctx, service } = this
+    ctx.validate({ reviews: 'array' })
+    const res = await service.goods.postReview(ctx.request.body)
     ctx.reply(res)
   }
 
