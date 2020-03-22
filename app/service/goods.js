@@ -181,6 +181,41 @@ class GoodsService extends Service {
     return { code: 2000, msg: '获取某分类的商品列表', data: { goods_list, pagination } }
   }
 
+  async getGoodsListByFilter({ page, page_size: pageSize, category, search, min_price, max_price }) {
+    const { ctx, app } = this
+    const base = {
+      status: 1,
+      category: { $in: [app.mongoose.Types.ObjectId(category)] },
+    }
+    if (search && search.trim().length > 0) {
+      const str = search.replace(/([()[\]{}\\/^$|?*+.])/g, '\\$1')
+      const reg = new RegExp(str.toLowerCase().trim(), 'i')
+      base.name = { $regex: reg }
+    }
+    if (min_price >= 0 && max_price >= 0 && min_price <= max_price) {
+      base.price = { $gte: min_price, $lte: max_price }
+    }
+    console.log(base)
+
+    const [total, goods_list] = await Promise.all([
+      ctx.model.Goods.countDocuments(base),
+      ctx.model.Goods.aggregate([
+        { $match: base },
+        { $project: { name: 1, price: 1, img_list: 1, created_at: 1 } },
+        { $sort: { created_at: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+      ]),
+      ctx.model.Category.updateOne({ _id: category }, { $inc: { hit: 1 } }),
+    ])
+    const pagination = {
+      page,
+      pageSize,
+      total,
+    }
+    return { code: 2000, msg: '根据过滤条件获取商品列表', data: { goods_list, pagination } }
+  }
+
   async getGoodsListBySchoolOrCategory({ school_id, category = null, page, page_size: pageSize }) {
     const { ctx, app } = this
     let match

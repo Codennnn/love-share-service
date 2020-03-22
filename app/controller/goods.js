@@ -121,6 +121,23 @@ class GoodsController extends Controller {
   }
 
   /* GET
+   * 根据过滤条件获取商品列表
+   */
+  async getGoodsListByFilter() {
+    const { ctx, service } = this
+    ctx.validate({
+      page: { type: 'int', min: 1 },
+      page_size: { type: 'int', min: 1 },
+      category: 'string',
+      search: 'string?',
+      min_price: 'number?',
+      max_price: 'number?',
+    }, ctx.query)
+    const res = await service.goods.getGoodsListByFilter(ctx.query)
+    ctx.reply(res)
+  }
+
+  /* GET
    * 获取同校商品列表
    */
   async getGoodsListBySchoolOrCategory() {
@@ -218,7 +235,7 @@ class GoodsController extends Controller {
   }
 
   /* POST
-   * 回复别人
+   * 回复别人的评论
    */
   async replyComment() {
     const { ctx, service } = this
