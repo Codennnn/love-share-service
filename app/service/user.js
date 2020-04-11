@@ -11,9 +11,14 @@ class UserService extends Service {
         { phone: account },
         { email: account },
       ],
-    }, 'password')
+    }, 'password account_info')
+
     if (!res) {
       return { code: 4001, msg: '手机号或邮箱尚未注册' }
+    }
+
+    if (res.account_info.is_blocked) {
+      return { code: 4005, msg: '该用户账号已被禁用' }
     }
 
     // 对比 hash 加密后的密码是否相等
