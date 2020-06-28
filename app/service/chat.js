@@ -64,7 +64,8 @@ class ChatService extends Service {
     return this.ctx.model.User
       .findOne({ _id }, 'contacts')
       .populate('contacts', 'nickname avatar_url')
-      .then(({ contacts: contact_list = [] }) => {
+      .then(res => {
+        const { contacts: contact_list = [] } = res || {}
         return { code: 2000, data: { contact_list }, msg: '获取联系人列表' }
       })
       .catch(err => {
